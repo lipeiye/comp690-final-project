@@ -157,3 +157,12 @@ python3 scripts/package_release.py --output release/COMP690_completed_2026-11-04
 - 推送前检查：最大文件是两份 11.3 MB 的回放视频；在暂存文件中搜索常见密钥格式、密码赋值、个人邮箱和机器序列号，没有命中。
 - README 开头加了仓库地址，并说明克隆后没有数据和模型、需要按第 7、8 节重建；agent.md 的 Git 状态说明同步更新。
 - 没有运行实验，没有改动 `results/`、模型或演示文稿。没有添加 LICENSE：公开仓库没有许可证时，别人只能查看，默认没有复用授权，是否添加由作者决定。
+
+## 2026-11-09 模型发布到 GitHub Release
+
+- 应用户要求（“传模型”），把模型作为 GitHub Release `models-v1` 的附件上传。
+- 发现：本机是原 M4 Mac mini（Mac16,10，16 GiB），`data.nosync/models` 里是 2026-11-03 主实验的原模型：validation 513 个 `.pt` + 918 个 ONNX，final 459 个 `.pt` + 918 个 ONNX，共 2,808 个文件。11-04 的维护在 M5 副本上进行，那份副本没有 `data.nosync/`，所以 README、agent.md 和本日志当时记为原权重缺失。11-08 条目说本机 `data.nosync/` 里是 216 个补充模型，这是照搬了 M5 的状态，写错了；本机没有补充模型目录。
+- 核对（只读；脚本放在会话临时目录，不写项目）：459 个最终模型在 session 2 重算 FP32/INT8 预测，918 组、264,384 次预测与 `results/test` 逐条一致，bundle 元数据和通道列表也一致；459 个验证模型在留出 run 上的混淆矩阵、loss（误差 1e-5 内）和 ONNX 文件大小与 `results/validation/quant` 一致；54 个预算选择文件能以 `weights_only=True` 载入；`audit_project.py --deep --require-artifacts` 通过，输出写到临时目录，没有改 `results/maintenance/audit.json`。
+- 打包：`comp690-models-original-m4.zip` 含 2,808 个文件，34,620,542 字节，SHA-256 `e16773335a1315b932c252efe1aa877b3eeca55aa62307985960466604a42e49`。`comp690-models-supplementary-m5.zip` 含从 `release/COMP690_completed_2026-11-04.zip` 取出的 216 个 `.pt` + 432 个 ONNX，6,715,548 字节，SHA-256 `4335a20dfb303e004b1b9aadbac69e93bb4cdcf8eeb01a8c4c47b7b156f3c2f6`；每个文件的 SHA-256 与交付包清单、`results/supplementary/matched_budget` 中 432 条记录的 `model_sha256` 一致。两个 ZIP 根目录各有一份 SHA256SUMS，解压到 `data.nosync/` 后路径与本地一致。
+- 隐私检查：3,456 个模型文件里没有邮箱、密钥或 token。ONNX 的 PyTorch 导出元数据含本机路径 `/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/...`，仓库里已有 396 个文件含同一路径。模型保持原字节，没有删改元数据。
+- 文档：README 第 1 节状态表、目录图、第 6.1 节下载步骤和几处“原模型缺失”的说法；agent.md 的当前产物、机器识别、审计说明和 Release 规则；REPRODUCIBILITY.md 的恢复原权重一节；BEGINNER_GUIDE 第 11 节。没有改 `results/`、模型、演示文稿或 11-04 交付包。`docs/MIDTERM_REVIEW_GUIDE_ZH.html` 中“原权重不在了”的说法没有改。

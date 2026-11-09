@@ -11,10 +11,10 @@
 必须区分三类材料：
 
 1. **历史主实验**：M4 Mac mini 上的 17 条件研究。`results/validation`、`final`、`test`、`benchmark`、`analysis` 与 `frozen_config.json` 是已保留证据。
-2. **当前可执行产物**：数据已恢复，但主实验原 `models/validation` 和 `models/final` 缺失。当前存在的 216 个 `.pt` 和 432 个 ONNX 属于 M5 独立补充复现。
+2. **当前可执行产物**：原 M4 Mac mini 的 `data.nosync/` 完整保存原始/处理数据和主实验原 `models/validation`、`models/final`（2,808 个文件）；2026-11-09 重算预测与历史记录逐条一致，`--require-artifacts` 审计通过。216 个 `.pt` 和 432 个 ONNX 的 M5 独立补充复现存于 M5 副本和 11-04 交付包，不在 M4 的 `data.nosync/`。两套模型都发布在 GitHub Release `models-v1`（README 第 6.1 节）。M5 副本没有原模型，11-04 及以前的文档和日志据此写成“原权重缺失”。
 3. **补充对照**：`supplementary/matched_budget` 是知道测试结果后追加的等微调预算研究，不得倒写成原计划或用于重选历史 finalist。
 
-主实验历史记录完整不等于当前副本具备所有原模型；权重缺失也不表示原实验从未完成。原 M4 RAM 未记录；当前 M5 环境记录的 24 GiB 不能补写成原硬件配置。
+主实验历史记录完整不等于某个副本具备所有原模型：先看所在机器（`sysctl -n hw.model`：Mac16,10 是原 M4 Mac mini，Mac17,3 是 M5）和 `data.nosync/models` 的实际内容。权重缺失也不表示原实验从未完成。原实验日志没有记录 RAM；2026-11-09 在保存原 `data.nosync/` 的 Mac mini（Mac16,10）上读到 16 GiB。M5 环境记录的 24 GiB 不能补写成原硬件配置。
 
 ## 2. 开始任务的检查顺序
 
@@ -147,7 +147,7 @@ ONNX 契约：opset 18；`eeg: float32[N,C,500] → logits[N,4]`；仅 batch 动
 
 被冻结目录拒绝再次选预算或运行汇总/冻结；已有 benchmark 拒绝覆盖。新实验同时隔离 `MIBCI_RESULTS_DIR` 与 `MIBCI_DATA_DIR`，否则可能隔离了 JSON 却共用模型路径。
 
-Git 历史从 2026-11-08 的首次上传开始；此前的变更只记录在 `docs/evidence` 和 WORK_LOG。编辑前副本不要覆盖 `docs/evidence/baseline/` 作为新“基线”。不要为普通说明任务清理结果、删除大文件或重建交付包。仓库是公开的：`data.nosync/`（原始/处理 EEG 和全部模型）、虚拟环境和 `release/` 不进仓库；提交前确认没有密钥或大文件。
+Git 历史从 2026-11-08 的首次上传开始；此前的变更只记录在 `docs/evidence` 和 WORK_LOG。编辑前副本不要覆盖 `docs/evidence/baseline/` 作为新“基线”。不要为普通说明任务清理结果、删除大文件或重建交付包。仓库是公开的：`data.nosync/`（原始/处理 EEG 和全部模型）、虚拟环境和 `release/` 不进仓库；提交前确认没有密钥或大文件。模型以 ZIP 附件发布在 Release `models-v1`，附件内的 SHA256SUMS 是核对依据；不要替换已发布的附件，新模型另开 Release。
 
 ## 7. 环境、路径和运行策略
 
@@ -222,7 +222,7 @@ python3 scripts/audit_project.py --deep --output /tmp/mibci-agent-audit.json
 
 不为纯格式修改新增镜像测试。修复会影响科学结论的错误时，应增加针对行为或不变量的测试，并标明其对应的新实验来源。通过必要验证后，不无理由反复跑耗时流程。
 
-普通审计成功主要说明历史覆盖、表哈希和指标一致。当前 `--deep` 能通过，而 `--require-artifacts` 会因原模型缺失失败；这是两个不同检查目标，不能把后者当作需要删除历史记录才能修复的 bug。审计本身不验证原始训练发生、模型反序列化或 MCU 部署，也不自动审计补充模型。
+普通审计成功主要说明历史覆盖、表哈希和指标一致。`--deep` 在各副本都能通过；`--require-artifacts` 在原 M4 副本（或解压原模型 ZIP 后）通过，在只有补充模型的副本上会因原模型缺失失败。这是两个不同检查目标，不能把后者当作需要删除历史记录才能修复的 bug。审计本身不验证原始训练发生、模型反序列化或 MCU 部署，也不自动审计补充模型。
 
 ## 9. 报告与结论写作约束
 

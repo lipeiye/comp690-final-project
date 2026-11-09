@@ -6,7 +6,7 @@ COMP 690-193（2026 秋季）课程项目，Python 包名为 `mibci`。项目研
 
 本文件面向阅读、运行和复现项目的人；开发与自动化代理应继续阅读 [agent.md](agent.md)，标准代理入口为 [AGENTS.md](AGENTS.md)。详细研究叙述见 [研究报告](docs/REPORT.md)，历史操作记录见 [WORK_LOG.md](docs/WORK_LOG.md)。
 
-代码仓库：<https://github.com/lipeiye/comp690-final-project>（公开）。仓库不含 `data.nosync/`（原始与处理 EEG、全部模型权重）、虚拟环境和 `release/` 交付 ZIP，所以克隆后第 6 节依赖补充模型的命令不能直接运行：数据按第 7 节下载并核对 SHA-256，模型按第 7、8 节重建。下文“当前项目状态”描述的是作者本地副本。
+代码仓库：<https://github.com/lipeiye/comp690-final-project>（公开）。仓库不含 `data.nosync/`（原始与处理 EEG、模型权重）、虚拟环境和 `release/` 交付 ZIP。模型权重在 GitHub Release [`models-v1`](https://github.com/lipeiye/comp690-final-project/releases/tag/models-v1)：主实验原模型和补充模型各一个 ZIP，下载与核对见[第 6.1 节](#61-从-github-release-下载模型)；EEG 数据按第 7 节下载并核对 SHA-256。下文“当前项目状态”描述的是作者本地副本。
 
 零基础阅读：[从零读懂这个脑电项目](docs/BEGINNER_GUIDE_ZH.md)，用例子解释数据来源、电极选择、剪枝、INT8 量化和实验结果。
 
@@ -21,18 +21,18 @@ COMP 690-193（2026 秋季）课程项目，Python 包名为 `mibci`。项目研
 
 ## 1. 当前项目状态
 
-以下是 2026-11-04 对当前副本的核验状态；文件存在、实验记录一致和原权重恢复是不同概念。
+以下是 2026-11-09 在原 Apple M4 Mac mini 副本上的核验状态。2026-11-04 的核验在另一台 M5 电脑的副本上进行，那份副本没有 `data.nosync/`（`.nosync` 目录不经 iCloud 同步），所以当时记为原模型缺失。文件存在、实验记录一致和原权重恢复是不同概念。
 
 | 部分 | 当前状态 | 可以据此做什么 |
 | --- | --- | --- |
 | 主实验结果 | validation/runs、validation/quant、final/runs、final/quant、test 各 459 份记录；深审计一致 | 阅读历史结果，从保留预测重算指标 |
-| 主实验原模型 | validation/final 所需 2,754 个 `.pt` / `.onnx` 文件缺失 | 不能直接用历史最终模型推理、回放或重测原模型性能 |
-| 原始与处理数据 | 18 个 `.mat`、18 个 session `.npz` 已恢复 | 核对数据、运行现有补充模型、开展独立复现 |
-| 补充实验模型 | 54 个独立重建基础模型 + 162 个分支；216 个 `.pt`、432 个 ONNX 导出齐全 | 使用补充模型推理、回放和测量；须标注独立重建来源 |
+| 主实验原模型 | M4 本机 `data.nosync/models/validation`、`final` 保存 2026-11-03 生成的 2,808 个文件（972 个 `.pt`、1,836 个 ONNX，含 54 个预算选择文件）。2026-11-09 用它们重算 session 2：FP32/INT8 共 918 组、264,384 次预测与 `results/test` 逐条一致；验证集 459 个模型的混淆矩阵、loss 和 ONNX 文件大小与 `results/validation/quant` 一致；`audit_project.py --deep --require-artifacts` 通过 | 用原模型推理、回放、重测性能；克隆者从 Release 下载（第 6.1 节） |
+| 原始与处理数据 | 18 个 `.mat`、18 个 session `.npz`（M4 本机保存原文件；M5 副本于 11-04 重新下载并核对） | 核对数据、运行现有模型、开展独立复现 |
+| 补充实验模型 | 54 个独立重建基础模型 + 162 个分支，216 个 `.pt`、432 个 ONNX；存于 M5 副本和 11-04 交付包，M4 本机 `data.nosync` 没有这个目录 | 从 Release 或交付包取得后推理、回放和测量；须标注独立重建来源 |
 | 报告与演示 | Markdown/PDF 报告、19 页本地 HTML 幻灯片、回放视频 | 阅读与展示已生成成果 |
 | 历史交付包 | `release/COMP690_completed_2026-11-04.zip` | 本轮 README/代理指南更新前的快照，不自动反映当前文档 |
 
-原主实验记录来自作者的 Apple M4 Mac mini；补充独立重建来自后续 M5 环境。缺少当前副本的原权重，不代表原实验未完成；补充模型也不能称为恢复出的原权重。
+原主实验记录和原模型来自作者的 Apple M4 Mac mini；补充独立重建来自后续 M5 环境。补充实验在没有原权重的 M5 副本上设计和运行，所以独立重建了基础模型。原模型后来在 M4 上确认存在，这不改变补充实验的设计和结论；补充模型也不能称为恢复出的原权重。
 
 ## 2. 主要结果与解释
 
@@ -72,7 +72,8 @@ project/
 ├── data.nosync/
 │   ├── raw/                            MOABB 下载的原始数据
 │   ├── processed/                      18 个 NPZ 和 manifest.json
-│   ├── models/supplementary/            当前可用的补充模型
+│   ├── models/validation/、final/       主实验原模型（M4 本机；Release 原模型 ZIP）
+│   ├── models/supplementary/            补充模型（M5 副本；Release 补充模型 ZIP）
 │   └── maintenance/                     渲染与维护中间文件
 ├── results/
 │   ├── frozen_config.json              历史配置、选择结果、验证表哈希
@@ -188,6 +189,28 @@ Fz FC3 FC1 FCz FC2 FC4 C5 C3 C1 Cz C2 C4 C6 CP3 CP1 CPz CP2 CP4 P1 Pz P2 POz
 
 ## 6. 优先使用已有证据和补充模型
 
+### 6.1 从 GitHub Release 下载模型
+
+克隆的仓库没有模型权重。Release [`models-v1`](https://github.com/lipeiye/comp690-final-project/releases/tag/models-v1) 有两个 ZIP，解压到 `data.nosync/` 后路径与作者本地一致：
+
+| 附件 | 内容 | 解压后位置 |
+| --- | --- | --- |
+| `comp690-models-original-m4.zip`（34.6 MB） | 主实验原模型，2026-11-03 在 M4 上生成：validation 513 个 `.pt` + 918 个 ONNX，final 459 个 `.pt` + 918 个 ONNX | `data.nosync/models/validation/`、`final/` |
+| `comp690-models-supplementary-m5.zip`（6.7 MB） | matched-budget 补充模型，M5 上独立重建：54 个基础模型 + 162 个分支，216 个 `.pt` + 432 个 ONNX | `data.nosync/models/supplementary/matched_budget/` |
+
+```bash
+mkdir -p data.nosync /tmp/mibci-models
+curl -fL -o /tmp/mibci-models/comp690-models-original-m4.zip https://github.com/lipeiye/comp690-final-project/releases/download/models-v1/comp690-models-original-m4.zip
+curl -fL -o /tmp/mibci-models/comp690-models-supplementary-m5.zip https://github.com/lipeiye/comp690-final-project/releases/download/models-v1/comp690-models-supplementary-m5.zip
+unzip -n /tmp/mibci-models/comp690-models-original-m4.zip -d data.nosync
+unzip -n /tmp/mibci-models/comp690-models-supplementary-m5.zip -d data.nosync
+(cd data.nosync && shasum -a 256 -c --quiet SHA256SUMS-original-m4.txt SHA256SUMS-supplementary-m5.txt)
+```
+
+`unzip -n` 不覆盖已有文件；`shasum --quiet` 只在文件不符时输出。两个 ZIP 本身的 SHA-256 写在 Release 说明里。模型文件保持生成时的原字节：ONNX 里有 PyTorch 导出时记下的作者本机路径，不影响推理。`.pt` 是 pickle 格式，只加载核对过哈希的文件。
+
+### 6.2 使用已有证据和模型
+
 以下示例针对当前项目副本；先恢复默认数据/结果路径，避免继承其他实验的环境变量。
 
 ```bash
@@ -196,9 +219,9 @@ export MIBCI_RESULTS_DIR="$PWD/results"
 python3 scripts/audit_project.py --deep --output /tmp/mibci-audit.json
 ```
 
-审计无需 PyTorch。默认可在历史结果一致但原模型缺失时成功；加 `--require-artifacts` 会要求原 validation/final 模型与预处理文件齐全，当前副本预期不能通过这一要求。
+审计无需 PyTorch。默认可在历史结果一致但原模型缺失时成功；加 `--require-artifacts` 会要求原 validation/final 模型与预处理文件齐全。M4 本机副本 2026-11-09 通过了这一要求；解压原模型 ZIP 并准备好数据后也应通过，只有补充模型时不能通过。
 
-使用现有补充模型进行 INT8 推理；FP32 将 `--precision` 改为 `fp32` 并选另一个输出文件名：
+使用现有补充模型进行 INT8 推理；FP32 将 `--precision` 改为 `fp32` 并选另一个输出文件名。原模型用法相同，例如 `--bundle data.nosync/models/final/sub-03_seed-0_relevance-16-prune50.pt`：
 
 ```bash
 .venv.nosync/bin/python scripts/infer_bundle.py \
@@ -302,7 +325,7 @@ cp -R results/test "$MIBCI_RESULTS_DIR/test"
 
 这里复制的历史记录只用作固定设计和预测一致率比较，新权重/预测写入 `supplementary/matched_budget/`。新目录中的历史主实验 JSON 不表示新主实验已训练；不要随后对它运行主实验训练脚本。
 
-若拥有原始 full/relevance `.pt`，可把匹配的原模型恢复至所选数据目录 `models/final/`，规划时省略 `--rebuild-bases`。当前副本没有这些原权重，因此上例明确选择独立重建。
+若拥有原始 full/relevance `.pt`，可把匹配的原模型恢复至所选数据目录 `models/final/`，规划时省略 `--rebuild-bases`。已完成的补充实验运行在没有原权重的 M5 副本上，因此选择了独立重建，上例沿用同一做法；原模型现在可从 Release 原模型 ZIP 取得。
 
 | 比较 | 含义 |
 | --- | --- |
@@ -403,13 +426,13 @@ python3 scripts/package_release.py --output release/project_with_supplement_mode
 
 ## 12. 维护限制与常见问题
 
-- **只有结果没有模型**：审计一致不代表可直接推理。恢复原 bundle/导出，或使用标注清楚的补充模型；不要删除历史 JSON 触发原位重训。
+- **只有结果没有模型**：审计一致不代表可直接推理。从 Release 恢复原 bundle/导出（第 6.1 节），或使用标注清楚的补充模型；不要删除历史 JSON 触发原位重训。
 - **已冻结，无法重选预算**：这是预期保护。新实验使用独立结果/数据目录；已有冻结实验仅继续缺少的后续阶段。
 - **重新运行覆盖范围**：`prepare_data.py`、`analyze.py`、报告/演示生成器会覆盖自己的派生输出；`manifest_results.py` 会建立新清单，不能用重跑清单替代保留前后哈希比较。
 - **路径重定向并非全局**：主实验和 matched 使用环境变量；report/presentation/release/maintenance 固定项目根，pilot 默认 out 也固定根。audit 读 `--root/results`，默认输出仍为原根 `results/maintenance/audit.json`，应显式传 output。
 - **探测脚本参数**：不是每个脚本都实现 argparse；对无参数的预算、分析、报告等脚本添加 `--help` 可能直接执行写入逻辑，先读源码或本表再运行。
 - **项目外结果目录**：`prepare_data.py` 最后打印使用 `relative_to(PROJECT_ROOT)`，外部目录可能在已写入后报错；当前示例使用项目内复现目录。不要误判为全部准备工作未执行。
-- **回放目录**：`--save` 不创建父目录；先 mkdir。默认 bundle 指向缺失的原 finalist，当前副本必须像第 6 节显式传补充 bundle。
+- **回放目录**：`--save` 不创建父目录；先 mkdir。默认 bundle 是冻结的原 finalist（seed 0），需要原模型；只有补充模型时须像第 6 节显式传补充 bundle。
 - **补充协议哈希冲突**：恢复计划所对应版本，或创建新补充目录和协议；不要为了继续运行删除哈希检查或重写旧协议。
 - **原始主剪枝比较有额外训练混杂**：未剪枝 base 没有同样的额外 100 epoch；相同预算效应应读取 matched 分支比较。
 - **统计与部署边界**：9 位被试、跨天同人评价、探索性 bootstrap 区间；不能声称跨人泛化、等效、临床效果、在线闭环、功耗或 MCU 实测。

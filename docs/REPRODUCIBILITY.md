@@ -61,6 +61,8 @@ python3 scripts/audit_project.py --data-dir "$MIBCI_DATA_DIR" --require-artifact
 
 `.pt` bundle 内保存了通道索引、归一化均值/标准差、模型维度和权重，仅拷贝 ONNX 不足以重现预处理。恢复模型后还应在锁定环境中验证反序列化、导出一致性与推理，不把文件存在性等同于模型正确性。
 
+2026-11-09：原 Mac mini 上的 `data.nosync/` 仍然完整，`--require-artifacts` 审计通过。主实验原模型和补充模型已发布到 GitHub Release `models-v1`，下载与核对见 README 第 6.1 节。发布前做过这些检查：459 个最终模型在 session 2 重算 FP32/INT8 预测，与 `results/test` 逐条一致；459 个验证模型在留出 run 上的混淆矩阵、loss 和 ONNX 文件大小与 `results/validation/quant` 一致；另外 54 个预算选择文件能以 `weights_only=True` 载入。
+
 训练、剪枝、量化和测试脚本现在会同时检查结果与必需产物。已有 JSON 而模型缺失时会明确报错，拒绝悄悄重训并替换已发表分数所对应的权重。
 
 ## 从零独立复现主实验
