@@ -1,0 +1,33 @@
+test_corrupt_json_and_nonfinite_writes_preserve_existing_evidence (test_artifacts.ArtifactRecoveryTests.test_corrupt_json_and_nonfinite_writes_preserve_existing_evidence) ... ok
+test_orphan_record_never_silently_triggers_retraining (test_artifacts.ArtifactRecoveryTests.test_orphan_record_never_silently_triggers_retraining) ... ok
+test_resumes_only_complete_matching_artifacts (test_artifacts.ArtifactRecoveryTests.test_resumes_only_complete_matching_artifacts) ... ok
+test_export_parity_quantization_and_actual_float32_input_contract (test_pipeline.PipelineInvariantTests.test_export_parity_quantization_and_actual_float32_input_contract) ... ok
+test_heldout_session_requires_explicit_final_evaluation (test_pipeline.PipelineInvariantTests.test_heldout_session_requires_explicit_final_evaluation) ... ok
+test_run_folds_are_disjoint_and_cover_every_trial_once (test_pipeline.PipelineInvariantTests.test_run_folds_are_disjoint_and_cover_every_trial_once) ... ok
+test_structured_pruning_reduces_real_tensors_and_keeps_valid_outputs (test_pipeline.PipelineInvariantTests.test_structured_pruning_reduces_real_tensors_and_keeps_valid_outputs) ... ok
+test_validation_values_do_not_change_training_normalization (test_pipeline.PipelineInvariantTests.test_validation_values_do_not_change_training_normalization) ... ok
+test_changed_historical_ranking_cannot_be_silently_reused (test_supplement.SupplementProtocolTests.test_changed_historical_ranking_cannot_be_silently_reused) ... Planned 2 bases and 6 matched-budget branches.
+ok
+test_missing_original_weights_require_explicit_reproduction_mode (test_supplement.SupplementProtocolTests.test_missing_original_weights_require_explicit_reproduction_mode) ... ERROR
+
+======================================================================
+ERROR: test_missing_original_weights_require_explicit_reproduction_mode (test_supplement.SupplementProtocolTests.test_missing_original_weights_require_explicit_reproduction_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/tests/test_supplement.py", line 35, in test_missing_original_weights_require_explicit_reproduction_mode
+    matched.create_plan(False)
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/run_matched_control.py", line 86, in create_plan
+    "original_base_sha256":sha256(bundle) if not rebuild else None})
+                           ^^^^^^^^^^^^^^
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/src/mibci/artifacts.py", line 18, in sha256
+    with Path(path).open("rb") as stream:
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lipeiye/.local/share/uv/python/cpython-3.12.12-macos-aarch64-none/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/89/wd1vtry17nsdmyxf990522640000gn/T/tmp5fpffrx4/original_models/final/sub-01_seed-0_full-22.pt'
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.458s
+
+FAILED (errors=1)

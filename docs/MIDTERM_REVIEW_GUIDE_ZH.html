@@ -1,0 +1,1720 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EEG 通道选择与模型压缩</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap">
+<style>
+/* Layout: a study guide on EEG chart paper. Sticky contents rail beside one reading column; figures may run wider than the text. */
+:root {
+  --bg: #F1F4F2;
+  --surface: #FBFCFA;
+  --surface-2: #E8EEEA;
+  --ink: #121A21;
+  --ink-2: #46525A;
+  --muted: #66727A;
+  --rule: #D6DED9;
+  --grid: #E2E8E4;
+  --axis: #B9C4BE;
+  --accent: #0B6477;
+  --accent-soft: #DCEDF0;
+  --mark: #FBE49A;
+  --bad: #C4352E;
+  --bad-soft: #F6E1DD;
+  --good: #1D7A4C;
+  --good-soft: #DDEFE4;
+  --bar: #8C979D;
+  --seg-a: #4F5C64;
+  --seg-c: #C9D1CC;
+  --on-seg-a: #FFFFFF;
+  --on-bad: #FFFFFF;
+  --on-seg-c: #121A21;
+  --s-pro: #eb6834;
+  --s-rel: #2a78d6;
+  --s-wn: #1baf7a;
+  --s-rnd: #9AA4A9;
+  --q0: #EEF3F1; --q1: #D3E8EB; --q2: #B9DCE2; --q3: #9DCDD7; --q4: #80BCCA;
+  --q5: #62A9BB; --q6: #4795AA; --q7: #2E7F96; --q8: #186A80; --q9: #0A5568;
+  --f-display: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --f-body: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1316; --surface: #151C20; --surface-2: #1C252A; --ink: #E5EBED; --ink-2: #B3BEC3; --muted: #8B979D;
+    --rule: #273237; --grid: #20292E; --axis: #3A474E; --accent: #6CC0D4; --accent-soft: #16343B; --mark: #5A4B12;
+    --bad: #EE6B5F; --bad-soft: #3A1E1C; --good: #4CC38A; --good-soft: #15322A; --bar: #6F7C83;
+    --seg-a: #93A1A9; --seg-c: #3A464C; --on-seg-a: #0E1316; --on-bad: #0E1316; --on-seg-c: #E5EBED;
+    --s-pro: #d95926; --s-rel: #3987e5; --s-wn: #199e70; --s-rnd: #6E7A80;
+    --q0: #1C2529; --q1: #1E3A41; --q2: #22484F; --q3: #28585F; --q4: #2F6970;
+    --q5: #387B82; --q6: #438E95; --q7: #52A1A8; --q8: #67B5BB; --q9: #82C9CE;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1316; --surface: #151C20; --surface-2: #1C252A; --ink: #E5EBED; --ink-2: #B3BEC3; --muted: #8B979D;
+  --rule: #273237; --grid: #20292E; --axis: #3A474E; --accent: #6CC0D4; --accent-soft: #16343B; --mark: #5A4B12;
+  --bad: #EE6B5F; --bad-soft: #3A1E1C; --good: #4CC38A; --good-soft: #15322A; --bar: #6F7C83;
+  --seg-a: #93A1A9; --seg-c: #3A464C; --on-seg-a: #0E1316; --on-bad: #0E1316; --on-seg-c: #E5EBED;
+  --s-pro: #d95926; --s-rel: #3987e5; --s-wn: #199e70; --s-rnd: #6E7A80;
+  --q0: #1C2529; --q1: #1E3A41; --q2: #22484F; --q3: #28585F; --q4: #2F6970;
+  --q5: #387B82; --q6: #438E95; --q7: #52A1A8; --q8: #67B5BB; --q9: #82C9CE;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.75; -webkit-text-size-adjust: 100%; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code, .mono { font-family: var(--f-mono); font-size: .86em; }
+code { background: var(--surface-2); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+mark { background: linear-gradient(transparent 56%, var(--mark) 56%); color: inherit; padding: 0 .08em; }
+strong, b { font-weight: 600; }
+
+.shell { max-width: 1260px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+@media (min-width: 1120px) { .shell { grid-template-columns: 196px minmax(0, 1fr); gap: 52px; padding-block: 40px 96px; } }
+
+/* contents rail */
+.toc { font-size: 14px; }
+.toc p { margin: 0 0 8px; font: 600 11.5px/1.4 var(--f-mono); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.toc a { display: flex; gap: 8px; align-items: baseline; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-2); text-decoration: none; background: var(--surface); line-height: 1.5; }
+.toc a span { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.toc a[aria-current="true"] { color: var(--accent); border-color: var(--accent); }
+@media (min-width: 1120px) {
+  .toc nav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 32px); }
+  .toc ol { flex-direction: column; gap: 2px; }
+  .toc a { border: 0; background: none; padding: 5px 0; border-radius: 0; }
+  .toc a[aria-current="true"] { font-weight: 600; }
+}
+
+.doc { min-width: 0; }
+.doc > section, .hero { max-width: 980px; }
+.prose, .doc p, .doc li { max-width: 44em; }
+.doc section { padding-top: 56px; margin-top: 8px; border-top: 1px solid var(--rule); }
+.doc section:first-of-type { border-top: 0; }
+
+/* hero */
+.hero { padding: 28px 0 8px; }
+.hero-paper { border: 1px solid var(--rule); border-radius: 14px; padding: 28px clamp(18px, 4vw, 40px) 30px; background-color: var(--surface);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px; background-position: -1px -1px; }
+.eyebrow { margin: 0 0 12px; font: 600 12px/1.5 var(--f-mono); letter-spacing: .06em; color: var(--accent); }
+h1 { font-family: var(--f-display); font-weight: 900; font-size: clamp(2rem, 5.4vw, 3.15rem); line-height: 1.16; margin: 0 0 14px; text-wrap: balance; letter-spacing: .01em; }
+.lead { font-size: 1.1rem; color: var(--ink-2); margin: 0 0 22px; max-width: 42em; }
+.pitch { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px; margin: 0 0 18px; max-width: 46em; }
+.pitch-label { margin: 0 0 6px !important; font: 600 12px/1.5 var(--f-mono); letter-spacing: .06em; color: var(--muted); }
+.pitch p:last-child { margin: 0; }
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 0 0 18px; }
+.finding { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; }
+.finding .fig { margin: 0 0 4px; font: 600 1.6rem/1.2 var(--f-body); color: var(--ink); }
+.finding p:last-child { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+.status { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+.chip { display: inline-block; font: 600 11.5px/1.6 var(--f-mono); letter-spacing: .04em; padding: 0 8px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); margin-right: 6px; vertical-align: 1px; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.bad { background: var(--bad-soft); color: var(--bad); }
+.chip.acc { background: var(--accent-soft); color: var(--accent); }
+
+/* headings */
+h2 { font-family: var(--f-display); font-weight: 900; font-size: clamp(1.55rem, 3.4vw, 2.05rem); line-height: 1.3; margin: 0 0 6px; display: flex; gap: 14px; align-items: baseline; text-wrap: balance; }
+h2 .num { font: 600 .62em/1 var(--f-mono); color: var(--accent); border: 1.5px solid var(--accent); border-radius: 7px; padding: .28em .42em .22em; flex: none; position: relative; top: -.12em; }
+.kicker { color: var(--ink-2); margin: 0 0 8px; font-size: 1.02rem; }
+h3 { font: 600 1.14rem/1.45 var(--f-body); margin: 2.1em 0 .5em; }
+h4 { font: 600 1rem/1.45 var(--f-body); margin: 0 0 .4em; }
+.doc ul, .doc ol { padding-left: 1.3em; }
+.doc li { margin: .25em 0; }
+.note { font-size: 14px; color: var(--muted); }
+
+/* boxes */
+.callout { background: var(--accent-soft); border-radius: 12px; padding: 14px 18px; margin: 18px 0; max-width: 46em; }
+.callout.warn { background: var(--bad-soft); }
+.callout.plain { background: var(--surface-2); }
+.callout p { margin: .3em 0; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin: 14px 0; }
+.two .card ul { margin: 0; }
+.two .card li { font-size: 15px; }
+.rq { margin: 14px 0; padding: 16px 20px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; max-width: 46em; }
+.rq p { margin: .35em 0; }
+.rq p[lang="en"] { font-family: var(--f-display); font-weight: 700; font-size: 1.04rem; line-height: 1.55; }
+.formula { font-family: var(--f-mono); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; margin: 14px 0; overflow-x: auto; white-space: nowrap; max-width: 46em; }
+.formula sub { font-size: .75em; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0 6px; max-width: 46em; }
+.facts div { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; line-height: 1.45; }
+.facts b { display: block; font: 600 1.3rem/1.25 var(--f-body); }
+.facts span { font-size: 13px; color: var(--ink-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
+.chips code { background: var(--surface); border: 1px solid var(--rule); padding: .15em .5em; font-size: 12.5px; }
+.cond-grid { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 4px 14px; align-items: baseline; max-width: 46em; margin: 10px 0; }
+.cond-grid > span { font-size: 14px; color: var(--ink-2); }
+.cond-grid .chips { margin: 0; }
+
+/* tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); margin: 14px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 1.5; }
+th, td { padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+thead th { background: var(--surface-2); font-weight: 600; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.n { font-family: var(--f-mono); font-size: 13px; }
+tr.hl td { background: var(--accent-soft); }
+tr.dim td { color: var(--muted); }
+td code { white-space: nowrap; }
+.lat { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.lat i { display: block; height: 6px; border-radius: 3px; background: var(--bar); flex: none; }
+.macbar { display: flex; align-items: center; gap: 8px; }
+.macbar i { display: block; height: 8px; border-radius: 0 3px 3px 0; background: var(--accent); min-width: 2px; flex: none; }
+.tag { display: inline-block; font: 600 11px/1.6 var(--f-mono); padding: 0 6px; border-radius: 5px; background: var(--surface-2); color: var(--ink-2); margin-left: 6px; white-space: nowrap; }
+.tag.bad { background: var(--bad-soft); color: var(--bad); }
+.tag.acc { background: var(--accent-soft); color: var(--accent); }
+pre.tree { font-family: var(--f-mono); font-size: 13px; line-height: 1.6; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; overflow-x: auto; margin: 14px 0; }
+pre.tree .c { color: var(--muted); }
+
+/* details */
+details { margin: 12px 0; max-width: 980px; }
+details > summary { cursor: pointer; font-weight: 600; font-size: 14.5px; color: var(--accent); list-style-position: inside; width: fit-content; }
+details[open] > summary { margin-bottom: 4px; }
+details.qa { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; margin: 10px 0; max-width: 46em; }
+details.qa > summary { color: var(--ink); font-size: 15.5px; width: auto; }
+details.qa p { margin: .6em 0 .2em; }
+
+/* stages */
+ol.stages { list-style: none; padding: 0 !important; margin: 18px 0; counter-reset: st; max-width: 46em; }
+ol.stages > li { counter-increment: st; position: relative; padding: 0 0 18px 46px; margin: 0; max-width: none; }
+ol.stages > li::before { content: counter(st); position: absolute; left: 0; top: 2px; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); font: 600 13px/27px var(--f-mono); text-align: center; background: var(--bg); }
+ol.stages > li::after { content: ""; position: absolute; left: 15px; top: 34px; bottom: 2px; width: 1.5px; background: var(--rule); }
+ol.stages > li:last-child::after { display: none; }
+.st-h { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.st-h b { font-size: 1.02rem; }
+.where { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+ol.stages p { margin: .2em 0 0; color: var(--ink-2); font-size: 15px; }
+
+/* figures */
+figure { margin: 22px 0; }
+figcaption { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); margin-top: 10px; max-width: 46em; }
+.scrollfig { overflow-x: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); padding: 12px; }
+.scrollfig svg { display: block; width: 100%; height: auto; }
+.chart-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 16px 16px 12px; margin: 18px 0; }
+.chart-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.chart-head h4 { margin: 0; font-size: 15px; }
+.chart-host { width: 100%; min-height: 120px; }
+.chart-host svg { display: block; overflow: visible; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; padding: 0 !important; margin: 4px 0 6px; font-size: 13px; color: var(--ink-2); }
+.legend li { display: flex; align-items: center; gap: 7px; margin: 0; }
+.legend .ln { width: 18px; height: 2px; border-radius: 1px; display: inline-block; }
+.legend .dt { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend .sq { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { font: 500 13px/1 var(--f-body); padding: 7px 12px; border: 0; background: transparent; color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.seg button:disabled { opacity: .4; cursor: not-allowed; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* svg text + marks */
+.chart text, .diagram text { font-family: var(--f-body); }
+.tick { fill: var(--muted); font-family: var(--f-mono) !important; font-size: 11.5px; }
+.axis-title { fill: var(--ink-2); font-size: 12px; font-weight: 500; }
+.dlabel { fill: var(--ink-2); font-size: 12.5px; font-weight: 500; }
+.dlabel.strong { fill: var(--ink); font-weight: 600; }
+.grp { fill: var(--ink); font-size: 13px; font-weight: 600; }
+.rowlbl { fill: var(--ink-2); font-size: 13px; }
+.valtxt { fill: var(--ink); font-family: var(--f-mono) !important; font-size: 12.5px; }
+.valnote { fill: var(--muted); font-size: 11.5px; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.axis { stroke: var(--axis); stroke-width: 1; }
+.zero { stroke: var(--ink-2); stroke-width: 1.25; }
+.thresh { stroke: var(--bad); stroke-width: 1.25; stroke-dasharray: 5 4; }
+.thresh-t { fill: var(--bad); font-size: 12px; font-weight: 600; }
+.series-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.dot { stroke: var(--surface); stroke-width: 2; }
+.dot-full { fill: var(--ink); }
+.hitarea { fill: transparent; }
+.hit { outline: none; cursor: default; }
+.hit:focus-visible .dot, .hit:focus-visible .ci-dot, .hit:focus-visible .bar, .hit:focus-visible .el-dot { stroke: var(--accent); stroke-width: 3; }
+.ci { stroke-width: 2; stroke-linecap: round; }
+.ci-dot { stroke: var(--surface); stroke-width: 2; }
+.bar { stroke: none; }
+.hit:hover .bar { opacity: .82; }
+.hit:hover .dot, .hit:hover .ci-dot { stroke: var(--ink); }
+
+/* tooltip */
+#tip { position: fixed; z-index: 60; pointer-events: none; background: var(--ink); color: var(--surface); border-radius: 8px; padding: 8px 11px; font-size: 12.5px; line-height: 1.45; max-width: 270px; box-shadow: 0 6px 22px rgba(0,0,0,.18); }
+#tip strong { display: block; font: 600 15px/1.3 var(--f-mono); }
+#tip span { display: block; }
+#tip em { display: block; font-style: normal; opacity: .75; }
+
+/* tall segmented bars */
+.segchart { display: grid; gap: 12px; margin: 6px 0 4px; }
+.segrow { display: grid; grid-template-columns: 1fr; gap: 4px; }
+@media (min-width: 640px) { .segrow { grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 14px; } }
+.segname { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.segname span { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.segtrack { display: flex; gap: 2px; height: 28px; min-width: 0; }
+.sg { flex: 0 1 auto; border-radius: 4px; display: flex; align-items: center; overflow: visible; min-width: 0; outline: none; }
+.sg span { padding-left: 8px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.sg.nolabel span { display: none; }
+.sg.a { background: var(--seg-a); color: var(--on-seg-a); }
+.sg.b { background: var(--bad); color: var(--on-bad); }
+.sg.c { background: var(--seg-c); color: var(--on-seg-c); }
+.sg:hover, .sg:focus-visible { filter: brightness(1.08); box-shadow: 0 0 0 2px var(--accent); }
+
+/* electrode map */
+.mapwrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (min-width: 760px) { .mapwrap { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); } }
+.mapwrap svg { width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto; }
+.head { fill: none; stroke: var(--axis); stroke-width: 2; }
+.el-dot { stroke: var(--axis); stroke-width: 1; }
+.el-name { font-size: 10.5px; font-weight: 600; fill: var(--ink); stroke: var(--surface); stroke-width: 2.6px; paint-order: stroke; stroke-linejoin: round; pointer-events: none; }
+.orient { fill: var(--muted); font-size: 12px; }
+.ramp { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-2); margin-top: 8px; flex-wrap: wrap; }
+.ramp .sw { display: flex; gap: 2px; }
+.ramp .sw i { width: 16px; height: 12px; border-radius: 3px; display: block; border: 1px solid var(--rule); }
+
+/* diagrams */
+.lane { fill: var(--surface); stroke: var(--rule); stroke-width: 1.5; }
+.lane-test { fill: var(--accent-soft); stroke: var(--accent); stroke-opacity: .45; }
+.ln-title { fill: var(--ink); font-size: 15px; font-weight: 600; }
+.ln-sub { fill: var(--muted); font-size: 12.5px; }
+.bx { fill: var(--bg); stroke: var(--axis); stroke-width: 1.2; }
+.bx-hot { fill: var(--surface); stroke: var(--accent); stroke-width: 1.6; }
+.bx-title { fill: var(--ink); font-size: 14px; font-weight: 600; }
+.bx-line { fill: var(--ink-2); font-size: 12.5px; }
+.flow { stroke: var(--ink-2); stroke-width: 1.5; fill: none; }
+.flow-acc { stroke: var(--accent); stroke-width: 2.4; fill: none; }
+.mk-ink { fill: var(--ink-2); }
+.mk-acc { fill: var(--accent); }
+.wall { fill: url(#hatch); stroke: var(--ink-2); stroke-width: 1.2; }
+.hatch-bg { fill: var(--surface-2); }
+.hatch-ln { stroke: var(--axis); stroke-width: 2; }
+.lock { fill: var(--surface); stroke: var(--ink); stroke-width: 1.6; }
+.halo { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.lab-acc { fill: var(--accent); font-size: 12.5px; font-weight: 600; }
+.lab-mono { fill: var(--ink-2); font-family: var(--f-mono) !important; font-size: 11px; }
+.tl-axis { stroke: var(--ink-2); stroke-width: 1.2; }
+.tl-win { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+.tl-mi { fill: var(--seg-c); }
+.tl-cue { stroke: var(--ink); stroke-width: 1.6; }
+.tl-dec { stroke: var(--accent); stroke-width: 1.4; }
+.tl-t { fill: var(--ink); font-size: 12.5px; font-weight: 500; }
+.tl-s { fill: var(--ink-2); font-size: 12px; }
+.tl-w { fill: var(--accent); font-size: 12.5px; font-weight: 600; }
+
+.footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule); font-size: 13.5px; color: var(--ink-2); max-width: 980px; }
+.footer ul { padding-left: 1.2em; }
+.footer li { margin: .2em 0; }
+.say { display: grid; grid-template-columns: 1fr; gap: 0; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; background: var(--surface); margin: 14px 0; max-width: 980px; }
+.say-row { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--rule); }
+.say-row:last-child { border-bottom: 0; }
+@media (min-width: 700px) { .say-row { grid-template-columns: 1fr 1fr; } }
+.say-row div { padding: 9px 14px; font-size: 14px; line-height: 1.55; }
+.say-row .no { color: var(--bad); }
+.say-row .no::before { content: "别说 "; font: 600 11px var(--f-mono); color: var(--bad); }
+.say-row .yes::before { content: "改说 "; font: 600 11px var(--f-mono); color: var(--good); }
+.ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 14px 0; }
+.ideas .card p { margin: .3em 0 0; font-size: 14.5px; color: var(--ink-2); }
+.ideas .card .meta { font: 600 11.5px/1.5 var(--f-mono); color: var(--muted); letter-spacing: .03em; }
+.limits { display: grid; gap: 10px; margin: 14px 0; max-width: 46em; }
+.limits .card p { margin: .25em 0 0; font-size: 14.5px; color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) {
+  .seg button, .toc a, .sg { transition: background-color .15s, color .15s, box-shadow .15s; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="toc" aria-label="目录">
+    <nav>
+      <p>目录</p>
+      <ol>
+        <li><a href="#top"><span>0</span>30 秒讲法</a></li>
+        <li><a href="#idea"><span>1</span>实验的想法</a></li>
+        <li><a href="#method"><span>2</span>实验方法</a></li>
+        <li><a href="#done"><span>3</span>具体做了什么</a></li>
+        <li><a href="#code"><span>4</span>代码架构</a></li>
+        <li><a href="#results"><span>5</span>具体结果</a></li>
+        <li><a href="#next"><span>6</span>下一步做什么</a></li>
+        <li><a href="#limits"><span>7</span>Limitations</a></li>
+        <li><a href="#more"><span>8</span>还能做什么</a></li>
+        <li><a href="#qa"><span>9</span>问答准备</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main class="doc">
+    <header class="hero" id="top">
+      <div class="hero-paper">
+        <p class="eyebrow">COMP 690-193 · FALL 2026 · PEIYE LI · 期中 REVIEW 讲解</p>
+        <h1>EEG 通道选择与模型压缩</h1>
+        <p class="lead">一个运动想象 BCI 的软件研究：少用几个电极、把解码器剪小并转成 INT8 之后，在“换了一天”的脑电上，还能多准确地分辨想象的是左手、右手、双脚还是舌头？下面按“想法 → 方法 → 做了什么 → 代码 → 结果 → 下一步 → 局限 → 还能做什么”讲一遍，最后附上问答准备。</p>
+        <div class="pitch">
+          <p class="pitch-label">30 秒讲法（可以照着说）</p>
+          <p>我在 BCI Competition IV 2a（9 个人、两天、22 个电极、4 类运动想象）上，用固定的 EEGNet 做了一个受控对照。第一天的数据用来训练和做所有决定；第二天的数据在代码里锁住，方案冻结后只评一次。我比较了四种选电极的方法：考虑冗余、只看相关性、看网络空间权重、随机，每种保留 16 或 8 个电极，再叠加 INT8 量化和结构剪枝。结果是：<mark>16 个任务相关电极和 22 个一样准</mark>；<mark>考虑冗余没有稳定地胜过只看相关性</mark>，只稳定胜过随机；<mark>INT8 几乎不掉准确率，但在 M4 CPU 上反而慢了 28%</mark>；按验证规则选出的最终方案平均准确率和基线几乎一样（65.01% vs 65.04%），但 9 个人里有 4 个下降超过 2 个百分点。</p>
+        </div>
+        <div class="findings">
+          <div class="finding"><p class="fig">16 ≈ 22</p><p>16 个任务相关电极 66.2–66.8%，全部 22 个 65.0%；只留 8 个时下降 2.9–5.1 个百分点。</p></div>
+          <div class="finding"><p class="fig">+0.6 pp</p><p>冗余感知减仅相关性（16 电极），95% 区间 [−0.3, +1.6] 跨过 0：主问题的答案是“没有可靠优势”。</p></div>
+          <div class="finding"><p class="fig">慢 28%</p><p>INT8 准确率变化 ≤ 0.5 pp，但 22 电极模型 0.358 ms，FP32 只要 0.280 ms；瓶颈是量化后的分组空间卷积。</p></div>
+          <div class="finding"><p class="fig">−0.03 pp</p><p>最终方案（16 电极 + 剪枝 50% + INT8）减全电极 FP32，区间 [−2.16, +2.40]，4/9 人下降超过 2 pp。</p></div>
+        </div>
+        <p class="status"><span class="chip good">进度</span>proposal 里的实验已经全部完成：分析计划在 2026-11-03 冻结后才评估第二天数据，等预算剪枝补充实验在 11-04 完成；研究报告（PDF 11 页）和 19 页幻灯片都有完整初稿（第 18 页“下一步”是 11-08 加的）。剩下的是收尾和可选扩展，见<a href="#next">第 6 部分</a>。</p>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <section id="idea">
+      <h2><span class="num">1</span>实验的想法</h2>
+      <p class="kicker">为什么研究“少电极 + 小模型”，以及具体在问什么。</p>
+
+      <h3>两种“通道”，三个旋钮</h3>
+      <p>可穿戴 BCI 有两份成本：头上要戴多少个电极（每个电极都要接触、放大器通道和佩戴时间），以及解码器要算多少（计算、内存、功耗）。这里最容易混淆的一点是：<strong>EEG 电极</strong>是头皮上的物理测量点，<strong>CNN 的 feature channel</strong> 是网络内部学到的滤波器。剪枝网络永远不会去掉一个电极。所以项目把三种缩减分开来测：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>旋钮</th><th>减少的是什么</th><th>理论上省什么</th><th>本项目怎么设</th></tr></thead>
+          <tbody>
+            <tr><td><b>电极选择</b></td><td>输入：头皮上的测量点</td><td>硬件 + 计算（第一层对每个电极分别计算）</td><td>22 → 16 或 8</td></tr>
+            <tr><td><b>结构剪枝</b></td><td>网络内部学到的特征滤波器</td><td>计算和存储；不改变硬件</td><td>最后一个 pointwise 卷积 16 → 12 或 8 个滤波器</td></tr>
+            <tr><td><b>INT8 量化</b></td><td>每个数用多少 bit</td><td>存储；会不会更快取决于硬件和 runtime</td><td>FP32 → INT8（ONNX Runtime 静态 PTQ）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>研究问题</h3>
+      <div class="rq">
+        <p lang="en">At a fixed EEG channel count, does accounting for redundancy in motor-related band-power features improve held-out-session accuracy over relevance-only and spatial-weight-based selection, and does any advantage survive INT8 quantization?</p>
+        <p>电极数固定时，考虑电极之间 band-power 特征冗余的选法，能不能在留出的第二天数据上，比“只看相关性”和“看网络空间权重”的选法更准？如果能，这个优势在 INT8 量化之后还在不在？</p>
+      </div>
+      <p><strong>假设</strong>：任务相关的电极子集应该比随机子集好；但彼此相关（冗余）的电极不一定可以丢。proposal 里明确写了“不预设准确率或速度一定提升”，所以负结果也是有效的结果。</p>
+
+      <h3>和已有工作的关系</h3>
+      <ul>
+        <li><strong>EEGNet</strong>（Lawhern et al., 2018）：用 depthwise / separable 卷积的紧凑 EEG 解码器，是本项目固定不变的模型。</li>
+        <li><strong>Q-EEGNet</strong>（Schneider et al., 2020）：8-bit 量化的 EEGNet 和面向嵌入式硬件的实现。</li>
+        <li><strong>MI-BMInet</strong>（Wang et al.）：基于空间滤波器的选电极 + 量化 + MCU 部署。本项目的 weightnorm 对照受它启发，是改编，不是复现。</li>
+        <li><strong>EEG-TCNet</strong>（Ingolfsson et al., 2020）：另一个紧凑的运动想象解码器参考。</li>
+      </ul>
+      <div class="callout">
+        <p><strong>贡献定位</strong>：不是提出新算法（选择规则是 mRMR 式的可解释启发式），而是在<strong>同一个固定的 EEGNet 流程</strong>里，把电极选择、冗余项、结构剪枝和数值精度的影响分开，用<strong>留出的第二天</strong>做受控对照，并实测这些压缩在 CPU 上到底省了什么、没省什么。</p>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="method">
+      <h2><span class="num">2</span>实验方法</h2>
+      <p class="kicker">数据怎么来、怎么切、训练和测试怎么分、比较哪些方法、用什么规则做决定。</p>
+
+      <h3>数据：BCI Competition IV 2a（也叫 BNCI 2014-001）</h3>
+      <div class="facts">
+        <div><b>9</b><span>被试</span></div>
+        <div><b>2</b><span>天（session），不同日期录制</span></div>
+        <div><b>6 × 48</b><span>每天 6 个 run，每个 48 个 trial，共 288</span></div>
+        <div><b>22</b><span>EEG 电极，250 Hz（另 3 路 EOG 不用）</span></div>
+        <div><b>4</b><span>类：左手、右手、双脚、舌头；每类每天 72 次</span></div>
+        <div><b>5,184</b><span>trial 总数（9 × 2 × 288）</span></div>
+      </div>
+      <p>数据集带有专家标注的伪迹（artifact）标记。主分析在训练、验证、测试时都去掉被标记的 trial：第一天剩 <b>2,328</b> 个，第二天剩 <b>2,368</b> 个；次分析用同一批模型评第二天的全部 trial。</p>
+
+      <figure>
+        <div class="scrollfig">
+          <svg class="diagram" viewBox="0 0 760 152" role="img" aria-label="一个 trial 的时间线：t=0 注视十字和提示音，t=2 秒出现 cue，模型输入窗口是 2.5 到 4.5 秒，共 2 秒 500 个采样点，窗口结束后加约 0.26 毫秒计算得到决策，运动想象持续到约 6 秒。" style="min-width: 620px">
+            <text class="tl-t" x="40" y="22">注视十字 + 提示音</text>
+            <line class="tl-cue" x1="40" y1="30" x2="40" y2="104"/>
+            <text class="tl-t" x="260" y="22" text-anchor="middle">cue 箭头出现</text>
+            <line class="tl-cue" x1="260" y1="30" x2="260" y2="104"/>
+            <text class="tl-w" x="535" y="22" text-anchor="middle">决策 = 窗口结束 + 约 0.26 ms 计算</text>
+            <line class="tl-dec" x1="535" y1="30" x2="535" y2="66"/>
+            <rect class="tl-mi" x="260" y="46" width="440" height="6" rx="3"/>
+            <text class="tl-s" x="698" y="40" text-anchor="end">运动想象持续到约 6 s</text>
+            <rect class="tl-win" x="315" y="66" width="220" height="38" rx="4"/>
+            <text class="tl-w" x="425" y="90" text-anchor="middle">模型输入：2 s · 500 个采样点</text>
+            <text class="tl-s" x="287" y="80" text-anchor="middle">0.5 s</text>
+            <line class="tl-axis" x1="40" y1="104" x2="712" y2="104"/>
+            <g class="tl-s">
+              <line class="tl-axis" x1="40" y1="104" x2="40" y2="110"/><text x="40" y="126" text-anchor="middle">0</text>
+              <line class="tl-axis" x1="150" y1="104" x2="150" y2="110"/><text x="150" y="126" text-anchor="middle">1</text>
+              <line class="tl-axis" x1="260" y1="104" x2="260" y2="110"/><text x="260" y="126" text-anchor="middle">2</text>
+              <line class="tl-axis" x1="370" y1="104" x2="370" y2="110"/><text x="370" y="126" text-anchor="middle">3</text>
+              <line class="tl-axis" x1="480" y1="104" x2="480" y2="110"/><text x="480" y="126" text-anchor="middle">4</text>
+              <line class="tl-axis" x1="590" y1="104" x2="590" y2="110"/><text x="590" y="126" text-anchor="middle">5</text>
+              <line class="tl-axis" x1="700" y1="104" x2="700" y2="110"/><text x="700" y="126" text-anchor="middle">6</text>
+            </g>
+            <text class="tl-s" x="712" y="148" text-anchor="end">时间（秒，从 trial 开始计）</text>
+          </svg>
+        </div>
+        <figcaption>每个 trial 的时间线。模型只看 cue 后 0.5–2.5 s 这 2 秒，所以即使模型计算只要零点几毫秒，判断最早也要在 cue 后 2.5 s 才能给出。</figcaption>
+      </figure>
+
+      <h3>预处理</h3>
+      <ul>
+        <li>只用 22 个 EEG 电极，保留原记录参考。</li>
+        <li>4 阶 Butterworth 4–38 Hz 带通，用 <code>scipy.signal.sosfilt</code> 做<strong>因果</strong>滤波（只用当前和过去的样本），每个 run 从零状态开始。这和在线回放时的处理完全一样。</li>
+        <li>每个 trial 取 cue 后 0.5–2.5 s 共 500 个采样点，得到 <code>X[N, 22, 500]</code>（float32，单位 µV）。</li>
+        <li>每个电极做 z-score；均值和标准差<strong>只在当前训练分区上</strong>计算。</li>
+      </ul>
+
+      <h3>训练、验证、测试怎么分</h3>
+      <p>这是整个项目最核心的协议：<mark>第一天做所有决定，第二天只评一次</mark>。</p>
+      <ul>
+        <li><b>第一天（Session 1）</b>：三折验证，按完整 run 分组，每折留出 2 个 run（runs 1–2、3–4、5–6）。不随机拆 trial，避免相邻 trial 泄漏。</li>
+        <li><b>第二天（Session 2）</b>：留出测试集，在代码里锁住，方案冻结后才能读取。</li>
+        <li>电极排名、归一化统计量、INT8 校准数据，都只来自对应的训练分区。</li>
+        <li>每个人单独训练、单独测试：检验的是“同一个人换一天还能不能用”，不是“新用户能不能用”。</li>
+      </ul>
+
+      <figure>
+        <div class="scrollfig">
+          <svg class="diagram" viewBox="0 0 960 360" role="img" aria-label="流程图：第一天依次做预处理、三折验证、定训练预算、17 种条件、决策规则并冻结、最终训练；只有冻结之后，箭头才穿过代码锁进入第二天，做一次性测试，再做统计分析。" style="min-width: 780px">
+            <defs>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect class="hatch-bg" width="8" height="8"/>
+                <line class="hatch-ln" x1="0" y1="0" x2="0" y2="8"/>
+              </pattern>
+              <marker id="pipe-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-ink" d="M0,0 L10,5 L0,10 z"/></marker>
+              <marker id="pipe-arr-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="mk-acc" d="M0,0 L10,5 L0,10 z"/></marker>
+            </defs>
+            <rect class="lane" x="8" y="8" width="648" height="344" rx="14"/>
+            <text class="ln-title" x="28" y="40">Session 1 · 第一天</text>
+            <text class="ln-sub" x="28" y="60">训练与验证：所有决定都在这一侧做出</text>
+
+            <rect class="bx" x="28" y="84" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="42" y="112">① 预处理</text>
+            <text class="bx-line" x="42" y="136">因果 4–38 Hz 带通</text>
+            <text class="bx-line" x="42" y="158">cue 后 0.5–2.5 s 窗口</text>
+
+            <rect class="bx" x="238" y="84" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="252" y="112">② 三折验证</text>
+            <text class="bx-line" x="252" y="136">按 run 留出两组</text>
+            <text class="bx-line" x="252" y="158">(1,2) · (3,4) · (5,6)</text>
+
+            <rect class="bx" x="448" y="84" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="462" y="112">③ 定训练预算</text>
+            <text class="bx-line" x="462" y="136">27 条 full-22 验证曲线</text>
+            <text class="bx-line" x="462" y="158">规则选出 475 epochs</text>
+
+            <rect class="bx" x="28" y="228" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="42" y="256">④ 17 种条件</text>
+            <text class="bx-line" x="42" y="280">选电极 · 剪枝 · INT8</text>
+            <text class="bx-line" x="42" y="302">459 次验证训练</text>
+
+            <rect class="bx" x="238" y="228" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="252" y="256">⑤ 决策规则</text>
+            <text class="bx-line" x="252" y="280">只看验证集选方案</text>
+            <text class="bx-line" x="252" y="302">写入 frozen_config</text>
+
+            <rect class="bx bx-hot" x="448" y="228" width="190" height="96" rx="10"/>
+            <text class="bx-title" x="462" y="256">⑥ 最终训练</text>
+            <text class="bx-line" x="462" y="280">第一天全部干净 trial</text>
+            <text class="bx-line" x="462" y="302">459 个模型（3 seeds）</text>
+
+            <line class="flow" x1="218" y1="132" x2="236" y2="132" marker-end="url(#pipe-arr)"/>
+            <line class="flow" x1="428" y1="132" x2="446" y2="132" marker-end="url(#pipe-arr)"/>
+            <path class="flow" d="M543,180 V204 H123 V226" marker-end="url(#pipe-arr)"/>
+            <line class="flow" x1="218" y1="276" x2="236" y2="276" marker-end="url(#pipe-arr)"/>
+            <line class="flow" x1="428" y1="276" x2="446" y2="276" marker-end="url(#pipe-arr)"/>
+
+            <rect class="wall" x="672" y="8" width="20" height="344"/>
+            <path class="lock" d="M676,150 v-7 a6,6 0 0 1 12,0 v7" fill="none"/>
+            <rect class="lock" x="672.5" y="150" width="19" height="15" rx="2.5"/>
+            <text class="lab-mono halo" x="682" y="190" text-anchor="middle">锁</text>
+
+            <rect class="lane lane-test" x="708" y="8" width="244" height="344" rx="14"/>
+            <text class="ln-title" x="726" y="40">Session 2 · 第二天</text>
+            <text class="ln-sub" x="726" y="60">冻结之后只评一次</text>
+
+            <rect class="bx" x="726" y="84" width="208" height="96" rx="10"/>
+            <text class="bx-title" x="740" y="112">⑧ 统计分析</text>
+            <text class="bx-line" x="740" y="136">人内先平均 3 个 seed</text>
+            <text class="bx-line" x="740" y="158">配对 bootstrap ×10,000</text>
+
+            <rect class="bx bx-hot" x="726" y="228" width="208" height="96" rx="10"/>
+            <text class="bx-title" x="740" y="256">⑦ 一次性测试</text>
+            <text class="bx-line" x="740" y="280">459 模型 × FP32 / INT8</text>
+            <text class="bx-line" x="740" y="302">主分析 + 次分析</text>
+
+            <line class="flow-acc" x1="638" y1="276" x2="722" y2="276" marker-end="url(#pipe-arr-acc)"/>
+            <text class="lab-acc halo" x="682" y="264" text-anchor="middle">冻结后才解锁</text>
+            <line class="flow" x1="830" y1="226" x2="830" y2="184" marker-end="url(#pipe-arr)"/>
+          </svg>
+        </div>
+        <figcaption>第二天的数据在代码里锁住：<code>load_session(subject, 2)</code> 默认抛出 <code>PermissionError</code>，<code>evaluate_test.py</code> 只有在 <code>frozen_config.json</code> 存在后才会运行。① 到 ⑥ 的所有选择（预算、电极、剪枝底座、最终方案）都只看第一天。</figcaption>
+      </figure>
+
+      <h3>解码器：EEGNet-8,2</h3>
+      <p>Braindecode 2.0.0 的 EEGNet：F1 = 8、D = 2、F2 = 16、时间卷积核 64（250 Hz 下是 256 ms）、dropout 0.5、max-norm 约束；22 个电极时共 <b>2,420</b> 个参数。训练用 Adam，学习率 1e-3，batch 64，固定 epoch 预算（475），不用 early stopping。所有条件的网络结构和训练预算都一样，只改变输入电极数（剪枝条件再改变 F2）。逐层结构见<a href="#code-eegnet">第 4 部分</a>。</p>
+
+      <h3>电极选择：被测方法和三种对照</h3>
+      <div class="formula" role="math" aria-label="下一个电极等于在未选电极中，使 relevance 减去 0.5 乘以与已选电极平均绝对 Spearman 相关最大的那个">下一个电极 = argmax<sub>c ∉ S</sub> [ relevance(c) − 0.5 × mean<sub>s ∈ S</sub> |ρ(c, s)| ]</div>
+      <ol>
+        <li>对每个训练 trial、每个电极，用 Welch 法算 μ 频带（8–13 Hz）和 β 频带（13–30 Hz）的 log 功率。</li>
+        <li><b>relevance</b>：两个频带的多类 Fisher score（类间方差 ÷ 类内方差）取平均，再在 22 个电极之间缩放到 0–1。</li>
+        <li><b>redundancy</b>：两个电极的 log 功率在所有训练 trial 上的 |Spearman ρ|，两个频带取平均。</li>
+        <li><b>贪心</b>：先选 relevance 最高的电极，之后每次加入“relevance − 0.5 × 与已选电极的平均冗余”最大的电极，取前 16 或前 8 个。</li>
+        <li>选出的电极按原 montage 顺序输入，<b>重新训练</b> EEGNet，输入张量和空间卷积核真的变小。</li>
+      </ol>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>方法</th><th>怎么给电极排序</th><th>在实验里的作用</th></tr></thead>
+          <tbody>
+            <tr><td><b>proposed</b> 冗余感知</td><td>上面的规则，冗余惩罚 0.5</td><td>被测方法</td></tr>
+            <tr><td><b>relevance</b> 仅相关性</td><td>同一规则，惩罚设为 0</td><td>只差一个冗余项，用来隔离冗余项本身的作用</td></tr>
+            <tr><td><b>weightnorm</b> 空间权重</td><td>训练好的 22 电极 EEGNet 中，每个电极的空间卷积权重的 L2 范数</td><td>受 MI-BMInet 启发的强对照（改编，不是复现）</td></tr>
+            <tr><td><b>random1–3</b> 随机</td><td>3 个固定随机子集（seed 690，所有人共用）</td><td>检验“精心挑选”到底有没有用</td></tr>
+            <tr><td><b>full-22</b></td><td>全部 22 个</td><td>参照基线</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">这些相关性只是特征层面的代理，不代表两个电极记录的是同一个神经源。</p>
+
+      <h3>两种压缩</h3>
+      <div class="two">
+        <div class="card">
+          <h4>INT8 量化（训练后量化，PTQ）</h4>
+          <ul>
+            <li>PyTorch → ONNX（opset 18）；先核对 FP32 ONNX 和 PyTorch 输出一致，再量化。</li>
+            <li>ONNX Runtime <code>quantize_static</code>：QDQ 格式、有符号 INT8 激活、per-channel INT8 权重、MinMax 校准。</li>
+            <li>校准数据只用该模型自己的训练 trial。</li>
+            <li>外部输入仍是 float32，ELU、pooling 等仍走浮点：不是“整张图都变成整数”。</li>
+            <li>proposal 规定：验证准确率掉超过 2 pp 才对一个 finalist 试 QAT。实际验证集上的差距都在 0.7 pp 以内，没有触发。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>结构剪枝（次要研究）</h4>
+          <ul>
+            <li>对象：最后一个 pointwise 卷积 <code>conv_separable_point</code> 的 16 个输出滤波器。</li>
+            <li>按 L1 范数去掉最小的 25% 或 50%（留下 12 或 8 个），同时切掉对应的 BatchNorm 通道和分类器输入：张量真的变小，不是置零 mask。</li>
+            <li>之后以学习率 1e-4 微调 100 epoch。</li>
+            <li>只作用于两个底座：full-22 和验证集选出的 relevance-16。“剪枝 50%”的分母是这一层的 16 个滤波器，不是整个模型。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>实验矩阵：17 个条件 × 2 种精度</h3>
+      <div class="cond-grid">
+        <span>基线</span><div class="chips"><code>full-22</code></div>
+        <span>16 个电极</span><div class="chips"><code>proposed-16</code><code>relevance-16</code><code>weightnorm-16</code><code>random1-16</code><code>random2-16</code><code>random3-16</code></div>
+        <span>8 个电极</span><div class="chips"><code>proposed-8</code><code>relevance-8</code><code>weightnorm-8</code><code>random1-8</code><code>random2-8</code><code>random3-8</code></div>
+        <span>剪枝</span><div class="chips"><code>full-22-prune25</code><code>full-22-prune50</code><code>relevance-16-prune25</code><code>relevance-16-prune50</code></div>
+      </div>
+      <p>验证阶段：9 人 × 3 折 × 17 = <b>459</b> 次训练。最终阶段：9 人 × 3 个 seed × 17 = <b>459</b> 个模型，每个都用 FP32 和 INT8 两种精度测试。</p>
+
+      <h3>预先写好的决策规则（只看验证集）</h3>
+      <ol>
+        <li><b>训练预算</b>：27 条 full-22 验证曲线（9 人 × 3 折，各 500 epoch）求平均，做 25-epoch 居中滑动平均，取第一个距最大值 0.5 pp 以内的 25 的倍数，得到 <b>475 epochs</b>（平滑后最大 63.5%，出现在第 498 epoch；475 处为 63.1%）。</li>
+        <li><b>剪枝底座</b>：在未剪枝的减电极候选里，要求验证准确率不低于 full-22 FP32 的 63.54% 减 2 pp，即 61.54%；再依次比电极数（少的优先）、参数字节（少的优先）、准确率（高的优先），得到 <b>relevance-16</b>（INT8 验证 66.13%，三种 16 电极方法里最高）。</li>
+        <li><b>最终方案</b>：同样的规则用在所有候选（含剪枝）上，得到 <b>relevance-16-prune50 INT8</b>：验证 64.87%，2,420 参数字节。8 电极的候选没有一个过线（最好的 weightnorm-8 只有 59.85%）。随机子集只做对照，不当候选。</li>
+      </ol>
+      <details>
+        <summary>展开：决定最终方案的那张验证表</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>候选</th><th class="n">电极</th><th class="n">验证 FP32</th><th class="n">验证 INT8</th><th class="n">参数字节 INT8</th><th>过线（≥ 61.54%）</th></tr></thead>
+            <tbody>
+              <tr><td><code>full-22</code></td><td class="n">22</td><td class="n">63.54%</td><td class="n">63.39%</td><td class="n">3,260</td><td>是（基线）</td></tr>
+              <tr><td><code>full-22-prune25</code></td><td class="n">22</td><td class="n">64.20%</td><td class="n">63.54%</td><td class="n">2,888</td><td>是</td></tr>
+              <tr><td><code>full-22-prune50</code></td><td class="n">22</td><td class="n">63.05%</td><td class="n">62.94%</td><td class="n">2,516</td><td>是</td></tr>
+              <tr><td><code>proposed-16</code></td><td class="n">16</td><td class="n">64.16%</td><td class="n">64.35%</td><td class="n">3,164</td><td>是</td></tr>
+              <tr><td><code>relevance-16</code></td><td class="n">16</td><td class="n">65.48%</td><td class="n">66.13%</td><td class="n">3,164</td><td>是，剪枝底座</td></tr>
+              <tr><td><code>weightnorm-16</code></td><td class="n">16</td><td class="n">64.51%</td><td class="n">63.96%</td><td class="n">3,164</td><td>是</td></tr>
+              <tr><td><code>relevance-16-prune25</code></td><td class="n">16</td><td class="n">65.93%</td><td class="n">65.75%</td><td class="n">2,792</td><td>是</td></tr>
+              <tr class="hl"><td><code>relevance-16-prune50</code></td><td class="n">16</td><td class="n">65.19%</td><td class="n">64.87%</td><td class="n">2,420</td><td>是，<b>最终方案（INT8）</b></td></tr>
+              <tr class="dim"><td><code>proposed-8</code></td><td class="n">8</td><td class="n">58.84%</td><td class="n">58.62%</td><td class="n">3,036</td><td>否</td></tr>
+              <tr class="dim"><td><code>relevance-8</code></td><td class="n">8</td><td class="n">58.21%</td><td class="n">58.11%</td><td class="n">3,036</td><td>否</td></tr>
+              <tr class="dim"><td><code>weightnorm-8</code></td><td class="n">8</td><td class="n">59.85%</td><td class="n">59.81%</td><td class="n">3,036</td><td>否</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">来源：<code>results/validation/summary.csv</code>、<code>pruning_base.json</code>、<code>frozen_config.json</code>。验证准确率先在每人的 3 折内平均，再平均 9 人。</p>
+      </details>
+
+      <h3>统计口径</h3>
+      <ul>
+        <li>主分析：第二天无伪迹 trial；次分析：第二天全部 trial（同一批模型，不重新训练）。</li>
+        <li>先在每个人内部平均 3 个 seed，再在 9 个人上汇总：独立样本是 <b>9 个人</b>，不是 27 个模型。</li>
+        <li>差值都是配对的（同一个人两种条件相减），区间是被试层面的 percentile bootstrap：10,000 次重采样、95%、seed 690。区间是探索性的，没有做多重比较校正。</li>
+        <li>另外报告 macro-F1、各类 recall、混淆矩阵，以及“下降超过 2 pp 的人数”。</li>
+      </ul>
+
+      <h3>效率怎么测</h3>
+      <ul>
+        <li>ONNX Runtime 1.31.1，Apple M4 CPU（Mac mini），batch 1、单线程，100 次预热 + 1,000 次计时，报告中位数和 P95。</li>
+        <li>解析成本：参数量、MACs、按“层输入 + 输出”调度估算的激活张量峰值；ORT profiler 的逐节点耗时；图优化后实际执行的算子类型。</li>
+        <li>预处理单独计时：每个 2 s 窗口 0.04–0.09 ms。</li>
+      </ul>
+    </section>
+
+    <!-- 3 -->
+    <section id="done">
+      <h2><span class="num">3</span>具体做了什么</h2>
+      <p class="kicker">按实际执行顺序，每一步的产出都在仓库里。</p>
+      <ol class="stages">
+        <li><div class="st-h"><b>环境与数据</b><span class="where">results/data_summary.csv</span></div><p>uv 锁定的 Python 3.12 环境（PyTorch 2.15.0、Braindecode 2.0.0、ONNX Runtime 1.31.1）。用 MOABB 下载 18 个 <code>.mat</code>（9 人 × 2 天），记录每个文件的 SHA-256，预处理成 18 个 NPZ 缓存。</p></li>
+        <li><div class="st-h"><b>Pilot（只作开发证据）</b><span class="where">results/pilot/</span></div><p>P1、22 电极、FP32、500 epoch、三折验证，确认整条流程能跑通（最佳 epoch 的验证准确率约 77%）。不进入任何结论。</p></li>
+        <li><div class="st-h"><b>验证：full 阶段</b><span class="where">results/validation/budget.json</span></div><p>27 次 full-22 训练（9 人 × 3 折，各 500 epoch），每个 epoch 记录验证准确率、每 25 epoch 存检查点，然后按规则定出训练预算 475。</p></li>
+        <li><div class="st-h"><b>验证：子集与压缩</b><span class="where">results/validation/</span></div><p>每折在训练分区上重新给电极排名，训练 12 种减电极条件（full-22 直接取第 475 epoch 的检查点），导出 ONNX 并做 INT8；选出剪枝底座 relevance-16；对 full-22 和 relevance-16 剪枝、微调、量化。合计 459 条验证记录。</p></li>
+        <li><div class="st-h"><b>冻结</b><span class="where">results/frozen_config.json</span></div><p>决策规则选出 relevance-16-prune50 INT8，连同预算、种子、比较计划、统计方法和验证汇总表的 SHA-256 一起写入（时间戳 2026-11-03 16:54）。在此之前没有对第二天打过分。</p></li>
+        <li><div class="st-h"><b>最终训练</b><span class="where">results/final/</span></div><p>在第一天全部干净 trial 上重新排名、重新训练：9 人 × 3 seeds × 17 条件 = 459 个模型，全部导出 FP32 和 INT8 ONNX。</p></li>
+        <li><div class="st-h"><b>第二天测试（一次）</b><span class="where">results/test/</span></div><p>459 个模型 × 两种精度 × 主/次分析，保存逐 trial 预测。</p></li>
+        <li><div class="st-h"><b>性能测量与统计分析</b><span class="where">results/benchmark/ · results/analysis/</span></div><p>在 M4 CPU 上测每种架构的延迟和逐层 profile（每种架构用 P1、seed 0 的模型代表）；<code>analyze.py</code> 生成全部表格、配对区间和图。</p></li>
+        <li><div class="st-h"><b>回放演示</b><span class="where">results/demo/replay_participant3.mp4</span></div><p>把 P3 第二天的一个 run 按 250 Hz 流式送进同样的因果滤波和最终 INT8 模型，生成视频。</p></li>
+        <li><div class="st-h"><b>维护与补充实验（11-04）</b><span class="where">results/supplementary/matched_budget/</span></div><p>恢复锁定环境，重新下载数据且 SHA-256 全部匹配；对 459 条测试记录做深度审计（从逐 trial 预测重算所有指标，结果一致）；增加防覆盖保护；做等预算剪枝补充实验：在 Apple M5 上独立重建 54 个底座 + 162 个分支 = 216 个模型。</p></li>
+        <li><div class="st-h"><b>交付物</b><span class="where">docs/ · presentation/ · release/</span></div><p>研究报告 <code>REPORT.md</code> / <code>REPORT.pdf</code>（11 页）、19 页 HTML 幻灯片（带讲稿和回放视频；11-04 交付包里还是加“下一步”页之前的 18 页版）、中文零基础导读 <code>BEGINNER_GUIDE_ZH.md</code>、交付包 <code>COMP690_completed_2026-11-04.zip</code>。</p></li>
+      </ol>
+      <div class="callout plain">
+        <p><b>算力安排</b>：按原设定，P1–6 在 Apple GPU（MPS）上训练，P7–9 在 CPU 上训练，两组进程池并行。</p>
+        <p><b>来源提醒</b>：当前副本里主实验的原始权重（validation/final 共 2,754 个 <code>.pt</code> / <code>.onnx</code>）不在了；所有记录和逐 trial 预测都在，审计一致。现在能直接运行的模型是 M5 上独立重建的补充模型，现场演示或继续做实验时要说明来源。</p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="code">
+      <h2><span class="num">4</span>代码架构</h2>
+      <p class="kicker">一个 Python 包负责“怎么做”，一组脚本负责“按什么顺序做”，每一步把结果落盘给下一步读。</p>
+      <p>Python 包 <code>mibci</code>（<code>src/mibci/</code>）实现数据、选择、模型、训练、剪枝、部署和成本模型；<code>scripts/</code> 里 23 个 Python 脚本加 <code>run_all.sh</code> 是流水线的各个阶段；每个阶段把 JSON 记录写进 <code>results/</code>，把模型写进 <code>data.nosync/models/</code>。项目没有 Web 服务，也没有统一 CLI。</p>
+
+      <h3>目录</h3>
+<pre class="tree">project/
+├── src/mibci/            <span class="c">核心包：11 个模块 + __init__.py</span>
+├── scripts/              <span class="c">流水线入口：23 个 .py + run_all.sh</span>
+├── tests/                <span class="c">10 个 unittest</span>
+├── results/              <span class="c">所有记录、表格、图（历史证据）</span>
+│   ├── validation/  final/  test/   <span class="c">各 459 条 JSON</span>
+│   ├── frozen_config.json           <span class="c">冻结的方案与统计计划</span>
+│   ├── benchmark/  analysis/  demo/
+│   └── supplementary/matched_budget/
+├── data.nosync/          <span class="c">raw .mat、processed .npz、models/</span>
+├── docs/                 <span class="c">报告、导读、复现说明、工作日志、证据</span>
+└── presentation/         <span class="c">19 页幻灯片：deck_source/ → index.html</span></pre>
+
+      <h3>核心包 <code>src/mibci/</code></h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>模块</th><th>负责什么</th><th>关键接口</th></tr></thead>
+          <tbody>
+            <tr><td><code>data.py</code></td><td>22 个电极的固定顺序、类别、MOABB 下载、按 run 因果滤波与切窗、缓存；第二天读取锁</td><td><code>preprocess_session</code>、<code>load_session(s, 2)</code> → <code>PermissionError</code></td></tr>
+            <tr><td><code>splits.py</code></td><td>按完整 run 分三折</td><td><code>VAL_RUNS</code>、<code>fold_masks</code></td></tr>
+            <tr><td><code>selection.py</code></td><td>Welch 频带功率、Fisher relevance、Spearman 冗余、贪心排名、weightnorm、随机子集</td><td><code>rank_channels</code>、<code>greedy_ranking</code>、<code>condition_subsets</code></td></tr>
+            <tr><td><code>model.py</code></td><td>Braindecode EEGNet 构建；模型 bundle 存取；去掉 max-norm 参数化的部署副本</td><td><code>build_eegnet</code>、<code>save_bundle</code> / <code>load_bundle</code>、<code>deploy_copy</code></td></tr>
+            <tr><td><code>train.py</code></td><td>固定 epoch 训练（Adam，无 early stopping）、只在训练集上拟合的 z-score、打分</td><td><code>TrainConfig</code>、<code>ChannelStandardizer</code>、<code>fit</code>、<code>scores</code></td></tr>
+            <tr><td><code>experiment.py</code></td><td>结果/模型目录、被试到设备的分配、第一天的分区、单次训练、进程池</td><td><code>train_run</code>、<code>session1</code>、<code>device_for</code>、<code>run_pool</code></td></tr>
+            <tr><td><code>prune.py</code></td><td>pointwise 卷积的结构化剪枝，同步切 BatchNorm 和分类器</td><td><code>prune_pointwise</code>（微调 100 epoch，lr 1e-4）</td></tr>
+            <tr><td><code>deploy.py</code></td><td>ONNX 导出、静态 INT8 PTQ、单线程 ORT 会话、延迟、逐节点 profile、执行算子</td><td><code>export_onnx</code>、<code>quantize_int8</code>、<code>latency</code>、<code>op_profile</code></td></tr>
+            <tr><td><code>costs.py</code></td><td>用 forward hook 统计逐层参数、MACs、输入/输出元素数，估算激活峰值</td><td><code>layer_costs</code>、<code>cost_summary</code></td></tr>
+            <tr><td><code>artifacts.py</code></td><td>断点续跑的安全检查、原子 JSON 写入、SHA-256</td><td><code>completed</code>、<code>write_json</code>、<code>require_files</code></td></tr>
+            <tr><td><code>env.py</code></td><td>记录 Python、CPU、库版本等环境信息</td><td><code>environment</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>流水线脚本（按运行顺序）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>阶段</th><th>脚本</th><th>做什么</th><th>写到哪里</th></tr></thead>
+          <tbody>
+            <tr><td>数据</td><td><code>prepare_data.py</code></td><td>下载、预处理、缓存，记录哈希和计数</td><td><code>data.nosync/processed/</code>、<code>results/data_summary.csv</code></td></tr>
+            <tr><td>验证</td><td><code>run_validation.py --stage full</code></td><td>27 次 full-22，500 epoch，逐 epoch 曲线和检查点</td><td><code>results/validation/full/</code></td></tr>
+            <tr><td></td><td><code>choose_budget.py</code></td><td>按规则定 epoch 预算</td><td><code>validation/budget.json</code></td></tr>
+            <tr><td></td><td><code>run_validation.py --stage subsets</code></td><td>每折排名并训练各电极条件</td><td><code>validation/rankings/</code>、<code>runs/</code></td></tr>
+            <tr><td></td><td><code>quantize_models.py --phase validation</code></td><td>导出 ONNX、INT8，并在留出 run 上打分</td><td><code>validation/quant/</code></td></tr>
+            <tr><td></td><td><code>summarize_validation.py --pruning-base</code></td><td>选剪枝底座</td><td><code>validation/pruning_base.json</code></td></tr>
+            <tr><td></td><td><code>run_pruning.py --phase validation</code></td><td>剪枝 + 微调（之后再量化一次）</td><td><code>validation/runs/</code></td></tr>
+            <tr><td>冻结</td><td><code>summarize_validation.py --freeze</code></td><td>决策规则 → 冻结计划</td><td><code>results/frozen_config.json</code></td></tr>
+            <tr><td>最终</td><td><code>train_final.py</code> → <code>run_pruning.py</code> → <code>quantize_models.py</code>（<code>--phase final</code>）</td><td>第一天全部数据，3 个 seed，导出两种精度</td><td><code>results/final/</code></td></tr>
+            <tr><td>测试</td><td><code>evaluate_test.py</code></td><td>没有冻结文件就拒绝运行；评第二天</td><td><code>results/test/</code></td></tr>
+            <tr><td>分析</td><td><code>benchmark.py</code>、<code>analyze.py</code></td><td>CPU 延迟与 profile；统计表、配对区间、图</td><td><code>results/benchmark/</code>、<code>results/analysis/</code></td></tr>
+            <tr><td>演示</td><td><code>replay_demo.py</code></td><td>250 Hz 流式回放并录视频</td><td><code>results/demo/</code></td></tr>
+            <tr><td>补充</td><td><code>run_matched_control.py</code> plan / train / evaluate / analyze</td><td>等预算剪枝对照</td><td><code>results/supplementary/matched_budget/</code></td></tr>
+            <tr><td>交付</td><td><code>build_report.py</code>、<code>export_report_pdf.py</code>、<code>build_presentation.py</code>、<code>audit_project.py</code>、<code>package_release.py</code></td><td>报告、PDF、幻灯片、审计、打包</td><td><code>docs/</code>、<code>presentation/</code>、<code>release/</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">另有工具脚本：<code>pilot_baseline.py</code>、<code>infer_bundle.py</code>（用 bundle 做推理）、<code>benchmark_memory.py</code>（独立进程测 RSS）、<code>manifest_results.py</code>、<code>record_maintenance.py</code>、<code>complete_supplement.py</code>。完整的命令行参数见 README 第 9 节。</p>
+
+      <h3 id="code-eegnet">EEGNet 逐层：成本在哪里</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>层</th><th>做什么</th><th>输出形状（22 电极）</th><th class="n">参数</th><th>MACs 占比（共 5,885,088）</th></tr></thead>
+          <tbody>
+            <tr><td>输入</td><td>22 个电极 × 500 个采样点</td><td><code>1×22×500</code></td><td class="n">—</td><td>—</td></tr>
+            <tr><td><code>conv_temporal</code><span class="tag acc">随电极数变</span></td><td>1×64 时间卷积，8 个滤波器，对每个电极分别做</td><td><code>8×22×501</code></td><td class="n">512</td><td><div class="macbar"><i style="width:115px"></i><span class="mono">95.9%</span></div></td></tr>
+            <tr><td><code>conv_spatial</code><span class="tag bad">INT8 变慢处</span></td><td>depthwise 空间卷积（22×1，D = 2）：跨电极加权求和</td><td><code>16×1×501</code></td><td class="n">352</td><td><div class="macbar"><i style="width:4px"></i><span class="mono">3.0%</span></div></td></tr>
+            <tr><td>BN + ELU + 平均池化 /4</td><td></td><td><code>16×1×125</code></td><td class="n">—</td><td>—</td></tr>
+            <tr><td><code>conv_separable_depth</code></td><td>1×16 depthwise 卷积</td><td><code>16×1×126</code></td><td class="n">256</td><td><div class="macbar"><i style="width:2px"></i><span class="mono">0.5%</span></div></td></tr>
+            <tr><td><code>conv_separable_point</code><span class="tag">剪枝对象</span></td><td>1×1 pointwise，F2 = 16 个输出滤波器</td><td><code>16×1×126</code></td><td class="n">256</td><td><div class="macbar"><i style="width:2px"></i><span class="mono">0.5%</span></div></td></tr>
+            <tr><td>BN + ELU + 平均池化 /8</td><td></td><td><code>16×1×15</code></td><td class="n">—</td><td>—</td></tr>
+            <tr><td>dense（max-norm）</td><td>展平 240 → 4 类 logits</td><td><code>4</code></td><td class="n">964</td><td><div class="macbar"><i style="width:2px"></i><span class="mono">0.02%</span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">卷积和 dense 共 2,340 个参数，3 个 BatchNorm 再加 80 个，合计 2,420。来源：<code>results/benchmark/benchmark.json</code> 的 <code>layer_costs</code>。</p>
+      <p>这张表直接解释了后面的效率结果：① 95.9% 的 MACs 在第一层时间卷积里，而它对每个电极单独做，所以计算量、激活内存和延迟基本跟电极数成正比；② 剪枝作用在最后的 pointwise 卷积，那里只有 0.5% 的 MACs，所以剪掉一半滤波器后参数少了 27%，MACs 只少了 0.4%。</p>
+
+      <h3>防泄漏、防覆盖的工程设计</h3>
+      <ul>
+        <li><b>第二天锁</b>：<code>data.load_session(s, 2)</code> 默认抛 <code>PermissionError</code>，只有 <code>final_evaluation=True</code> 才能读。</li>
+        <li><b>冻结闸门</b>：<code>evaluate_test.py</code>、<code>train_final.py</code> 要求 <code>frozen_config.json</code> 存在；已冻结时 <code>choose_budget.py</code>、<code>summarize_validation.py</code> 拒绝重新选择。</li>
+        <li><b>冻结文件存了验证汇总表的 SHA-256</b>：可以检查内部一致性，但不能独立证明时间先后。</li>
+        <li><b>不会静默重训</b>：<code>artifacts.completed()</code> 只有在 JSON 记录、非空模型文件、元数据都对得上时才跳过；记录还在但模型丢了就报错，不会悄悄重训覆盖历史结果。</li>
+        <li><b>原子写入</b>：<code>write_json()</code> 先写临时文件再替换，拒绝 NaN / Infinity。</li>
+        <li><b>补充实验协议</b>：<code>protocol.json</code> 固定原配置、通道排名和核心源码的哈希；代码一改，旧计划就拒绝继续。</li>
+        <li><b>10 个测试</b>：第二天锁、run 分折不重叠、归一化只用训练集、剪枝真的缩小张量、ONNX FP32 一致且 INT8 输入仍是 float32（5 项）；产物恢复保护（3 项）；补充协议保护（2 项）。</li>
+      </ul>
+
+      <h3>数据和模型的接口约定</h3>
+      <ul>
+        <li>输入：<code>X: float32 [N, 22, 500]</code>，单位 µV，电极顺序固定为 Fz、FC3 … POz（不能按字母重排）。</li>
+        <li>模型 bundle（<code>.pt</code>）：<code>state_dict</code> + F2 + 所选电极索引 + 训练集 mean / std + 来源元数据（被试、seed、epoch、设备）。</li>
+        <li>ONNX：<code>eeg: float32[N, C, 500] → logits[N, 4]</code>，只有 batch 维是动态的；选电极和归一化在图外完成。</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section id="results">
+      <h2><span class="num">5</span>具体结果</h2>
+      <p class="kicker">以下都是第二天、无伪迹 trial 的准确率：先在每人内平均 3 个 seed，再平均 9 个人。四类随机猜是 25%；“pp”指百分点。</p>
+
+      <h3>主要条件一览</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>条件</th><th class="n">电极</th><th class="n">FP32</th><th class="n">INT8</th><th class="n">FP32 减 full-22 FP32（95% 区间）</th><th class="n">下降 &gt; 2 pp 的人数</th></tr></thead>
+          <tbody>
+            <tr><td><code>full-22</code></td><td class="n">22</td><td class="n">65.04%</td><td class="n">65.30%</td><td class="n">基线</td><td class="n">—</td></tr>
+            <tr><td><code>proposed-16</code></td><td class="n">16</td><td class="n">66.78%</td><td class="n">66.64%</td><td class="n">+1.74 [−0.46, +4.06]</td><td class="n">1</td></tr>
+            <tr><td><code>relevance-16</code></td><td class="n">16</td><td class="n">66.21%</td><td class="n">66.17%</td><td class="n">+1.17 [−1.27, +3.75]</td><td class="n">2</td></tr>
+            <tr><td><code>weightnorm-16</code></td><td class="n">16</td><td class="n">66.82%</td><td class="n">66.44%</td><td class="n">+1.78 [−0.98, +4.63]</td><td class="n">2</td></tr>
+            <tr><td><code>proposed-8</code></td><td class="n">8</td><td class="n">60.59%</td><td class="n">60.46%</td><td class="n">−4.45 [−7.59, −1.05]</td><td class="n">7</td></tr>
+            <tr><td><code>relevance-8</code></td><td class="n">8</td><td class="n">59.92%</td><td class="n">59.61%</td><td class="n">−5.12 [−8.66, −1.33]</td><td class="n">6</td></tr>
+            <tr><td><code>weightnorm-8</code></td><td class="n">8</td><td class="n">62.10%</td><td class="n">62.27%</td><td class="n">−2.94 [−6.79, +0.29]</td><td class="n">4</td></tr>
+            <tr class="hl"><td><code>relevance-16-prune50</code> 最终方案</td><td class="n">16</td><td class="n">64.99%</td><td class="n">65.01%</td><td class="n">−0.05 [−2.12, +2.25]</td><td class="n">3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details>
+        <summary>展开：全部 17 个条件 × 2 种精度（主分析）</summary>
+        <div class="table-wrap">
+          <table id="full-table">
+            <thead><tr><th>条件</th><th>精度</th><th class="n">准确率</th><th class="n">macro-F1</th><th class="n">减 full-22 FP32（95% 区间）</th><th class="n">下降 &gt; 2 pp</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note">来源：<code>results/analysis/conditions_primary.csv</code>。次分析（含伪迹 trial）见 <code>conditions_secondary.csv</code>，结论相同，例如最终方案在次分析里比基线低 0.3 pp。</p>
+      </details>
+
+      <h3>16 个电极够用，8 个不够</h3>
+      <div class="chart-card">
+        <div class="chart-head">
+          <h4>准确率随保留电极数的变化</h4>
+          <div class="seg" role="group" aria-label="精度">
+            <button type="button" id="acc-fp32" aria-pressed="true" data-prec="fp32">FP32</button>
+            <button type="button" id="acc-int8" aria-pressed="false" data-prec="int8">INT8</button>
+          </div>
+        </div>
+        <ul class="legend">
+          <li><span class="ln" style="background:var(--s-pro)"></span>冗余感知 proposed</li>
+          <li><span class="ln" style="background:var(--s-rel)"></span>仅相关性 relevance</li>
+          <li><span class="ln" style="background:var(--s-wn)"></span>空间权重 weightnorm</li>
+          <li><span class="ln" style="background:var(--s-rnd)"></span>随机（3 组平均）</li>
+          <li><span class="dt" style="background:var(--ink)"></span>全部 22 个</li>
+        </ul>
+        <div class="chart-host" id="acc-chart"></div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>方法</th><th class="n">8 · FP32</th><th class="n">16 · FP32</th><th class="n">8 · INT8</th><th class="n">16 · INT8</th></tr></thead>
+              <tbody>
+                <tr><td>冗余感知 proposed</td><td class="n">60.59</td><td class="n">66.78</td><td class="n">60.46</td><td class="n">66.64</td></tr>
+                <tr><td>仅相关性 relevance</td><td class="n">59.92</td><td class="n">66.21</td><td class="n">59.61</td><td class="n">66.17</td></tr>
+                <tr><td>空间权重 weightnorm</td><td class="n">62.10</td><td class="n">66.82</td><td class="n">62.27</td><td class="n">66.44</td></tr>
+                <tr><td>随机（3 组平均）</td><td class="n">58.28</td><td class="n">63.50</td><td class="n">58.09</td><td class="n">63.46</td></tr>
+                <tr><td>全部 22 个</td><td class="n" colspan="2">65.04（22 个）</td><td class="n" colspan="2">65.30（22 个）</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <ul>
+        <li>16 个电极：三种任务相关的方法都在 66.2–66.8%，略高于全部 22 个的 65.0%，但区间都包含 0，所以只能说<b>持平</b>，不能说更好。</li>
+        <li>8 个电极：全部下降。weightnorm −2.9、proposed −4.4、relevance −5.1 pp（FP32）；三个随机子集平均只有 58.3%。</li>
+        <li>INT8 的曲线和 FP32 几乎重合（点上面的按钮切换）。</li>
+      </ul>
+
+      <h3>研究问题的答案：冗余项没有带来可靠提升</h3>
+      <div class="chart-card">
+        <div class="chart-head">
+          <h4>冗余感知减各对照（9 人配对差值，95% bootstrap 区间）</h4>
+          <div class="seg" role="group" aria-label="精度">
+            <button type="button" id="forest-fp32" aria-pressed="true" data-prec="fp32">FP32</button>
+            <button type="button" id="forest-int8" aria-pressed="false" data-prec="int8">INT8</button>
+          </div>
+        </div>
+        <ul class="legend">
+          <li><span class="dt" style="background:var(--ink-2)"></span>区间跨过 0</li>
+          <li><span class="dt" style="background:var(--accent)"></span>区间整体在 0 以上</li>
+        </ul>
+        <div class="chart-host" id="forest-chart"></div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>比较</th><th class="n">FP32 差值 [95% 区间]</th><th class="n">INT8 差值 [95% 区间]</th><th>9 人中：proposed 更好 / 更差 / 相同</th></tr></thead>
+              <tbody>
+                <tr><td>16 · vs 仅相关性</td><td class="n">+0.58 [−0.26, +1.58]</td><td class="n">+0.47 [−0.42, +1.50]</td><td>2 / 1 / 6</td></tr>
+                <tr><td>16 · vs 空间权重</td><td class="n">−0.04 [−1.50, +1.53]</td><td class="n">+0.20 [−1.38, +1.77]</td><td>4 / 5 / 0</td></tr>
+                <tr><td>16 · vs 随机均值</td><td class="n">+3.28 [+1.31, +5.41]</td><td class="n">+3.18 [+1.21, +5.26]</td><td>8 / 1 / 0</td></tr>
+                <tr><td>8 · vs 仅相关性</td><td class="n">+0.68 [−0.67, +2.70]</td><td class="n">+0.85 [−0.10, +2.66]</td><td>1 / 1 / 7</td></tr>
+                <tr><td>8 · vs 空间权重</td><td class="n">−1.51 [−4.10, +1.34]</td><td class="n">−1.81 [−4.27, +0.78]</td><td>2 / 7 / 0</td></tr>
+                <tr><td>8 · vs 随机均值</td><td class="n">+2.32 [+0.15, +4.17]</td><td class="n">+2.37 [+0.25, +4.01]</td><td>8 / 1 / 0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <ul>
+        <li><b>vs 仅相关性</b>：+0.58（16）/ +0.68（8）pp，区间跨过 0。多数人两种规则选出的电极完全相同，差值就是 0：16 电极有 6 人、8 电极有 7 人打平。</li>
+        <li><b>vs 空间权重</b>：−0.04（16）/ −1.51（8）pp；8 个电极时 weightnorm 在 7/9 人上更好。</li>
+        <li><b>vs 随机</b>：+3.28（16）/ +2.32（8）pp，区间不含 0，8/9 人更好。“任务相关的选择比随机好”这一半假设成立。</li>
+        <li>INT8 之后结论不变：每项差值的变化都不超过 0.3 pp。</li>
+      </ul>
+      <div class="callout">
+        <p><b>一句话</b>：对主问题的回答是“没有”。冗余项没有带来可靠提升。这是针对“band-power 的 |Spearman ρ| + 固定惩罚 0.5”这个具体代理的负结果，不代表所有冗余度量都没用。</p>
+      </div>
+
+      <h3>为什么冗余项几乎没起作用</h3>
+      <ul>
+        <li>任意两个电极的 band power |ρ| 平均是 <b>0.74</b>（每人 0.66–0.84）。功率在 trial 之间是整个头皮一起涨落的，所以每个候选电极看起来都“差不多一样冗余”。</li>
+        <li>选第 8 个电极时，各候选的惩罚项（0.5 × 平均冗余）之间只差约 <b>0.13</b>（每人 0.06–0.21），而 relevance 在 0–1 之间分得很开，所以惩罚通常只会调换几乎打平的候选。</li>
+        <li>结果：最终（seed 0）排名中，16 电极有 6/9 人、8 电极有 7/9 人两种规则选出同一组电极；连同 27 次验证折一起算，36 次里分别有 15 次和 25 次完全相同。</li>
+        <li>启示：先去掉所有电极共有的波动，再计算冗余，这可以作为下一步（见第 6 部分）。</li>
+      </ul>
+      <p class="note">|ρ| 和惩罚项差距由本页作者用项目代码在第一天全部干净 trial 上重新计算（没有读第二天），与幻灯片第 10 页一致。</p>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <h4>每个电极被几个人选中（最终训练，seed 0）</h4>
+          <div class="controls">
+            <div class="seg" role="group" aria-label="方法">
+              <button type="button" id="map-m-proposed" aria-pressed="true" data-m="proposed">冗余感知</button>
+              <button type="button" id="map-m-relevance" aria-pressed="false" data-m="relevance">仅相关性</button>
+              <button type="button" id="map-m-weightnorm" aria-pressed="false" data-m="weightnorm">空间权重</button>
+              <button type="button" id="map-m-score" aria-pressed="false" data-m="score">relevance 分数</button>
+            </div>
+            <div class="seg" role="group" aria-label="电极数">
+              <button type="button" id="map-k-8" aria-pressed="true" data-k="8">8 个</button>
+              <button type="button" id="map-k-16" aria-pressed="false" data-k="16">16 个</button>
+            </div>
+          </div>
+        </div>
+        <div class="mapwrap">
+          <div>
+            <svg id="map-svg" viewBox="-222 -228 444 448" role="group" aria-label="22 个电极的头皮位置图，颜色越深表示被越多被试选中">
+              <circle class="head" cx="0" cy="0" r="196"/>
+              <path class="head" d="M-16,-195 L0,-216 L16,-195"/>
+              <path class="head" d="M-196,-24 q-16,24 0,48"/>
+              <path class="head" d="M196,-24 q16,24 0,48"/>
+              <text class="orient" x="-206" y="212">左</text>
+              <text class="orient" x="206" y="212" text-anchor="end">右</text>
+              <g id="map-el"></g>
+            </svg>
+            <div class="ramp" id="map-ramp"></div>
+          </div>
+          <div>
+            <p id="map-caption" class="note" style="margin-top:0"></p>
+            <ul>
+              <li>所有方法都偏好 C3、C4、CP3、CP4 一带：这是手部运动区上方，正是运动想象时 μ / β 节律变化的位置，符合生理预期。</li>
+              <li>8 个电极时，CP3 被 8/9 人选中（proposed 和 relevance）；最少被选的是额叶的 Fz、FCz、FC2、FC4。</li>
+              <li>稳定性（不同训练之间所选子集的平均 Jaccard）：band-power 方法 0.74–0.85，weightnorm 只有 0.40（8 个）/ 0.66（16 个），但它的准确率并不差，说明“子集稳定”不是准确率的必要条件。</li>
+            </ul>
+          </div>
+        </div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap"><table id="map-table"><thead></thead><tbody></tbody></table></div>
+        </details>
+      </div>
+      <p class="note">上方是鼻子（前额），左边是被试左侧。位置用 MNE 的 standard_1020 投影，与项目 <code>analyze.py</code> 的电极图一致。</p>
+
+      <h3>最终方案：<code>relevance-16-prune50</code> INT8</h3>
+      <div class="facts">
+        <div><b>65.01%</b><span>第二天准确率；全部 22 个 FP32 为 65.04%</span></div>
+        <div><b>−0.03 pp</b><span>配对差值，95% 区间 [−2.16, +2.40]</span></div>
+        <div><b>4 / 9</b><span>人下降超过 2 pp（P1、P4、P7、P9）</span></div>
+        <div><b>64.87%</b><span>验证集上的预测，与测试结果很接近</span></div>
+        <div><b>4.0×</b><span>更少参数字节：2,420 vs 9,576</span></div>
+        <div><b>−7.1%</b><span>完整 ONNX 文件：26,029 vs 28,022 字节</span></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-head"><h4>每个人：最终方案减全部 22 个 FP32（pp）</h4></div>
+        <ul class="legend">
+          <li><span class="sq" style="background:var(--bad)"></span>下降超过 2 pp</li>
+          <li><span class="sq" style="background:var(--bar)"></span>其他</li>
+        </ul>
+        <div class="chart-host" id="part-chart"></div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>被试</th><th class="n">full-22 FP32</th><th class="n">最终 INT8</th><th class="n">差值（pp）</th></tr></thead>
+              <tbody id="part-table"></tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <p>平均值几乎一样，但个体差别很大：P1（−4.3）、P9（−3.4）、P7（−2.9）、P4（−2.0）下降超过 2 pp，P2 上升 7.3。各人准确率从 45.6% 到 83.0%，人与人之间的差距远大于任何两种条件之间的差距。所以只能说“平均接近”，不能说“等效”，也不能说“每个人都没有损失”。</p>
+      <details>
+        <summary>展开：每个人的变化来自哪一步（算术拆分，不是因果分解）</summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>被试</th><th class="n">22 → 16 电极 + 重训</th><th class="n">剪枝 + 额外 100 epoch</th><th class="n">转 INT8</th><th class="n">合计</th></tr></thead>
+            <tbody>
+              <tr><td>P1</td><td class="n">−3.44</td><td class="n">−0.47</td><td class="n">−0.36</td><td class="n">−4.27</td></tr>
+              <tr><td>P2</td><td class="n">+8.72</td><td class="n">−2.01</td><td class="n">+0.59</td><td class="n">+7.30</td></tr>
+              <tr><td>P3</td><td class="n">+2.07</td><td class="n">−2.68</td><td class="n">0.00</td><td class="n">−0.61</td></tr>
+              <tr><td>P4</td><td class="n">−0.43</td><td class="n">−1.32</td><td class="n">−0.29</td><td class="n">−2.04</td></tr>
+              <tr><td>P5</td><td class="n">+4.47</td><td class="n">−2.42</td><td class="n">−0.36</td><td class="n">+1.69</td></tr>
+              <tr><td>P6</td><td class="n">+1.55</td><td class="n">−0.93</td><td class="n">+0.16</td><td class="n">+0.78</td></tr>
+              <tr><td>P7</td><td class="n">−5.05</td><td class="n">+1.81</td><td class="n">+0.36</td><td class="n">−2.88</td></tr>
+              <tr><td>P8</td><td class="n">+1.23</td><td class="n">+1.84</td><td class="n">+0.13</td><td class="n">+3.20</td></tr>
+              <tr><td>P9</td><td class="n">+1.39</td><td class="n">−4.80</td><td class="n">0.00</td><td class="n">−3.41</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">各类 recall（人内平均）：左手 64.4 → 63.6（−0.8），右手 69.0 → 72.9（+3.9），双脚 61.3 → 60.4（−0.9），舌头 65.8 → 63.6（−2.2）。只作描述，不是可靠的类别效应。</p>
+      </details>
+
+      <h3>INT8 与效率：省了存储，没省时间</h3>
+      <ul>
+        <li><b>准确率</b>：17 个条件里 INT8 与 FP32 的差距都不超过 0.5 pp；459 个模型平均有 97.0% 的第二天 trial 两种精度预测相同。</li>
+        <li><b>体积</b>：参数字节约少 2.9 倍（full-22：9,576 → 3,260），但完整 ONNX 文件只从 28,022 降到 26,871 字节，因为图结构、量化比例尺等元数据也占空间。</li>
+        <li><b>速度</b>：在 M4 CPU 上 INT8 反而更慢，full-22 从 0.280 ms 变成 0.358 ms（+28%）。</li>
+      </ul>
+      <div class="chart-card">
+        <div class="chart-head"><h4>full-22 模型一次推理的时间都花在哪（ORT profiler，µs）</h4></div>
+        <ul class="legend">
+          <li><span class="sq" style="background:var(--seg-a)"></span>时间卷积 conv_temporal</li>
+          <li><span class="sq" style="background:var(--bad)"></span>分组空间卷积 conv_spatial</li>
+          <li><span class="sq" style="background:var(--seg-c)"></span>其他（量化/反量化、ELU、池化、后面几层）</li>
+        </ul>
+        <div class="segchart" id="seg-chart">
+          <div class="segrow">
+            <div class="segname">FP32<span>合计 276 µs · 实测 0.280 ms</span></div>
+            <div class="segtrack">
+              <div class="sg a" style="flex-basis:65.14%" data-v="239.4 µs" data-l="FP32 · 时间卷积"><span>时间卷积 239</span></div>
+              <div class="sg b" style="flex-basis:3.48%" data-v="12.8 µs" data-l="FP32 · 分组空间卷积"><span>空间卷积 13</span></div>
+              <div class="sg c" style="flex-basis:6.48%" data-v="23.8 µs" data-l="FP32 · 其他算子"><span>其他 24</span></div>
+            </div>
+          </div>
+          <div class="segrow">
+            <div class="segname">INT8<span>合计 368 µs · 实测 0.358 ms</span></div>
+            <div class="segtrack">
+              <div class="sg a" style="flex-basis:40.35%" data-v="148.3 µs" data-l="INT8 · 时间卷积（QLinearConv）"><span>时间卷积 148</span></div>
+              <div class="sg b" style="flex-basis:50.31%" data-v="184.9 µs" data-l="INT8 · 分组空间卷积（QLinearConv）"><span>空间卷积 185</span></div>
+              <div class="sg c" style="flex-basis:9.36%" data-v="34.4 µs" data-l="INT8 · 其他算子"><span>其他 34</span></div>
+            </div>
+          </div>
+        </div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>算子</th><th class="n">FP32（µs）</th><th class="n">INT8（µs）</th><th class="n">变化</th></tr></thead>
+              <tbody>
+                <tr><td>时间卷积 conv_temporal</td><td class="n">239.4</td><td class="n">148.3</td><td class="n">快 38%</td></tr>
+                <tr><td>分组空间卷积 conv_spatial</td><td class="n">12.8</td><td class="n">184.9</td><td class="n">慢约 14 倍</td></tr>
+                <tr><td>其他</td><td class="n">23.8</td><td class="n">34.4</td><td class="n">+10.6</td></tr>
+                <tr><td>合计（profiler）</td><td class="n">275.9</td><td class="n">367.5</td><td class="n">+33%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <p>时间卷积在 INT8 下快了 38%，但量化后的分组空间卷积慢了约 14 倍，成了最大的开销。优化后的执行图里确实有 <code>QLinearConv</code>（整数内核），所以不能说“缺少整数内核”，只能说这个量化算子在这个 runtime 和这颗 CPU 上很慢。在有专用整数内核的 MCU 上结果可能完全不同，那需要实测。</p>
+
+      <h4 style="margin-top:22px">各架构的效率（M4 CPU，batch 1，单线程，延迟为 1,000 次中位数）</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>架构</th><th class="n">电极</th><th class="n">F2</th><th class="n">参数量</th><th class="n">参数字节 FP32 → INT8</th><th class="n">MACs</th><th class="n">建模激活峰值 FP32 → INT8</th><th class="n">延迟 FP32（ms）</th><th class="n">延迟 INT8（ms）</th></tr></thead>
+          <tbody>
+            <tr><td><code>full-22</code></td><td class="n">22</td><td class="n">16</td><td class="n">2,420</td><td class="n">9,576 → 3,260</td><td class="n">5.89 M</td><td class="n">397 → 99 KB</td><td class="n"><div class="lat"><i style="width:47px"></i>0.280</div></td><td class="n"><div class="lat"><i style="width:60px"></i>0.358</div></td></tr>
+            <tr><td><code>relevance-16</code></td><td class="n">16</td><td class="n">16</td><td class="n">2,324</td><td class="n">9,192 → 3,164</td><td class="n">4.30 M</td><td class="n">289 → 72 KB</td><td class="n"><div class="lat"><i style="width:34px"></i>0.206</div></td><td class="n"><div class="lat"><i style="width:43px"></i>0.259</div></td></tr>
+            <tr><td><code>proposed-8</code></td><td class="n">8</td><td class="n">16</td><td class="n">2,196</td><td class="n">8,680 → 3,036</td><td class="n">2.18 M</td><td class="n">160 → 40 KB</td><td class="n"><div class="lat"><i style="width:19px"></i>0.115</div></td><td class="n"><div class="lat"><i style="width:25px"></i>0.148</div></td></tr>
+            <tr><td><code>full-22-prune25</code></td><td class="n">22</td><td class="n">12</td><td class="n">2,108</td><td class="n">8,344 → 2,888</td><td class="n">5.88 M</td><td class="n">397 → 99 KB</td><td class="n"><div class="lat"><i style="width:46px"></i>0.273</div></td><td class="n"><div class="lat"><i style="width:59px"></i>0.355</div></td></tr>
+            <tr><td><code>full-22-prune50</code></td><td class="n">22</td><td class="n">8</td><td class="n">1,796</td><td class="n">7,112 → 2,516</td><td class="n">5.87 M</td><td class="n">397 → 99 KB</td><td class="n"><div class="lat"><i style="width:47px"></i>0.279</div></td><td class="n"><div class="lat"><i style="width:59px"></i>0.354</div></td></tr>
+            <tr><td><code>relevance-16-prune25</code></td><td class="n">16</td><td class="n">12</td><td class="n">2,012</td><td class="n">7,960 → 2,792</td><td class="n">4.29 M</td><td class="n">289 → 72 KB</td><td class="n"><div class="lat"><i style="width:34px"></i>0.206</div></td><td class="n"><div class="lat"><i style="width:43px"></i>0.259</div></td></tr>
+            <tr class="hl"><td><code>relevance-16-prune50</code> 最终</td><td class="n">16</td><td class="n">8</td><td class="n">1,700</td><td class="n">6,728 → 2,420</td><td class="n">4.28 M</td><td class="n">289 → 72 KB</td><td class="n"><div class="lat"><i style="width:34px"></i>0.201</div></td><td class="n"><div class="lat"><i style="width:43px"></i>0.257</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><b>电极数才是真正的旋钮</b>：MACs 从 5.89 M 降到 4.30 M、2.18 M；FP32 延迟 16 个电极快约 26–27%，8 个快约 59%，和 MACs 几乎同步。</li>
+        <li><b>剪枝几乎不省时间</b>：剪掉一半最后的滤波器，参数少 27%，MACs 只少 0.4%，延迟基本不变。</li>
+        <li><b>最终方案</b>比 full-22 FP32 快约 8%（0.257 vs 0.280 ms），但比未剪枝的 relevance-16 FP32 慢约 25%（0.257 vs 0.206 ms）：快的那一点来自输入变小，不是 INT8。决策规则优先电极数和参数字节，不是延迟。</li>
+        <li><b>时间尺度</b>：模型计算不到 0.4 ms，而决策要等 2 s 的窗口，在 cue 后 2.5 s 才能给出。在桌面上，用户感到的延迟由窗口决定，不由计算决定。</li>
+        <li><b>内存</b>：激活峰值 397 KB → 72 KB（5.5 倍）是按统一 4 字节 / 1 字节张量估算的理论值；M5 上独立进程的 RSS 峰值是 57–59 MiB，包含 Python 和 ORT 运行时开销。两者都不是 MCU 的 SRAM。</li>
+      </ul>
+
+      <h3>补充实验：在相同微调预算下，剪枝 50% 有代价</h3>
+      <p>原来的剪枝模型在 475 epoch 之后又多训练了 100 epoch，而未剪枝的基线没有。这样“剪枝”和“多练 100 遍”的效果混在了一起。补充实验让每个底座分成三支（不剪 / 剪 25% / 剪 50%），每一支都同样再训 100 epoch（Adam，lr 1e-4）。</p>
+      <div class="chart-card">
+        <div class="chart-head">
+          <h4>等预算对照：A 减 B（9 人配对差值，95% 区间，pp）</h4>
+          <div class="seg" role="group" aria-label="精度">
+            <button type="button" id="matched-int8" aria-pressed="true" data-prec="int8">INT8</button>
+            <button type="button" id="matched-fp32" aria-pressed="false" data-prec="fp32">FP32</button>
+          </div>
+        </div>
+        <ul class="legend">
+          <li><span class="dt" style="background:var(--ink-2)"></span>区间跨过 0</li>
+          <li><span class="dt" style="background:var(--bad)"></span>区间整体在 0 以下</li>
+        </ul>
+        <div class="chart-host" id="matched-chart"></div>
+        <details class="tv">
+          <summary>数据表</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>底座</th><th>比较</th><th class="n">FP32</th><th class="n">INT8</th></tr></thead>
+              <tbody>
+                <tr><td>relevance-16</td><td>0 − base（额外训练）</td><td class="n">+0.25 [−0.36, +0.87]</td><td class="n">+0.43 [−0.20, +1.14]</td></tr>
+                <tr><td>relevance-16</td><td>25 − 0（同预算剪 25%）</td><td class="n">−0.23 [−0.79, +0.33]</td><td class="n">−0.15 [−0.77, +0.51]</td></tr>
+                <tr class="hl"><td>relevance-16</td><td>50 − 0（同预算剪 50%）</td><td class="n">−1.59 [−2.86, −0.49]</td><td class="n">−1.56 [−2.86, −0.42]</td></tr>
+                <tr><td>full-22</td><td>0 − base</td><td class="n">+0.40 [−0.63, +1.67]</td><td class="n">+0.29 [−0.56, +1.26]</td></tr>
+                <tr><td>full-22</td><td>25 − 0</td><td class="n">+0.01 [−0.67, +0.76]</td><td class="n">+0.16 [−0.62, +1.00]</td></tr>
+                <tr><td>full-22</td><td>50 − 0</td><td class="n">−0.30 [−2.41, +1.39]</td><td class="n">−0.25 [−2.28, +1.49]</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <ul>
+        <li>relevance-16 INT8：剪 50% 比同样微调的不剪分支低 <b>1.56 pp</b>，区间 [−2.86, −0.42] 整体在 0 以下；剪 25% 没有明显代价（−0.15）；额外训练本身是 +0.43，区间跨 0。</li>
+        <li>full-22 上剪枝的代价不明显（50%：−0.25，区间跨 0）。</li>
+        <li>所以“最终方案和基线平均差不多”不能解读成“剪枝没有代价”。</li>
+      </ul>
+      <div class="callout warn">
+        <p><b>边界</b>：这个补充实验是在看过第二天结果之后追加的（post-test），底座在 Apple M5 上独立重建（原权重已缺失），不改变原来冻结的最终方案。与历史同条件模型的预测一致率平均 99.40%（96.18–100%），但这不能证明权重相同。</p>
+      </div>
+
+      <h3>回放演示</h3>
+      <p><code>replay_demo.py</code> 以 250 Hz 把 P3 第二天的一个 run 逐块送进与训练相同的因果滤波器，每个 trial 的窗口一结束（cue 后 2.5 s）就用最终 INT8 模型给出判断：光标按类别往左、右、下、上移动，同时显示计算耗时。流式得到的窗口与离线缓存一致。它是<b>录制数据的实时回放</b>：被试看不到反馈，所以不能证明闭环控制。视频在 <code>results/demo/replay_participant3.mp4</code>，幻灯片第 16 页可以点开播放。</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="next">
+      <h2><span class="num">6</span>下一步做什么</h2>
+      <p class="kicker">先对照 proposal 的时间线看进度，再说剩下几周怎么用。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>proposal 时间</th><th>计划内容</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>9 月</td><td>数据划分、基线、pilot，确认 CPU 导出和 INT8 算子</td><td><span class="chip good">完成</span></td></tr>
+            <tr><td>10 月上中旬</td><td>选择规则和对照，完成验证，固定设置</td><td><span class="chip good">完成</span>预算 475、剪枝底座 relevance-16</td></tr>
+            <tr><td>10 月下旬至 11 月初</td><td>FP32 / INT8 对比、剪枝研究，冻结分析计划</td><td><span class="chip good">完成</span>11-03 冻结</td></tr>
+            <tr><td>11 月</td><td>9 人评估、不确定性、效率图、回放演示</td><td><span class="chip good">完成</span>另加等预算补充实验</td></tr>
+            <tr><td>11 月下旬至 12 月初</td><td>定稿报告和展示</td><td><span class="chip acc">进行中</span>报告 PDF 与 19 页幻灯片已有初稿</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>我建议的剩余安排</h3>
+      <ol class="stages">
+        <li><div class="st-h"><b>收尾（必做，约 1 周）</b></div><p>根据期中反馈修改报告和幻灯片；按第 9 部分准备问答；最终展示播放已录好的回放视频。如果要现场跑模型，只能用 M5 补充模型，并说明来源。</p></li>
+        <li><div class="st-h"><b>扩展 A：INT8 为什么变慢（推荐先做，1–2 天）</b></div><p>最便宜、最贴合课程“系统”角度的实验，不需要重训。用 ORT <code>quantize_static</code> 的 <code>nodes_to_exclude</code> 把分组空间卷积留在 FP32，其余保持 INT8，看延迟能否回到 FP32 以下、准确率是否不变；再对比 QOperator 格式、uint8 激活和 per-tensor 权重，并重新做 profile。用现有 216 个补充模型在 M5 上测，结果必须标注“M5 + 独立重建模型”，不能和 M4 的历史数字混在一起比较。</p></li>
+        <li><div class="st-h"><b>扩展 B：更好的冗余度量（回应主问题的负结果，需要几天算力）</b></div><p>先去掉所有电极共有的 trial 间功率波动，再算冗余：比如每个 trial 的 log 功率先减去 22 个电极的平均，或者用控制全局均值的 partial correlation。重点看 8 个电极，那里差别才重要。选择和比较只在第一天的验证折上做；第二天已经看过，结果只能算探索性。要做确认，最好换一个有两天记录的数据集，例如 MOABB 里的 <code>Lee2019_MI</code>（54 人、62 个电极，但只有左右手两类）。</p></li>
+      </ol>
+      <div class="callout">
+        <p><b>我的建议</b>：先做 A，几天内就有结果，而且直接对应“为什么 INT8 没加速”这个最常被追问的问题；时间够再做 B。两者都要在报告里标成“冻结之后的追加分析”。</p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="limits">
+      <h2><span class="num">7</span>Limitations</h2>
+      <p class="kicker">每一条都写成“问题是什么，以及该怎么表述”。</p>
+      <div class="limits">
+        <div class="card"><h4>样本小：9 人、1 个数据集</h4><p>bootstrap 区间很宽，而且是探索性的，没有做多重比较校正。不能用“区间包含 0”去证明两个方案相等。</p></div>
+        <div class="card"><h4>只验证了“同一个人换一天”</h4><p>不能推到新用户、其他数据集、其他头戴设备或植入式记录。</p></div>
+        <div class="card"><h4>电极是每个人单独选的</h4><p>真实的头戴设备需要一套固定布局，这里没有验证“所有人通用的一组电极”。</p></div>
+        <div class="card"><h4>只试了一种冗余度量</h4><p>band-power 的 |Spearman ρ|、惩罚固定 0.5。负结果只针对这个代理，其他冗余度量可能表现不同。</p></div>
+        <div class="card"><h4>原剪枝比较有训练预算混淆</h4><p>剪枝模型多训了 100 epoch。等预算补充实验修正了这一点，但它是看过测试结果后追加的、在 M5 上独立重建的。</p></div>
+        <div class="card"><h4>只有桌面 CPU 的计时</h4><p>没有测 MCU 的延迟、SRAM 和能耗；激活内存的 5.5 倍是理论估计；进程 RSS（57–59 MiB）包含运行时开销。“INT8 更慢”只对这个 runtime 和这颗 CPU 成立。</p></div>
+        <div class="card"><h4>INT8 图不是全整数</h4><p>QDQ 图里 ELU、池化等仍是浮点，输入仍是 float32，还有量化/反量化的转换开销。</p></div>
+        <div class="card"><h4>离线回放不等于在线控制</h4><p>被试看不到反馈；没有测闭环控制和异步（自定节奏）检测；真实的决策延迟由 2 s 窗口决定。</p></div>
+        <div class="card"><h4>主分析去掉了专家标注的伪迹 trial</h4><p>在线使用时拿不到这种标注。次分析（全部 trial）的结论相同，用来暴露这个依赖。</p></div>
+        <div class="card"><h4>来源和可复现性</h4><p>原 M4 主实验的模型权重不在当前副本（记录和预测完整、审计一致）。冻结文件和哈希能证明内部一致，但不能独立证明时间先后（没有外部预注册）。跨硬件不保证逐位相同。</p></div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="more">
+      <h2><span class="num">8</span>还能做什么</h2>
+      <p class="kicker">比第 6 部分更长期的方向，按“回答什么问题、要花多少”列出来。</p>
+      <div class="ideas">
+        <div class="card"><p class="meta">回应局限 · 成本中</p><h4>所有人通用的一组电极</h4><p>留一人（leave-one-subject-out）选电极：用 8 个人的训练数据选出固定的 16 或 8 个，再在第 9 个人身上测。回应“每人一套电极，头戴设备做不到”。</p></div>
+        <div class="card"><p class="meta">完整曲线 · 成本高</p><h4>电极数扫描</h4><p>4、6、10、12、14、18、20 个电极，画出完整的“准确率–电极数”曲线并找拐点。现在只有 22 / 16 / 8 三个点，每个模型要训 475 epoch。</p></div>
+        <div class="card"><p class="meta">更强对照 · 成本中到高</p><h4>更强的选电极方法</h4><p>CSP / FBCSP 权重、稀疏 group lasso、可学习的选电极层（如 concrete / Gumbel-softmax 选择器）。</p></div>
+        <div class="card"><p class="meta">真实延迟 · 成本中</p><h4>更短窗口、滑动窗口</h4><p>1 s 或 1.5 s 窗口能缩短“意图到动作”的延迟，也是做异步检测的前提。</p></div>
+        <div class="card"><p class="meta">部署 · 成本高（需要板子）</p><h4>MCU 实测</h4><p>把最终 INT8 模型放到 Cortex-M（例如 STM32 + TFLite Micro / CMSIS-NN），测真实的延迟、峰值 SRAM 和能耗。这正是桌面数字回答不了的问题。</p></div>
+        <div class="card"><p class="meta">优先级低</p><h4>更低位宽 / QAT</h4><p>INT4 或量化感知训练。PTQ 已经只差 ≤ 0.5 pp，proposal 里 QAT 的触发条件（掉超过 2 pp）没有满足。</p></div>
+        <div class="card"><p class="meta">泛化 · 成本中到高</p><h4>跨人迁移、少校准</h4><p>先用其他人的数据预训练，再用新用户的少量数据微调，减少每个人的校准时间。</p></div>
+        <div class="card"><p class="meta">新信号 · 长期</p><h4>ECoG / 皮层内记录</h4><p>proposal 里推迟的 GRU 扩展。特征、空间冗余结构和解码任务都要重新验证。</p></div>
+        <div class="card"><p class="meta">课程内不现实</p><h4>在线闭环实验</h4><p>需要硬件、被试和伦理审批，才能检验真正的实时控制。</p></div>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="qa">
+      <h2><span class="num">9</span>问答准备</h2>
+      <p class="kicker">明天可能被问到的问题，以及几句话的回答。点开看答案。</p>
+
+      <details class="qa"><summary>为什么你提出的方法没有赢？</summary>
+        <p>因为冗余项几乎没改变选择。band-power 的相关性整体很高（|ρ| 平均 0.74），选第 8 个电极时，惩罚项在候选之间只差约 0.13，只能调换几乎打平的候选，所以多数人两种规则选出同一组电极。这是这个冗余代理的负结果；下一步是先去掉共有波动再算冗余。</p></details>
+      <details class="qa"><summary>INT8 为什么反而更慢？</summary>
+        <p>profiler 显示时间卷积在 INT8 下快了 38%，但量化后的分组空间卷积从 12.8 µs 变成 185 µs，抵消并超过了收益，再加上量化/反量化的开销。图里有 QLinearConv，所以是“这个算子在这个 runtime 和 CPU 上慢”，不是“没有整数内核”。在有专用整数内核的 MCU 上可能不一样，需要实测。</p></details>
+      <details class="qa"><summary>怎么保证没有用测试集调参？</summary>
+        <p>第二天的数据在代码里锁着（<code>PermissionError</code>），评估脚本要求冻结文件存在；训练预算、剪枝底座和最终方案全部由验证集按预先写好的规则选出；归一化、电极排名、INT8 校准只用训练分区。冻结文件里存了验证汇总表的 SHA-256。补充实验明确标注为测试后追加，没有改选方案。</p></details>
+      <details class="qa"><summary>475 个 epoch 是怎么来的？</summary>
+        <p>不是手调的：27 条 full-22 验证曲线求平均，做 25-epoch 平滑，取第一个距最大值 0.5 pp 以内的 25 的倍数。</p></details>
+      <details class="qa"><summary>为什么最后选的是 relevance，而不是你的 proposed？</summary>
+        <p>规则先找验证准确率不低于 full-22 FP32 减 2 pp 的候选，再选电极最少、参数字节最少、准确率最高的。选剪枝底座时，三种 16 电极方法的 INT8 字节数一样，relevance-16 的验证准确率最高（66.1%），所以剪枝只做在它上面；最终 relevance-16-prune50 INT8 的参数字节最少（2,420）。8 电极没有任何候选过线。</p></details>
+      <details class="qa"><summary>16 个电极比 22 个还准，是不是说明电极越少越好？</summary>
+        <p>差值（+1.2 到 +1.8 pp）的区间都包含 0，只能说持平。数据少的时候，输入少一些也许噪声更少，但这里没有证据支持这个结论；8 个电极就明显下降了。</p></details>
+      <details class="qa"><summary>9 个人够吗？区间是什么意思？</summary>
+        <p>独立样本是 9 个人（3 个 seed 先在人内平均）。区间是对“抽到哪些人”的 bootstrap，探索性的，没有做多重比较校正。它说明不确定性很大，不能用来证明等效。</p></details>
+      <details class="qa"><summary>最终方案和基线一样准，是不是可以直接替换？</summary>
+        <p>不能这么说。平均只差 −0.03 pp，但区间 [−2.16, +2.40] 很宽，4/9 人下降超过 2 pp；等预算补充实验还显示 50% 剪枝本身有约 1.6 pp 的代价。</p></details>
+      <details class="qa"><summary>压缩到底省了什么？</summary>
+        <p>参数字节约少 4 倍（9,576 → 2,420），但完整 ONNX 文件只小 7.1%；激活峰值的 5.5 倍是理论估计；CPU 延迟主要由电极数决定（第一层时间卷积占 96% 的 MACs），剪最后一层几乎不省时间，INT8 在 M4 上更慢。</p></details>
+      <details class="qa"><summary>和 MI-BMInet、Q-EEGNet 比，你的贡献是什么？</summary>
+        <p>不是更好的模型或新算法，而是在同一个固定流程里把电极选择、冗余项、剪枝和精度的影响分开，用留出的第二天和配对区间报告结果，包括负结果和“压缩不一定加速”。</p></details>
+      <details class="qa"><summary>遇到了什么困难或意外？</summary>
+        <p>① INT8 在 CPU 上更慢：用 profiler 定位到分组空间卷积。② 发现原剪枝比较混入了额外 100 epoch 训练：补做等预算对照。③ 当前副本缺少原始权重：按固定协议在 M5 上独立重建，并明确标注来源。④ 冗余项几乎不改变选择：分析相关结构找到了原因。</p></details>
+      <details class="qa"><summary>为什么回放演示不算实时 BCI？</summary>
+        <p>它是录制数据按原速回放，被试看不到反馈。它验证了流式滤波和推理的实现，不验证闭环控制；而且决策要等 2 s 窗口。</p></details>
+      <details class="qa"><summary>剪枝为什么要“真的删维度”？</summary>
+        <p>只把权重置零（mask）时张量大小不变，在稠密硬件上不会更快也不会更省，所以要切掉卷积、BatchNorm 和分类器里对应的维度。</p></details>
+
+      <h3>措辞边界</h3>
+      <div class="say">
+        <div class="say-row"><div class="no">最终方案和基线等效</div><div class="yes">平均接近，但区间宽，4/9 人下降超过 2 pp</div></div>
+        <div class="say-row"><div class="no">我的冗余方法更好</div><div class="yes">冗余项没有可靠优势，只稳定优于随机子集</div></div>
+        <div class="say-row"><div class="no">INT8 让模型更快</div><div class="yes">INT8 省存储，在 M4 CPU 上反而慢了 28%</div></div>
+        <div class="say-row"><div class="no">模型缩小了 4 倍</div><div class="yes">参数字节约少 4 倍；完整 ONNX 文件只小 7.1%</div></div>
+        <div class="say-row"><div class="no">最终模型有 2,420 个参数</div><div class="yes">2,420 是 INT8 的字节数；最终模型有 1,700 个参数（22 电极的原模型恰好是 2,420 个参数）</div></div>
+        <div class="say-row"><div class="no">亚毫秒级的 BCI</div><div class="yes">模型计算不到 0.4 ms；决策要等 2 s 窗口</div></div>
+        <div class="say-row"><div class="no">实时闭环演示</div><div class="yes">录制数据的实时回放</div></div>
+        <div class="say-row"><div class="no">剪枝的代价是 1.56 pp</div><div class="yes">只指 relevance-16、INT8、剪 50% 对比同预算不剪</div></div>
+      </div>
+
+      <h3>按现有 19 页幻灯片的讲述顺序</h3>
+      <ol>
+        <li>动机：每个电极有两份成本（第 2 页）；研究问题与假设（第 3 页）。</li>
+        <li>数据和“锁住第二天”的协议（第 4 页）；EEGNet 的成本在哪里（第 5 页）。</li>
+        <li>选电极方法与两种压缩（第 6–7 页）。</li>
+        <li>结果：16 ≈ 22、冗余项没有优势、原因、电极图（第 8–11 页）。</li>
+        <li>INT8 与效率（第 12–13 页）；最终方案与等预算补充实验（第 14–15 页）。</li>
+        <li>回放演示、局限（第 16–17 页）；下一步（第 18 页，对应本页第 6 部分）；结论（第 19 页）。</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <p><b>数字从哪里来</b>（都在项目目录里）：</p>
+      <ul>
+        <li>准确率与区间：<code>results/analysis/conditions_primary.csv</code>、<code>comparisons_primary.csv</code>、<code>chart_accuracy.csv</code>、<code>chart_forest.csv</code></li>
+        <li>个体与类别：<code>results/maintenance/participant_differences.csv</code>、<code>class_recall.csv</code>；拆分表来自 <code>docs/REPORT.md</code></li>
+        <li>效率：<code>results/analysis/efficiency.csv</code>、<code>results/benchmark/benchmark.json</code>（含逐节点 profile 和 <code>layer_costs</code>）</li>
+        <li>验证与冻结：<code>results/validation/summary.csv</code>、<code>budget.json</code>、<code>pruning_base.json</code>、<code>results/frozen_config.json</code></li>
+        <li>补充实验：<code>results/supplementary/matched_budget/paired_comparisons.csv</code>、<code>analysis.json</code></li>
+        <li>INT8 预测一致率（97.0%）由 <code>results/test/*.json</code> 的 <code>int8_pred_agreement</code> 求平均；电极选择次数、|ρ| 和惩罚项差距由本页作者用项目代码在第一天数据上重算。</li>
+      </ul>
+      <p>更多：<code>README.md</code>（项目说明与命令）、<code>docs/BEGINNER_GUIDE_ZH.md</code>（零基础导读）、<code>docs/REPORT.pdf</code>（正式报告）、<code>presentation/index.html</code>（幻灯片）。</p>
+    </footer>
+  </main>
+</div>
+<div id="tip" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    if (attrs) { for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) n.setAttribute(k, attrs[k]); } }
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function txt(parent, x, y, s, cls, anchor) {
+    var t = el("text", { x: x, y: y }, parent);
+    if (cls) t.setAttribute("class", cls);
+    if (anchor) t.setAttribute("text-anchor", anchor);
+    t.textContent = s;
+    return t;
+  }
+  function sgn(v, d) {
+    d = d === undefined ? 2 : d;
+    var s = Math.abs(v).toFixed(d);
+    if (Number(s) === 0) return (0).toFixed(d);
+    return (v > 0 ? "+" : "−") + s;
+  }
+  function minus(s) { return String(s).replace(/-/g, "−"); }
+
+  /* ---------- tooltip ---------- */
+  var tip = $("#tip");
+  var tipOwner = null;
+  function placeTip(owner, evt) {
+    var r = tip.getBoundingClientRect();
+    var x, y;
+    if (evt && typeof evt.clientX === "number") { x = evt.clientX + 14; y = evt.clientY + 16; }
+    else {
+      var b = owner.getBoundingClientRect();
+      x = b.left + b.width / 2 + 10; y = b.top - r.height - 8;
+      if (y < 8) y = b.bottom + 8;
+    }
+    x = Math.min(x, window.innerWidth - r.width - 8);
+    y = Math.min(y, window.innerHeight - r.height - 8);
+    tip.style.left = Math.max(8, x) + "px";
+    tip.style.top = Math.max(8, y) + "px";
+  }
+  function showTip(owner, value, label, note, evt) {
+    tipOwner = owner;
+    tip.replaceChildren();
+    var v = document.createElement("strong"); v.textContent = value; tip.appendChild(v);
+    var l = document.createElement("span"); l.textContent = label; tip.appendChild(l);
+    if (note) { var n = document.createElement("em"); n.textContent = note; tip.appendChild(n); }
+    tip.hidden = false;
+    placeTip(owner, evt);
+  }
+  function hideTip(owner) { if (!owner || tipOwner === owner) { tip.hidden = true; tipOwner = null; } }
+  function bindTip(node, value, label, note) {
+    node.setAttribute("tabindex", "0");
+    node.setAttribute("aria-label", label + "：" + value + (note ? "，" + note : ""));
+    node.classList.add("hit");
+    node.addEventListener("pointerenter", function (e) { showTip(node, value, label, note, e); });
+    node.addEventListener("pointermove", function (e) { if (tipOwner === node) placeTip(node, e); });
+    node.addEventListener("pointerleave", function (e) { if (e.pointerType !== "touch") hideTip(node); });
+    node.addEventListener("focus", function () { showTip(node, value, label, note); });
+    node.addEventListener("blur", function () { hideTip(node); });
+  }
+  document.addEventListener("pointerdown", function (e) {
+    if (!e.target.closest || !e.target.closest(".hit")) hideTip();
+  });
+  window.addEventListener("scroll", function () { hideTip(); }, { passive: true });
+
+  /* ---------- segmented controls ---------- */
+  function segGroup(buttons, onPick) {
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (b.disabled) return;
+        buttons.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+        onPick(b);
+      });
+    });
+  }
+
+  /* ---------- responsive redraw ---------- */
+  function onWidth(host, draw) {
+    var last = -1;
+    function run() {
+      var w = Math.floor(host.clientWidth);
+      if (w > 0 && w !== last) { last = w; draw(); }
+    }
+    if (typeof ResizeObserver === "function") {
+      var ro = new ResizeObserver(function () { window.requestAnimationFrame(run); });
+      ro.observe(host);
+    } else {
+      window.addEventListener("resize", run);
+    }
+    run();
+    return function force() { last = -1; run(); };
+  }
+
+  /* ---------- chart A: accuracy vs electrode count ---------- */
+  var ACC = {
+    fp32: { proposed: [60.59, 66.78], relevance: [59.92, 66.21], weightnorm: [62.10, 66.82], random: [58.28, 63.50], full: 65.04 },
+    int8: { proposed: [60.46, 66.64], relevance: [59.61, 66.17], weightnorm: [62.27, 66.44], random: [58.09, 63.46], full: 65.30 }
+  };
+  var SERIES = [
+    { key: "proposed", name: "冗余感知", color: "var(--s-pro)" },
+    { key: "relevance", name: "仅相关性", color: "var(--s-rel)" },
+    { key: "weightnorm", name: "空间权重", color: "var(--s-wn)" },
+    { key: "random", name: "随机均值", color: "var(--s-rnd)" }
+  ];
+  var accPrec = "fp32";
+  var accHost = $("#acc-chart");
+  function drawAcc() {
+    hideTip();
+    accHost.replaceChildren();
+    var W = Math.max(300, Math.floor(accHost.clientWidth));
+    var wide = W >= 560;
+    var H = wide ? 340 : 300;
+    var m = { l: 46, r: wide ? 104 : 66, t: 30, b: 50 };
+    var xa = wide ? 2 : 6.5, xb = 23, ya = 56, yb = 68;
+    var PW = W - m.l - m.r, PH = H - m.t - m.b;
+    function X(v) { return m.l + (v - xa) / (xb - xa) * PW; }
+    function Y(v) { return m.t + (yb - v) / (yb - ya) * PH; }
+    var P = accPrec.toUpperCase();
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "class": "chart", role: "group",
+      "aria-label": "第二天准确率随电极数变化（" + P + "）：16 个电极时三种任务相关方法 66% 左右，与全部 22 个持平；8 个电极时全部下降。" }, accHost);
+    for (var t = ya; t <= yb; t += 2) {
+      el("line", { x1: m.l, x2: W - m.r + 8, y1: Y(t), y2: Y(t), "class": "gridline" }, svg);
+      txt(svg, m.l - 8, Y(t) + 4, String(t), "tick", "end");
+    }
+    txt(svg, 4, 14, "准确率（%）", "axis-title");
+    el("line", { x1: m.l, x2: W - m.r + 8, y1: m.t + PH, y2: m.t + PH, "class": "axis" }, svg);
+    [8, 16, 22].forEach(function (v) {
+      el("line", { x1: X(v), x2: X(v), y1: m.t + PH, y2: m.t + PH + 5, "class": "axis" }, svg);
+      txt(svg, X(v), m.t + PH + 20, String(v), "tick", "middle");
+    });
+    txt(svg, X(15), H - 8, "保留的电极数", "axis-title", "middle");
+    var D = ACC[accPrec];
+    SERIES.forEach(function (s) {
+      var a = D[s.key][0], b = D[s.key][1];
+      el("polyline", { points: X(8) + "," + Y(a) + " " + X(16) + "," + Y(b) + " " + X(22) + "," + Y(D.full),
+        "class": "series-line", style: "stroke:" + s.color }, svg);
+    });
+    SERIES.forEach(function (s) {
+      var vals = D[s.key];
+      [[8, vals[0]], [16, vals[1]]].forEach(function (p) {
+        var g = el("g", null, svg);
+        el("circle", { cx: X(p[0]), cy: Y(p[1]), r: 12, "class": "hitarea" }, g);
+        el("circle", { cx: X(p[0]), cy: Y(p[1]), r: 4.5, "class": "dot", style: "fill:" + s.color }, g);
+        bindTip(g, p[1].toFixed(2) + "%", s.name + " · " + p[0] + " 个电极 · " + P);
+      });
+      if (wide) txt(svg, X(8) - 12, Y(vals[0]) + 4, s.name + " " + vals[0].toFixed(1) + "%", "dlabel", "end");
+    });
+    var gf = el("g", null, svg);
+    el("circle", { cx: X(22), cy: Y(D.full), r: 12, "class": "hitarea" }, gf);
+    el("circle", { cx: X(22), cy: Y(D.full), r: 5.5, "class": "dot dot-full" }, gf);
+    bindTip(gf, D.full.toFixed(2) + "%", "全部 22 个电极 · " + P);
+    txt(svg, X(22) + 11, Y(D.full) - 3, wide ? "全部 22 个" : "22 个", "dlabel");
+    txt(svg, X(22) + 11, Y(D.full) + 13, D.full.toFixed(1) + "%", "dlabel strong");
+  }
+  var accForce = onWidth(accHost, drawAcc);
+  segGroup([$("#acc-fp32"), $("#acc-int8")], function (b) { accPrec = b.getAttribute("data-prec"); accForce(); });
+
+  /* ---------- forest renderer (charts B and E) ---------- */
+  function drawForest(host, rows, opt) {
+    hideTip();
+    host.replaceChildren();
+    var W = Math.max(300, Math.floor(host.clientWidth));
+    var wide = W >= 640;
+    var labelW = wide ? 196 : 0;
+    var valueW = wide ? 168 : 150;
+    var padL = wide ? labelW + 14 : 10;
+    var padR = valueW + 10;
+    var rowH = wide ? 44 : 58, groupH = 30;
+    var y = 4, lastG = null, layout = [];
+    rows.forEach(function (r) {
+      if (r.g !== lastG) { layout.push({ type: "g", y: y, text: r.g }); y += groupH; lastG = r.g; }
+      layout.push({ type: "r", y: y, r: r }); y += rowH;
+    });
+    var axisY = y + 6, H = axisY + 34;
+    var d0 = opt.domain[0], d1 = opt.domain[1];
+    function X(v) { return padL + (v - d0) / (d1 - d0) * (W - padL - padR); }
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "class": "chart", role: "group", "aria-label": opt.aria }, host);
+    var step = (W - padL - padR) / (d1 - d0) < 34 ? 2 : 1;
+    for (var t = Math.ceil(d0); t <= d1; t += 1) {
+      if (t % step !== 0 && t !== 0) continue;
+      el("line", { x1: X(t), x2: X(t), y1: 4, y2: axisY, "class": t === 0 ? "zero" : "gridline" }, svg);
+      txt(svg, X(t), axisY + 16, t === 0 ? "0" : sgn(t, 0), "tick", "middle");
+    }
+    txt(svg, W - padR + 6, axisY + 16, "pp", "tick", "start");
+    layout.forEach(function (it) {
+      if (it.type === "g") { txt(svg, wide ? 0 : padL, it.y + 20, it.text, "grp"); return; }
+      var r = it.r;
+      var cy = wide ? it.y + rowH / 2 : it.y + 38;
+      var excl = r.lo > 0 || r.hi < 0;
+      var col = excl ? (r.d > 0 ? "var(--accent)" : "var(--bad)") : "var(--ink-2)";
+      var g = el("g", null, svg);
+      el("rect", { x: 0, y: it.y, width: W, height: rowH, "class": "hitarea" }, g);
+      if (wide) txt(g, 0, cy + 4, r.label, "rowlbl");
+      else txt(g, padL, it.y + 17, r.label, "rowlbl");
+      el("line", { x1: X(r.lo), x2: X(r.hi), y1: cy, y2: cy, "class": "ci", style: "stroke:" + col }, g);
+      el("line", { x1: X(r.lo), x2: X(r.lo), y1: cy - 5, y2: cy + 5, "class": "ci", style: "stroke:" + col }, g);
+      el("line", { x1: X(r.hi), x2: X(r.hi), y1: cy - 5, y2: cy + 5, "class": "ci", style: "stroke:" + col }, g);
+      el("circle", { cx: X(r.d), cy: cy, r: 5.5, "class": "ci-dot", style: "fill:" + col }, g);
+      var vt = sgn(r.d) + " [" + sgn(r.lo) + ", " + sgn(r.hi) + "]";
+      var vx = W - valueW + 4;
+      if (r.n && wide) {
+        txt(g, vx, cy - 2, vt, "valtxt");
+        txt(g, vx, cy + 14, r.n, "valnote");
+      } else {
+        txt(g, vx, cy + 4, vt, "valtxt");
+      }
+      bindTip(g, sgn(r.d) + " pp", r.g + " · " + r.label, "95% 区间 [" + sgn(r.lo) + ", " + sgn(r.hi) + "]" + (r.n ? " · " + r.n : ""));
+    });
+  }
+
+  /* ---------- chart B: proposed minus controls ---------- */
+  var FOREST = {
+    fp32: [
+      { g: "16 个电极", label: "vs 仅相关性", d: 0.58, lo: -0.26, hi: 1.58, n: "更好 2 · 更差 1 · 相同 6" },
+      { g: "16 个电极", label: "vs 空间权重", d: -0.04, lo: -1.50, hi: 1.53, n: "更好 4 · 更差 5" },
+      { g: "16 个电极", label: "vs 随机（3 组平均）", d: 3.28, lo: 1.31, hi: 5.41, n: "更好 8 · 更差 1" },
+      { g: "8 个电极", label: "vs 仅相关性", d: 0.68, lo: -0.67, hi: 2.70, n: "更好 1 · 更差 1 · 相同 7" },
+      { g: "8 个电极", label: "vs 空间权重", d: -1.51, lo: -4.10, hi: 1.34, n: "更好 2 · 更差 7" },
+      { g: "8 个电极", label: "vs 随机（3 组平均）", d: 2.32, lo: 0.15, hi: 4.17, n: "更好 8 · 更差 1" }
+    ],
+    int8: [
+      { g: "16 个电极", label: "vs 仅相关性", d: 0.47, lo: -0.42, hi: 1.50, n: "更好 2 · 更差 1 · 相同 6" },
+      { g: "16 个电极", label: "vs 空间权重", d: 0.20, lo: -1.38, hi: 1.77, n: "更好 4 · 更差 5" },
+      { g: "16 个电极", label: "vs 随机（3 组平均）", d: 3.18, lo: 1.21, hi: 5.26, n: "更好 8 · 更差 1" },
+      { g: "8 个电极", label: "vs 仅相关性", d: 0.85, lo: -0.10, hi: 2.66, n: "更好 1 · 更差 1 · 相同 7" },
+      { g: "8 个电极", label: "vs 空间权重", d: -1.81, lo: -4.27, hi: 0.78, n: "更好 2 · 更差 7" },
+      { g: "8 个电极", label: "vs 随机（3 组平均）", d: 2.37, lo: 0.25, hi: 4.01, n: "更好 8 · 更差 1" }
+    ]
+  };
+  var forestPrec = "fp32";
+  var forestHost = $("#forest-chart");
+  var forestForce = onWidth(forestHost, function () {
+    drawForest(forestHost, FOREST[forestPrec], { domain: [-5, 6],
+      aria: "冗余感知减各对照的配对差值（" + forestPrec.toUpperCase() + "）：对仅相关性和空间权重的区间都跨过 0，只有对随机子集的区间整体大于 0。" });
+  });
+  segGroup([$("#forest-fp32"), $("#forest-int8")], function (b) { forestPrec = b.getAttribute("data-prec"); forestForce(); });
+
+  /* ---------- chart E: matched-budget pruning ---------- */
+  var MATCHED = {
+    int8: [
+      { g: "relevance-16（最终方案的底座）", label: "0 − base：额外训练", d: 0.43, lo: -0.20, hi: 1.14 },
+      { g: "relevance-16（最终方案的底座）", label: "25 − 0：同预算剪 25%", d: -0.15, lo: -0.77, hi: 0.51 },
+      { g: "relevance-16（最终方案的底座）", label: "50 − 0：同预算剪 50%", d: -1.56, lo: -2.86, hi: -0.42 },
+      { g: "full-22", label: "0 − base：额外训练", d: 0.29, lo: -0.56, hi: 1.26 },
+      { g: "full-22", label: "25 − 0：同预算剪 25%", d: 0.16, lo: -0.62, hi: 1.00 },
+      { g: "full-22", label: "50 − 0：同预算剪 50%", d: -0.25, lo: -2.28, hi: 1.49 }
+    ],
+    fp32: [
+      { g: "relevance-16（最终方案的底座）", label: "0 − base：额外训练", d: 0.25, lo: -0.36, hi: 0.87 },
+      { g: "relevance-16（最终方案的底座）", label: "25 − 0：同预算剪 25%", d: -0.23, lo: -0.79, hi: 0.33 },
+      { g: "relevance-16（最终方案的底座）", label: "50 − 0：同预算剪 50%", d: -1.59, lo: -2.86, hi: -0.49 },
+      { g: "full-22", label: "0 − base：额外训练", d: 0.40, lo: -0.63, hi: 1.67 },
+      { g: "full-22", label: "25 − 0：同预算剪 25%", d: 0.01, lo: -0.67, hi: 0.76 },
+      { g: "full-22", label: "50 − 0：同预算剪 50%", d: -0.30, lo: -2.41, hi: 1.39 }
+    ]
+  };
+  var matchedPrec = "int8";
+  var matchedHost = $("#matched-chart");
+  var matchedForce = onWidth(matchedHost, function () {
+    drawForest(matchedHost, MATCHED[matchedPrec], { domain: [-3.5, 2.5],
+      aria: "等预算剪枝对照（" + matchedPrec.toUpperCase() + "）：relevance-16 剪 50% 比同样微调的不剪分支约低 1.6 个百分点，区间整体在 0 以下；其余区间都跨过 0。" });
+  });
+  segGroup([$("#matched-int8"), $("#matched-fp32")], function (b) { matchedPrec = b.getAttribute("data-prec"); matchedForce(); });
+
+  /* ---------- chart C: participants ---------- */
+  var PART = [[1, 81.02, 76.75, -4.27], [2, 38.87, 46.17, 7.30], [3, 83.64, 83.03, -0.61], [4, 49.85, 47.81, -2.04],
+    [5, 43.96, 45.65, 1.69], [6, 49.92, 50.70, 0.78], [7, 76.77, 73.89, -2.88], [8, 77.86, 81.06, 3.20], [9, 83.46, 80.05, -3.41]];
+  var partBody = $("#part-table");
+  PART.forEach(function (p) {
+    var tr = document.createElement("tr");
+    [["P" + p[0], ""], [p[1].toFixed(2) + "%", "n"], [p[2].toFixed(2) + "%", "n"], [sgn(p[3]), "n"]].forEach(function (c) {
+      var td = document.createElement("td"); td.textContent = c[0]; if (c[1]) td.className = c[1]; tr.appendChild(td);
+    });
+    partBody.appendChild(tr);
+  });
+  function barPath(x, w, y0, y1, r) {
+    var up = y1 < y0;
+    var h = Math.abs(y1 - y0);
+    r = Math.min(r, w / 2, h);
+    if (h < 0.5) return "M" + x + "," + y0 + "h" + w;
+    if (up) return "M" + x + "," + y0 + "V" + (y1 + r) + "Q" + x + "," + y1 + " " + (x + r) + "," + y1 + "H" + (x + w - r) + "Q" + (x + w) + "," + y1 + " " + (x + w) + "," + (y1 + r) + "V" + y0 + "Z";
+    return "M" + x + "," + y0 + "V" + (y1 - r) + "Q" + x + "," + y1 + " " + (x + r) + "," + y1 + "H" + (x + w - r) + "Q" + (x + w) + "," + y1 + " " + (x + w) + "," + (y1 - r) + "V" + y0 + "Z";
+  }
+  var partHost = $("#part-chart");
+  onWidth(partHost, function () {
+    hideTip();
+    partHost.replaceChildren();
+    var W = Math.max(300, Math.floor(partHost.clientWidth));
+    var wide = W >= 560;
+    var H = 300;
+    var m = { l: 40, r: 44, t: 18, b: wide ? 56 : 38 };
+    var ya = -6, yb = 8;
+    var PW = W - m.l - m.r, PH = H - m.t - m.b;
+    function Y(v) { return m.t + (yb - v) / (yb - ya) * PH; }
+    var band = PW / PART.length, bw = Math.min(24, band * 0.56);
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "class": "chart", role: "group",
+      "aria-label": "每位被试最终方案减全部 22 个 FP32 的差值：P1、P4、P7、P9 下降超过 2 个百分点，P2 上升 7.3。" }, partHost);
+    for (var t = ya; t <= yb; t += 2) {
+      el("line", { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t), "class": t === 0 ? "zero" : "gridline" }, svg);
+      txt(svg, m.l - 8, Y(t) + 4, t === 0 ? "0" : sgn(t, 0), "tick", "end");
+    }
+    el("line", { x1: m.l, x2: W - m.r, y1: Y(-2), y2: Y(-2), "class": "thresh" }, svg);
+    txt(svg, W - m.r + 4, Y(-2) + 4, "−2", "thresh-t");
+    PART.forEach(function (p, i) {
+      var cx = m.l + band * (i + 0.5), d = p[3];
+      var lose = d < -2;
+      var g = el("g", null, svg);
+      el("rect", { x: cx - band / 2, y: m.t, width: band, height: PH, "class": "hitarea" }, g);
+      el("path", { d: barPath(cx - bw / 2, bw, Y(0), Y(d), 4), "class": "bar", style: "fill:" + (lose ? "var(--bad)" : "var(--bar)") }, g);
+      txt(g, cx, d >= 0 ? Y(d) - 7 : Y(d) + 16, sgn(d, 1), "dlabel strong", "middle");
+      txt(g, cx, H - m.b + 20, "P" + p[0], "tick", "middle");
+      if (wide && band >= 62) txt(g, cx, H - m.b + 38, p[1].toFixed(1) + "→" + p[2].toFixed(1), "valnote", "middle");
+      bindTip(g, sgn(d) + " pp", "P" + p[0] + "：全部 22 个 FP32 " + p[1].toFixed(2) + "% → 最终 INT8 " + p[2].toFixed(2) + "%", lose ? "下降超过 2 pp" : "");
+    });
+    if (wide) txt(svg, m.l, H - 6, "下方小字：全部 22 个 FP32 → 最终 INT8 的准确率（%）", "valnote");
+  });
+
+  /* ---------- chart D: segmented profile bars ---------- */
+  var segs = $$("#seg-chart .sg");
+  segs.forEach(function (s) {
+    var parts = s.getAttribute("data-l");
+    bindTip(s, s.getAttribute("data-v"), parts);
+  });
+  function fitSegLabels() {
+    segs.forEach(function (s) {
+      s.classList.remove("nolabel");
+      var sp = s.querySelector("span");
+      if (sp && sp.offsetWidth + 10 > s.clientWidth) s.classList.add("nolabel");
+    });
+  }
+  var segHost = $("#seg-chart");
+  onWidth(segHost, fitSegLabels);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSegLabels);
+
+  /* ---------- electrode map ---------- */
+  var EL = ["Fz", "FC3", "FC1", "FCz", "FC2", "FC4", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "CP3", "CP1", "CPz", "CP2", "CP4", "P1", "Pz", "P2", "POz"];
+  var XY = [[-0.00086, 0.06513], [-0.04312, 0.03983], [-0.0239, 0.04129], [-0.00084, 0.04189], [0.02216, 0.04135], [0.04223, 0.0402],
+    [-0.05969, 0.01403], [-0.0454, 0.01579], [-0.02463, 0.0171], [-0.00088, 0.01769], [0.02328, 0.0171], [0.04411, 0.01591], [0.05935, 0.01431],
+    [-0.04388, -0.00797], [-0.02415, -0.00698], [-0.00097, -0.0067], [0.02352, -0.00703], [0.04333, -0.00803],
+    [-0.02012, -0.02949], [-0.00111, -0.02936], [0.0196, -0.02953], [-0.00129, -0.0462]];
+  var COUNTS = {
+    "proposed-8":    [1, 5, 1, 1, 0, 0, 1, 6, 3, 2, 1, 5, 2, 8, 5, 5, 5, 6, 5, 3, 4, 3],
+    "relevance-8":   [1, 4, 1, 1, 0, 1, 1, 5, 3, 2, 1, 6, 2, 8, 5, 5, 5, 6, 5, 3, 4, 3],
+    "weightnorm-8":  [1, 4, 2, 1, 1, 1, 2, 6, 3, 3, 3, 6, 2, 6, 4, 5, 1, 6, 6, 1, 3, 5],
+    "proposed-16":   [3, 5, 4, 2, 4, 2, 8, 8, 7, 7, 8, 8, 7, 9, 8, 8, 8, 8, 9, 6, 9, 6],
+    "relevance-16":  [2, 5, 5, 4, 3, 2, 7, 8, 8, 7, 8, 8, 7, 9, 8, 8, 8, 8, 9, 6, 9, 5],
+    "weightnorm-16": [5, 7, 6, 2, 4, 4, 2, 9, 9, 9, 8, 8, 5, 9, 7, 8, 6, 7, 9, 6, 6, 8]
+  };
+  var REL = [0.116, 0.292, 0.236, 0.144, 0.164, 0.154, 0.235, 0.608, 0.345, 0.369, 0.301, 0.496, 0.231, 0.642, 0.49, 0.439, 0.431, 0.6, 0.49, 0.462, 0.491, 0.337];
+  var MNAME = { proposed: "冗余感知", relevance: "仅相关性", weightnorm: "空间权重" };
+  var mapMode = "proposed", mapK = 8;
+  var mapG = $("#map-el"), mapRamp = $("#map-ramp"), mapCap = $("#map-caption");
+  function drawRamp(lowLabel, highLabel) {
+    mapRamp.replaceChildren();
+    var a = document.createElement("span"); a.textContent = lowLabel; mapRamp.appendChild(a);
+    var sw = document.createElement("span"); sw.className = "sw";
+    for (var i = 0; i <= 9; i++) { var b = document.createElement("i"); b.style.background = "var(--q" + i + ")"; sw.appendChild(b); }
+    mapRamp.appendChild(sw);
+    var c = document.createElement("span"); c.textContent = highLabel; mapRamp.appendChild(c);
+  }
+  function drawMap() {
+    hideTip();
+    mapG.replaceChildren();
+    var S = 2400, relMax = Math.max.apply(null, REL);
+    var score = mapMode === "score";
+    EL.forEach(function (name, i) {
+      var cx = XY[i][0] * S, cy = -XY[i][1] * S, step, value, label;
+      if (score) {
+        step = Math.round(REL[i] / relMax * 9);
+        value = REL[i].toFixed(2);
+        label = name + " · 平均 relevance 分数（9 人，0–1 缩放后）";
+      } else {
+        step = COUNTS[mapMode + "-" + mapK][i];
+        value = step + " / 9 人选中";
+        label = name + " · " + MNAME[mapMode] + " · 保留 " + mapK + " 个";
+      }
+      var g = el("g", null, mapG);
+      el("circle", { cx: cx, cy: cy, r: 16, "class": "el-dot", style: "fill:var(--q" + step + ")" }, g);
+      txt(g, cx, cy + 3.7, name, "el-name", "middle");
+      bindTip(g, value, label);
+    });
+    if (score) {
+      drawRamp("低", "高（CP3 最高 0.64）");
+      mapCap.textContent = "颜色 = 每个电极的 relevance 分数在 9 人上的平均（μ/β 频带 Fisher score，缩放到 0–1）。电极数切换在这个视图里不起作用。";
+    } else {
+      drawRamp("0 人", "9 人");
+      mapCap.textContent = "颜色 = 9 人中有几人的 " + MNAME[mapMode] + "（保留 " + mapK + " 个）选中了这个电极。来自最终训练、seed 0 的排名。";
+    }
+    $("#map-k-8").disabled = score;
+    $("#map-k-16").disabled = score;
+  }
+  segGroup([$("#map-m-proposed"), $("#map-m-relevance"), $("#map-m-weightnorm"), $("#map-m-score")], function (b) {
+    var m = b.getAttribute("data-m");
+    mapMode = m === "score" ? "score" : m;
+    drawMap();
+  });
+  segGroup([$("#map-k-8"), $("#map-k-16")], function (b) { mapK = Number(b.getAttribute("data-k")); drawMap(); });
+  drawMap();
+  (function mapTable() {
+    var head = $("#map-table thead"), body = $("#map-table tbody");
+    var cols = ["proposed-8", "relevance-8", "weightnorm-8", "proposed-16", "relevance-16", "weightnorm-16"];
+    var trh = document.createElement("tr");
+    ["电极"].concat(cols, ["relevance 分数"]).forEach(function (c, i) {
+      var th = document.createElement("th"); th.textContent = c; if (i > 0) th.className = "n"; trh.appendChild(th);
+    });
+    head.appendChild(trh);
+    EL.forEach(function (name, i) {
+      var tr = document.createElement("tr");
+      var td0 = document.createElement("td"); td0.textContent = name; tr.appendChild(td0);
+      cols.forEach(function (c) { var td = document.createElement("td"); td.className = "n"; td.textContent = COUNTS[c][i]; tr.appendChild(td); });
+      var tdr = document.createElement("td"); tdr.className = "n"; tdr.textContent = REL[i].toFixed(3); tr.appendChild(tdr);
+      body.appendChild(tr);
+    });
+  })();
+
+  /* ---------- full primary table ---------- */
+  var FULL = [
+    ["full-22", "fp32", 65.04, 64.36, 0, 0, 0, 0], ["full-22", "int8", 65.30, 64.64, 0.26, 0.07, 0.47, 0],
+    ["full-22-prune25", "fp32", 65.63, 65.22, 0.59, -0.60, 2.07, 0], ["full-22-prune25", "int8", 65.67, 65.26, 0.63, -0.55, 2.34, 0],
+    ["full-22-prune50", "fp32", 65.31, 64.82, 0.27, -2.23, 2.67, 1], ["full-22-prune50", "int8", 65.33, 64.86, 0.29, -2.05, 2.45, 1],
+    ["proposed-16", "fp32", 66.78, 66.09, 1.74, -0.46, 4.06, 1], ["proposed-16", "int8", 66.64, 65.92, 1.60, -0.64, 3.89, 2],
+    ["relevance-16", "fp32", 66.21, 65.47, 1.17, -1.27, 3.75, 2], ["relevance-16", "int8", 66.17, 65.40, 1.13, -1.28, 3.61, 2],
+    ["weightnorm-16", "fp32", 66.82, 66.29, 1.78, -0.98, 4.63, 2], ["weightnorm-16", "int8", 66.44, 65.93, 1.40, -1.00, 3.87, 2],
+    ["random1-16", "fp32", 64.50, 63.85, -0.54, -3.17, 2.34, 3], ["random1-16", "int8", 64.38, 63.72, -0.66, -3.29, 2.23, 3],
+    ["random2-16", "fp32", 63.81, 63.24, -1.23, -3.93, 1.59, 4], ["random2-16", "int8", 63.99, 63.46, -1.05, -3.72, 1.79, 4],
+    ["random3-16", "fp32", 62.18, 61.57, -2.86, -7.73, 2.15, 4], ["random3-16", "int8", 62.01, 61.38, -3.03, -7.92, 1.85, 4],
+    ["relevance-16-prune25", "fp32", 66.32, 65.77, 1.28, -0.66, 3.33, 2], ["relevance-16-prune25", "int8", 66.51, 65.97, 1.47, -0.34, 3.48, 2],
+    ["relevance-16-prune50", "fp32", 64.99, 64.44, -0.05, -2.12, 2.25, 3], ["relevance-16-prune50", "int8", 65.01, 64.47, -0.03, -2.16, 2.40, 4],
+    ["proposed-8", "fp32", 60.59, 59.71, -4.45, -7.59, -1.05, 7], ["proposed-8", "int8", 60.46, 59.57, -4.58, -7.67, -1.32, 7],
+    ["relevance-8", "fp32", 59.92, 59.03, -5.12, -8.66, -1.33, 6], ["relevance-8", "int8", 59.61, 58.74, -5.43, -8.75, -1.84, 7],
+    ["weightnorm-8", "fp32", 62.10, 61.14, -2.94, -6.79, 0.29, 4], ["weightnorm-8", "int8", 62.27, 61.29, -2.77, -6.78, 0.61, 5],
+    ["random1-8", "fp32", 55.50, 54.86, -9.54, -12.40, -6.50, 8], ["random1-8", "int8", 55.50, 54.84, -9.54, -12.53, -6.41, 8],
+    ["random2-8", "fp32", 60.74, 60.06, -4.30, -7.11, -1.54, 6], ["random2-8", "int8", 60.28, 59.57, -4.76, -7.46, -2.12, 7],
+    ["random3-8", "fp32", 58.59, 57.50, -6.45, -9.38, -3.60, 7], ["random3-8", "int8", 58.49, 57.34, -6.55, -9.43, -3.72, 8]
+  ];
+  var ftb = $("#full-table tbody");
+  FULL.forEach(function (r) {
+    var tr = document.createElement("tr");
+    if (r[0] === "relevance-16-prune50" && r[1] === "int8") tr.className = "hl";
+    var base = r[0] === "full-22" && r[1] === "fp32";
+    var cells = [
+      [r[0], ""], [r[1].toUpperCase(), ""], [r[2].toFixed(2) + "%", "n"], [r[3].toFixed(2) + "%", "n"],
+      [base ? "基线" : sgn(r[4]) + " [" + sgn(r[5]) + ", " + sgn(r[6]) + "]", "n"], [base ? "—" : String(r[7]), "n"]
+    ];
+    cells.forEach(function (c, i) {
+      var td = document.createElement("td");
+      if (i === 0) { var code = document.createElement("code"); code.textContent = c[0]; td.appendChild(code); }
+      else td.textContent = c[0];
+      if (c[1]) td.className = c[1];
+      tr.appendChild(td);
+    });
+    ftb.appendChild(tr);
+  });
+
+  /* ---------- contents highlight ---------- */
+  var links = $$(".toc a");
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+  if (typeof IntersectionObserver === "function") {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          links.forEach(function (a) { a.removeAttribute("aria-current"); });
+          var a = byId[en.target.id];
+          if (a) a.setAttribute("aria-current", "true");
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    ["top", "idea", "method", "done", "code", "results", "next", "limits", "more", "qa"].forEach(function (id) {
+      var s = document.getElementById(id);
+      if (s) io.observe(s);
+    });
+  }
+})();
+</script>
+</body>
+</html>

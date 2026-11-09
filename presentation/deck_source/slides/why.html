@@ -1,0 +1,18 @@
+<section id="why" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Every electrode costs twice</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Sensing</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">Hardware on the head</h3>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">Each electrode needs a contact, an amplifier channel and setup time. Removing one changes the device itself.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Compute</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">Work in the decoder</h3>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">EEGNet’s first layer runs over every electrode, so its multiply-accumulates and activation memory grow with the electrode count.</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">Electrodes are physical measurement sites; CNN feature channels are learned. Pruning the model never removes an electrode.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 2</p>
+<aside>Two different things are called channels. Electrodes are sensors on the scalp; feature channels are filters inside the network. Cutting electrodes saves hardware and compute at the same time; pruning network filters only saves compute. That is why this project looks at electrode selection first and model compression second.</aside>
+</section>

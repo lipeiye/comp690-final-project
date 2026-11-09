@@ -1,0 +1,17 @@
+Prediction audit: 50/459
+Prediction audit: 100/459
+Prediction audit: 150/459
+Prediction audit: 200/459
+Traceback (most recent call last):
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/audit_project.py", line 153, in <module>
+    main()
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/audit_project.py", line 144, in main
+    report=audit(args.root.resolve(),args.data_dir.resolve(),args.deep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/audit_project.py", line 97, in audit
+    content = path.read_bytes()
+              ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1020, in read_bytes
+    return f.read()
+           ^^^^^^^^
+KeyboardInterrupt

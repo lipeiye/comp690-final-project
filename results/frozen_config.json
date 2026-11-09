@@ -1,0 +1,62 @@
+{
+ "frozen_at": "2026-11-03T16:54:48",
+ "note": "Written from validation results only, before any session-2 data was scored.",
+ "epochs": 475,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "channel_counts": [
+  16,
+  8
+ ],
+ "methods": [
+  "proposed",
+  "relevance",
+  "weightnorm",
+  "random1",
+  "random2",
+  "random3"
+ ],
+ "pruning": {
+  "bases": [
+   "full-22",
+   "relevance-16"
+  ],
+  "fractions": [
+   0.25,
+   0.5
+  ],
+  "finetune_epochs": 100,
+  "finetune_lr": 0.0001
+ },
+ "final_configuration": {
+  "condition": "relevance-16-prune50",
+  "precision": "int8",
+  "electrodes": 16,
+  "parameter_bytes": 2420.0,
+  "val_acc": 0.6486744993897466,
+  "baseline_full22_fp32_val_acc": 0.635400512788253,
+  "eligible": true,
+  "n_eligible": 16,
+  "tolerance": 0.02
+ },
+ "primary_analysis": "session-2 trials without expert artifact flags; metrics averaged over seeds within each participant, then summarized over the nine participants",
+ "secondary_analysis": "the same models scored on all session-2 trials, flagged ones included",
+ "comparisons": {
+  "redundancy_vs_relevance": "proposed-K minus relevance-K, K in (16, 8), FP32 and INT8",
+  "redundancy_vs_weightnorm": "proposed-K minus weightnorm-K, K in (16, 8), FP32 and INT8",
+  "redundancy_vs_random": "proposed-K minus the mean of random1-3-K, K in (16, 8), FP32 and INT8",
+  "vs_full": "every condition minus full-22 FP32; count participants losing more than 2 points",
+  "quantization": "INT8 minus FP32 for every condition",
+  "pruning": "pruned minus unpruned base, FP32 and INT8"
+ },
+ "uncertainty": {
+  "method": "participant-level bootstrap of paired differences, percentile interval",
+  "resamples": 10000,
+  "level": 0.95,
+  "seed": 690
+ },
+ "validation_summary_sha256": "d157783a2bddb61b07174de76613bd547d6ee996bcb833d9a49fab5cda42a232"
+}

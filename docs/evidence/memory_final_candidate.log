@@ -1,0 +1,26 @@
+{
+  "fp32": {
+    "model_sha256": "a040dec73d02256c026bfab3934213b60be2389d060ad6ba5cfa22cdbc690420",
+    "baseline_rss_bytes": 50659328,
+    "after_session_rss_bytes": 57999360,
+    "after_inference_rss_bytes": 59736064,
+    "process_lifetime_peak_rss_bytes": 59736064,
+    "runtime_input_type": "tensor(float)",
+    "input_array_bytes": 1024000,
+    "warmup": 100,
+    "runs": 1000,
+    "onnxruntime": "1.31.1"
+  },
+  "int8": {
+    "model_sha256": "db5dab6b94e96b233cdc6a116eddef89a9beadc1603763242cc7d8ab0e13f67a",
+    "baseline_rss_bytes": 50626560,
+    "after_session_rss_bytes": 58458112,
+    "after_inference_rss_bytes": 60719104,
+    "process_lifetime_peak_rss_bytes": 60719104,
+    "runtime_input_type": "tensor(float)",
+    "input_array_bytes": 1024000,
+    "warmup": 100,
+    "runs": 1000,
+    "onnxruntime": "1.31.1"
+  }
+}

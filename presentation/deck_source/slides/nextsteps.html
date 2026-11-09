@@ -1,0 +1,38 @@
+<section id="nextsteps" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Next steps</h2>
+<p style="font-size:30px;line-height:1.4;color:#14213D;background:#F3E6D8;padding:20px 32px;border-radius:12px">Done: every proposed experiment (plan frozen before day 2) and the M5 matched-budget control</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Required</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Finish the report and slides</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>Revise after this review</li>
+<li>Keep the frozen-plan results as the main claims</li>
+<li>Flag later analyses as post-test</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">Late November to early December</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Follow-up A · first</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Why was INT8 slower on the M4?</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>Leave only the grouped spatial convolution in FP32</li>
+<li>Is the mix faster than FP32?</li>
+<li>Time FP32, INT8 and the mix on the M5, apart from M4</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">No retraining needed</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Follow-up B · if time</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Redundancy without shared activity</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>First remove the band-power swing shared by all electrodes</li>
+<li>Retest at 8 electrodes, still 3–5 points below all 22</li>
+<li>Choose on day 1; confirm on a second two-day dataset</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">Needs new training runs</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 18 · plans only, nothing on this slide has been run · both follow-ups come after the frozen plan</p>
+<aside>Every experiment in the proposal is done, and the analysis plan was frozen before day 2 was scored. What is left is the write-up: I will revise the report and slides from today's feedback, keep the frozen-plan results as the main claims, and mark anything added later as post-test. If time allows, two follow-ups, in this order. First, INT8 was slower on the M4, and the profile points to the quantized grouped spatial convolution. Keeping just that layer in floating point tests this directly and needs no retraining; the new timings would come from the M5, so they stay separate from the M4 numbers. Second, the penalty changed little because band power rises and falls together across the scalp. Removing that shared swing first tests whether a better redundancy measure helps, mainly at eight electrodes. Day 2 has already been seen, so a result there would be exploratory; confirming it needs a second two-day dataset.</aside>
+</section>

@@ -1,0 +1,21 @@
+<section id="data" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Data, and a test day kept locked</h2>
+<div style="display:flex;gap:80px;align-items:start">
+<div style="width:620px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">9 people</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">BCI Competition IV, dataset 2a</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">2 days</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">6 runs of 48 cued trials each day</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">22 electrodes</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">EEG at 250 Hz, 2-s window after each cue</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">4 classes</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">left hand, right hand, feet, tongue</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A808A">Protocol</p>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">1 · Validate on day 1</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">three folds, two runs held out each</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">2 · Decide on validation only</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">epoch budget, pruning base, final choice</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #B5591A;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">3 · Freeze the analysis plan</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">written before day 2 is read</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">4 · Retrain on all of day 1</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">three seeds per condition</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">5 · Score day 2 once</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">FP32 and INT8, artifact-free trials</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 4</p>
+<aside>The test day is locked in code: the loader for session 2 refuses to run unless called by the final evaluation, and that script refuses to start until the frozen plan file exists. Every number on the result slides comes from that single pass over day 2. Trials that experts flagged as artifacts are excluded in the primary analysis; a secondary analysis keeps them.</aside>
+</section>

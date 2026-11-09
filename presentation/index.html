@@ -1,0 +1,355 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EEG Channel Selection and Model Compression</title><style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#171a20;color:white;font-family:Arial,sans-serif}
+#stage{position:absolute;inset:0;overflow:hidden}.slide{position:absolute!important;width:1920px;height:1080px;transform-origin:top left;overflow:hidden;margin:0}
+[hidden]{display:none!important}.slide p,.slide h2,.slide h3{margin:0}.slide ul{margin:0;padding-left:1.1em}.slide th,.slide td{padding:14px 12px}.slide aside{display:none}
+#toolbar{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;background:#171a20e8;padding:7px 15px;border-radius:7px;font-size:13px;z-index:3}
+button{background:#f6f5f1;border:0;border-radius:3px;padding:6px 12px;color:#14213d;cursor:pointer}button:focus-visible{outline:3px solid #f2a65a}
+#notes{position:fixed;bottom:62px;left:8%;right:8%;padding:20px;background:#fff;color:#14213d;border:2px solid #b5591a;max-height:35vh;overflow:auto;line-height:1.5;z-index:5}
+video{object-fit:contain;background:black}
+@media print{@page{size:1920px 1080px;margin:0}html,body{width:auto;height:auto;background:white}#stage{position:static;overflow:visible}.slide,.slide[hidden]{position:relative!important;display:flex!important;transform:none!important;left:0!important;top:0!important;page-break-after:always;break-after:page;width:1920px;height:1080px}#toolbar,#notes{display:none!important}}
+</style></head><body><main id="stage" aria-label="Presentation"><section class="slide" id="cover" data-transition="fade" style="background:#14213D;color:#F6F5F1;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between">
+<p style="font-size:28px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F2A65A">COMP 690-193 · Final project · Fall 2026</p>
+<div style="display:flex;flex-direction:column;gap:40px">
+<h1 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:96px;font-weight:600;line-height:1.08;color:#F6F5F1">EEG Channel Selection and Model Compression for Motor-Imagery BCI</h1>
+<p style="font-size:40px;line-height:1.3;color:#C9D1DE">How many electrodes, and how many bits, can a decoder lose on a new recording day?</p>
+</div>
+<p style="font-size:32px;color:#F6F5F1">Peiye Li</p>
+<aside>This project is a software study of one practical question for wearable brain-computer interfaces: if we record from fewer EEG electrodes and run a smaller, 8-bit decoder, how much decoding accuracy do we give up when the decoder is used on a different day from the one it was trained on?</aside>
+</section>
+
+<section class="slide" id="why" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Every electrode costs twice</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Sensing</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">Hardware on the head</h3>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">Each electrode needs a contact, an amplifier channel and setup time. Removing one changes the device itself.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Compute</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">Work in the decoder</h3>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">EEGNet’s first layer runs over every electrode, so its multiply-accumulates and activation memory grow with the electrode count.</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">Electrodes are physical measurement sites; CNN feature channels are learned. Pruning the model never removes an electrode.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 2</p>
+<aside>Two different things are called channels. Electrodes are sensors on the scalp; feature channels are filters inside the network. Cutting electrodes saves hardware and compute at the same time; pruning network filters only saves compute. That is why this project looks at electrode selection first and model compression second.</aside>
+</section>
+
+<section class="slide" id="question" data-transition="fade" style="background:#F3E6D8;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A4500F">Research question</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.15;color:#14213D">At a fixed electrode count, does accounting for redundancy between electrodes beat relevance-only and weight-based selection on a new recording day, and does any advantage survive INT8?</h2>
+<p style="font-size:32px;line-height:1.4;color:#3D4A5C">Hypothesis: a task-aware subset beats a random one, but correlated electrodes are not necessarily dispensable. No gain in accuracy or speed is assumed.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A6A5C">Peiye Li · COMP 690 · 3</p>
+<aside>The question is deliberately narrow: same decoder, same training budget, same number of electrodes, and only the way the electrodes are chosen changes. Then the same comparison is repeated after 8-bit quantization.</aside>
+</section>
+
+<section class="slide" id="data" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Data, and a test day kept locked</h2>
+<div style="display:flex;gap:80px;align-items:start">
+<div style="width:620px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">9 people</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">BCI Competition IV, dataset 2a</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">2 days</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">6 runs of 48 cued trials each day</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">22 electrodes</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">EEG at 250 Hz, 2-s window after each cue</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">4 classes</p><p style="font-size:28px;line-height:1.3;color:#3D4A5C">left hand, right hand, feet, tongue</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A808A">Protocol</p>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">1 · Validate on day 1</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">three folds, two runs held out each</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">2 · Decide on validation only</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">epoch budget, pruning base, final choice</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #B5591A;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">3 · Freeze the analysis plan</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">written before day 2 is read</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">4 · Retrain on all of day 1</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">three seeds per condition</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding:4px 0 4px 28px"><p style="font-size:30px;font-weight:600;line-height:1.3">5 · Score day 2 once</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">FP32 and INT8, artifact-free trials</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 4</p>
+<aside>The test day is locked in code: the loader for session 2 refuses to run unless called by the final evaluation, and that script refuses to start until the frozen plan file exists. Every number on the result slides comes from that single pass over day 2. Trials that experts flagged as artifacts are excluded in the primary analysis; a secondary analysis keeps them.</aside>
+</section>
+
+<section class="slide" id="cost" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Where EEGNet’s cost lives</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">2,420</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">parameters: about 9.4 KB in FP32</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">5.9 M</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">MACs per decision; 96% in the first temporal convolution</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">397 KB</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">peak activations, FP32, run layer by layer</p>
+</div>
+</div>
+<p style="font-size:34px;line-height:1.4;color:#14213D">Compute and activation memory scale with the electrode count; parameters barely do.</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">At 8 electrodes: 2.2 M MACs (−63%), 160 KB of modeled peak activations (−60%), but still 2,196 parameters (−9%).</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 5 · analytical counts for one 2-s window, batch 1</p>
+<aside>This is the systems lens for the rest of the talk. The weights are tiny, about ten kilobytes. The work is in the first layer, a temporal convolution applied to every electrode separately, and its output is also the largest tensor. So the knob that really moves compute and memory is the number of electrodes, not the number of weights.</aside>
+</section>
+
+<section class="slide" id="selection" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Choosing the electrodes</h2>
+<div style="background:#14213D;border-radius:16px;padding:36px 48px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:34px;line-height:1.4;color:#F6F5F1">next = argmax<span style="color:#F2A65A"> relevance(c) − 0.5 × mean |ρ(c, chosen)|</span></p>
+</div>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#B5591A">Proposed rule</h3>
+<ul style="font-size:28px;line-height:1.45;color:#3D4A5C">
+<li>Relevance: Fisher score of mu (8–13 Hz) and beta (13–30 Hz) log power, scaled 0–1</li>
+<li>Redundancy: |Spearman ρ| of that log power across trials</li>
+<li>Training trials only; keep 16 or 8 of 22</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Controls, same count</h3>
+<ul style="font-size:28px;line-height:1.45;color:#3D4A5C">
+<li>Relevance only (penalty 0)</li>
+<li>Spatial-weight norm of the trained 22-electrode EEGNet</li>
+<li>Three fixed random subsets</li>
+<li>All 22 electrodes as the reference</li>
+</ul>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 6 · each subset retrains EEGNet, so the input really shrinks</p>
+<aside>The proposed rule is an mRMR-style heuristic, not a new algorithm. It starts from the most relevant electrode and then keeps adding the electrode whose relevance, minus half its average correlation with the electrodes already chosen, is highest. Relevance-only is the same rule with the penalty set to zero, so comparing the two isolates the redundancy term. The weight-norm control is an adaptation inspired by MI-BMInet.</aside>
+</section>
+
+<section class="slide" id="compression" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Compressing the decoder</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Fewer bits</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">INT8 quantization</h3>
+<ul style="font-size:28px;line-height:1.45;color:#3D4A5C">
+<li>ONNX Runtime static post-training quantization</li>
+<li>8-bit activations, per-channel 8-bit weights</li>
+<li>Calibrated on the model’s own training trials</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#FDFCF9;padding:48px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Fewer filters</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:44px;font-weight:600;line-height:1.2;color:#14213D">Structured pruning</h3>
+<ul style="font-size:28px;line-height:1.45;color:#3D4A5C">
+<li>Drop 25% or 50% of the 16 final pointwise filters by L1 norm</li>
+<li>Slice BatchNorm and dense inputs: 2,420 → 2,108 or 1,796 parameters</li>
+<li>Fine-tune 100 epochs</li>
+</ul>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Timing: ONNX Runtime on an Apple M4 CPU, batch 1, one thread, 100 warm-up and 1,000 timed calls.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 7</p>
+<aside>Both compression steps are applied to trained models. Quantization needs no retraining; the exported FP32 graph matches PyTorch to about one part in a million before it is quantized. Pruning really removes tensor dimensions rather than zeroing weights, because zero masks alone would not save any time or memory on dense hardware.</aside>
+</section>
+
+<section class="slide" id="accuracy" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">16 chosen electrodes match all 22; 8 cost 3–5 points</h2>
+<img src="assets/fig_accuracy_vs_electrodes.png" alt="Session-2 accuracy by electrode count for each selection rule, FP32 and INT8: 16-electrode task-aware subsets at 66 to 67 percent, all 22 electrodes at 65 percent, 8-electrode subsets at 58 to 62 percent" style="width:1664px;height:620px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 8 · session 2, artifact-free trials, 9 participants, seeds averaged</p>
+<aside>On the held-out day, all 22 electrodes gave 65.0% accuracy, where chance is 25%. Every task-aware rule at 16 electrodes landed at 66 to 67%, slightly above the full set, with intervals that include zero, so call it a match. At 8 electrodes every rule lost accuracy: the proposed rule 4.4 points, relevance-only 5.1, the weight-based rule 2.9. The INT8 panel on the right is practically identical to FP32.</aside>
+</section>
+
+<section class="slide" id="redundancy" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">The redundancy term beat random, not simpler rules</h2>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="width:700px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #2F6DB5;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs relevance only</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#14213D">+0.6 / +0.7 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">same subsets for 6 and 7 of 9 people</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #4E8A3E;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs spatial-weight norm</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#14213D">−0.0 / −1.5 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">weights did better for 7 of 9 at 8 electrodes</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #B5591A;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs random subsets</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#B5591A">+3.3 / +2.3 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">better for 8 of 9 people</p></div>
+</div>
+<img src="assets/fig_forest.png" alt="Paired accuracy differences, proposed minus each control, with 95 percent participant bootstrap intervals, at 16 and 8 electrodes in FP32 and INT8" style="width:908px;height:567px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 9 · values are 16 / 8 electrodes, FP32; INT8 within 0.3 points of each</p>
+<aside>This slide answers the research question. Proposed minus relevance-only is under one point, and the intervals cross zero, because for most people the two rules picked exactly the same electrodes. Against the weight-based rule it ties at 16 electrodes and loses 1.5 points at 8. The only reliable gain is over random subsets, about 2 to 3 points, for 8 of the 9 participants. All of this is unchanged after INT8.</aside>
+</section>
+
+<section class="slide" id="whynot" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Why the penalty changed so little</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">0.74</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">mean |ρ| between two electrodes’ band power (0.66–0.84 by person)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">0.13</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">spread of the penalty across candidates, against relevance gaps of 0.1–0.3</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">6–7 of 9</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">people got identical subsets from both rules</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#14213D">Power rises and falls across the whole scalp from trial to trial, so every candidate looks equally redundant.</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">The weight-based rule asks the trained network which inputs it uses, which may be why it held up best at 8 electrodes.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 10 · penalty measured at the 8th pick, final fit on all of day 1</p>
+<aside>The redundancy measure is the absolute Spearman correlation of band power across trials. It averages 0.74, so almost every pair of electrodes looks redundant. When the eighth electrode is chosen, the penalty differs by only 0.13 between candidates, while the relevance of the leading candidates differs by 0.1 to 0.3, so the penalty can only reorder near-ties. A measure that first removes the activity shared by all electrodes might behave differently; that is future work.</aside>
+</section>
+
+<section class="slide" id="maps" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Every rule favours C3, C4, CP3 and CP4</h2>
+<div style="display:flex;gap:48px;align-items:center">
+<img src="assets/fig_selection_maps.png" alt="Electrode maps: share of the nine participants choosing each electrode, for the redundancy-aware, relevance-only and weight-based rules at 8 and 16 electrodes, plus the mean relevance score; lateral central and centro-parietal sites dominate" style="width:1250px;height:643px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A808A">Subset overlap</p>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">0.74–0.85</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">band-power rules, across folds</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#4E8A3E">0.40–0.66</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">weight-based rule, yet it decoded as well</p></div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 11 · maps from the final fit; overlap = mean pairwise Jaccard index</p>
+<aside>These maps show how often each electrode was chosen across the nine participants. The band-power rules concentrate on the lateral central and centro-parietal electrodes over the hand areas, where the mu and beta rhythms change during imagined movement, which is reassuring physiologically. The weight-based rule changes its picks a lot between training runs, with a Jaccard overlap of only 0.40 at 8 electrodes, but it still decoded at least as well, so a stable subset was not needed for accuracy.</aside>
+</section>
+
+<section class="slide" id="int8" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">INT8 kept the accuracy but ran slower on this CPU</h2>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="width:540px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#14213D">≤ 0.5 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">accuracy change in all 17 conditions</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#14213D">2.9× fewer</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">parameter bytes (9,576 → 3,260)</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">28% slower</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">0.358 vs 0.280 ms, 22 electrodes</p></div>
+</div>
+<img src="assets/fig_int8_layers.png" alt="CPU kernel time per layer for FP32 and INT8 at 22 and 8 electrodes: INT8 speeds up the temporal convolution but the grouped spatial convolution becomes about 14 times slower" style="width:1068px;height:427px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+</div>
+<p style="font-size:30px;line-height:1.4;color:#14213D">The temporal convolution got 38% faster in INT8, but the grouped spatial convolution ran 14× slower (185 vs 12.8 µs): the quantized spatial operator dominated this profile.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 12 · ONNX Runtime 1.31.1 on an Apple M4 CPU; per-node times from its profiler</p>
+<aside>Mean quantization effects were small: every condition moved by half a point or less, and INT8 and FP32 agreed on 97% of trials. The weights shrink about threefold. But on this CPU the INT8 model was slower. The profiler shows why: the big temporal convolution did get faster, but the executed quantized grouped spatial operator became fourteen times slower and dominated the total. QLinearConv kernels were present; this profile does not establish a missing integer kernel. On a microcontroller with dedicated integer kernels this could be very different, which is exactly why it has to be measured.</aside>
+</section>
+
+<section class="slide" id="efficiency" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Electrode count sets compute, memory and latency</h2>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:30px;color:#14213D;background:#FDFCF9;border-radius:12px">
+<tr style="background:#E9E6DD"><th style="width:28%;text-align:left">Model</th><th style="width:20%;text-align:right">Param. bytes FP32 / INT8</th><th style="width:12%;text-align:right">MACs</th><th style="width:20%;text-align:right">Modeled activations FP32 / INT8</th><th style="width:20%;text-align:right">Latency FP32 / INT8</th></tr>
+<tr><td>22 electrodes</td><td style="text-align:right">9,576 / 3,260</td><td style="text-align:right">5.89 M</td><td style="text-align:right">397 / 99 KB</td><td style="text-align:right">0.280 / 0.358 ms</td></tr>
+<tr><td>16 electrodes</td><td style="text-align:right">9,192 / 3,164</td><td style="text-align:right">4.30 M</td><td style="text-align:right">289 / 72 KB</td><td style="text-align:right">0.206 / 0.259 ms</td></tr>
+<tr><td>8 electrodes</td><td style="text-align:right">8,680 / 3,036</td><td style="text-align:right">2.18 M</td><td style="text-align:right">160 / 40 KB</td><td style="text-align:right">0.115 / 0.148 ms</td></tr>
+<tr style="background:#F3E6D8"><td>16, 50% pruned (final)</td><td style="text-align:right">6,728 / 2,420</td><td style="text-align:right">4.28 M</td><td style="text-align:right">289 / 72 KB</td><td style="text-align:right">0.201 / 0.257 ms</td></tr>
+</table>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Pruning half of the final filters removed 27% of the parameters but only 0.4% of the MACs, and left latency unchanged. Preprocessing takes 0.04–0.09 ms. Activation bytes are modeled, not measured ORT memory.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 13 · Apple M4 CPU, batch 1, one thread, 1,000 timed calls; 95th percentile within 0.012 ms of the median</p>
+<aside>Going from 22 to 16 to 8 electrodes cut latency by 27% and 59%, almost exactly in step with the multiply-accumulates, because the first layer runs once per electrode. INT8 and pruning shrink the parameter bytes, which were never the bottleneck at about ten kilobytes. Note also that every number here is well under a millisecond, against a 2-second observation window, so on a desktop compute is not what a user would feel; on a wearable it is memory and energy that matter.</aside>
+</section>
+
+<section class="slide" id="final" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">The frozen choice had similar mean accuracy on day 2</h2>
+<p style="font-size:30px;line-height:1.4;color:#14213D;background:#F3E6D8;padding:20px 32px;border-radius:12px">16 electrodes by relevance · half of the final filters pruned · INT8, chosen on day-1 validation before day 2 was scored</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#B5591A">65.0%</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">day-2 accuracy; all 22 in FP32: 65.0%</p></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">4.0×</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">fewer parameter bytes (2,420 vs 9,576)</p></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">5.5×</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">smaller modeled tensor peak (72 vs 397 KB)</p></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">4 of 9</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">people lost more than 2 points; one gained 7.3</p></div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Validation had predicted 64.9%. Across people, accuracy ranged from 45.6% to 83.0%, far wider than any gap between conditions.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 14 · mean difference vs all 22 FP32: −0.0 points (95% interval −2.2 to 2.4)</p>
+<aside>The decision rule picked this configuration on validation data: the fewest electrodes within 2 points of the full model, then the smallest model. On the held-out day it scored nearly the same mean accuracy as all 22 electrodes, with four times fewer parameter bytes and a 5.5-fold modeled activation-tensor ratio, not measured runtime memory. The average hides spread: four people lost more than two points, and one gained over seven. Validation predicted 64.9%; the close mean does not establish equivalence or rule out selection overfitting. The complete ONNX file shrank by only 7.1%.</aside>
+</section>
+
+<section class="slide" id="matched" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:100px 128px 130px;display:flex;flex-direction:column;gap:25px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Supplementary M5 reproduction · added after original test results</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Equal fine-tuning reveals a cost of 50% pruning</h2>
+<p style="font-size:29px;line-height:1.35">Both original bases, all 9 participants and 3 seeds; every branch gets 100 extra epochs at 1e-4.</p>
+<div style="display:flex;align-items:center;gap:40px">
+<img src="assets/matched_budget_effects.png" alt="Pruned minus equally fine-tuned unpruned accuracy with 95 percent participant bootstrap intervals; relevance-16 with 50 percent pruning is lower in both FP32 and INT8" style="width:1110px;height:565px;object-fit:contain;background:white;border-radius:12px">
+<div style="display:flex;flex-direction:column;gap:22px;flex:1">
+<p style="font-size:72px;font-weight:600;color:#B5591A;line-height:1">−1.56 points</p>
+<p style="font-size:29px;line-height:1.4">16-electrode INT8, 50% pruned versus unpruned with the same extra training.</p>
+<p style="font-size:27px;line-height:1.4">95% exploratory interval: −2.86 to −0.42 points.</p>
+<p style="font-size:25px;line-height:1.4;color:#526177">216 models evaluated in FP32 and INT8. The historical M4 finalist is retained.</p>
+</div></div>
+<p style="position:absolute;left:128px;bottom:55px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · supplementary, post-test comparison · M5 independent reproduction, not original-weight recovery</p>
+<aside>The original unpruned baseline did not get the 100 additional epochs used after pruning. I added a controlled comparison: all three branches start from the same independently reproduced base and receive the same fine-tuning schedule. For relevance-16 INT8, 50 percent pruning is 1.56 points worse than the equally fine-tuned unpruned model, with an exploratory participant interval entirely below zero. This qualifies the earlier near-baseline mean; it does not retrospectively change the original finalist. The supplementary run used an M5, not the original M4, and was added after the test outcomes were known.</aside>
+</section>
+
+<section class="slide" id="demo" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Real-time replay through the frozen decoder</h2>
+<div style="display:flex;gap:48px;align-items:center">
+<img src="assets/replay_participant3_still.png" data-video="assets/replay_participant3.mp4" data-video-start="click" alt="Frame of the replay: causally filtered EEG at C4, Cz and C3 with the cue, the shaded 2-second observation window and the decision marker, beside a cursor moved by the decoded class and a timing panel" style="width:1180px;height:629px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">6 of 8</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">trials correct, participant 3, day 2</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">0.35 ms</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">compute per decision, INT8</p></div>
+<p style="font-size:26px;line-height:1.35;color:#3D4A5C">Streamed windows equal the offline ones to 10⁻⁶ µV.</p>
+<p style="font-size:26px;line-height:1.35;color:#B5591A">Replay only: the participant never saw this feedback.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 16 · click the frame to play the 62-s replay · participant 3 is one of the stronger decoders (83%)</p>
+<aside>Click the frame to start the one-minute replay. The script streams a recorded run at 250 samples per second through the same causal filter used in training. Each trial’s window closes 2.5 seconds after the cue, the INT8 model decides in about a third of a millisecond, and the cursor moves left, right, down or up for left hand, right hand, feet or tongue. Green means correct. This is a replay of recorded data: the person never saw the cursor, so it does not show closed-loop control.</aside>
+</section>
+
+<section class="slide" id="limits" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">What these results do not show</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 56px">
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Nine people, one dataset</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Wide intervals; no claim for new users, headsets or implants.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Desktop timing</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Not microcontroller latency, SRAM or energy.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Original pruning confound</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Original pruned models got 100 extra epochs; the added M5 control matches this budget.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Per-person electrodes</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">A headset would need one fixed set for everyone.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">One redundancy measure</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Band-power correlation only; others may differ.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Offline replay</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">No closed-loop or asynchronous use was tested.</p></div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 17</p>
+<aside>I want to be explicit about the claim boundaries. With nine participants the bootstrap intervals are exploratory. All timing is from a desktop CPU, so it says nothing direct about a microcontroller. The original pruned models had extra training. The supplementary M5 control now provides the equally fine-tuned comparison, with a post-test analysis caveat. And electrodes were chosen separately for each person, while a real headset has one fixed layout.</aside>
+</section>
+
+<section class="slide" id="nextsteps" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Next steps</h2>
+<p style="font-size:30px;line-height:1.4;color:#14213D;background:#F3E6D8;padding:20px 32px;border-radius:12px">Done: every proposed experiment (plan frozen before day 2) and the M5 matched-budget control</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Required</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Finish the report and slides</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>Revise after this review</li>
+<li>Keep the frozen-plan results as the main claims</li>
+<li>Flag later analyses as post-test</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">Late November to early December</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Follow-up A · first</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Why was INT8 slower on the M4?</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>Leave only the grouped spatial convolution in FP32</li>
+<li>Is the mix faster than FP32?</li>
+<li>Time FP32, INT8 and the mix on the M5, apart from M4</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">No retraining needed</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Follow-up B · if time</p>
+<h3 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:40px;font-weight:600;line-height:1.2;color:#14213D">Redundancy without shared activity</h3>
+<ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
+<li>First remove the band-power swing shared by all electrodes</li>
+<li>Retest at 8 electrodes, still 3–5 points below all 22</li>
+<li>Choose on day 1; confirm on a second two-day dataset</li>
+</ul>
+<p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">Needs new training runs</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 18 · plans only, nothing on this slide has been run · both follow-ups come after the frozen plan</p>
+<aside>Every experiment in the proposal is done, and the analysis plan was frozen before day 2 was scored. What is left is the write-up: I will revise the report and slides from today's feedback, keep the frozen-plan results as the main claims, and mark anything added later as post-test. If time allows, two follow-ups, in this order. First, INT8 was slower on the M4, and the profile points to the quantized grouped spatial convolution. Keeping just that layer in floating point tests this directly and needs no retraining; the new timings would come from the M5, so they stay separate from the M4 numbers. Second, the penalty changed little because band power rises and falls together across the scalp. Removing that shared swing first tests whether a better redundancy measure helps, mainly at eight electrodes. Day 2 has already been seen, so a result there would be exploratory; confirming it needs a second two-day dataset.</aside>
+</section>
+
+<section class="slide" id="takeaways" data-transition="fade" style="background:#14213D;color:#F6F5F1;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<p style="font-size:28px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F2A65A">Takeaways</p>
+<div style="display:flex;flex-direction:column;gap:44px">
+<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">1</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">Which electrodes, and how many, matter more than how the weights are stored.</p></div>
+<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">2</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">Sixteen task-chosen electrodes kept similar mean accuracy; redundancy showed no clear gain over relevance.</p></div>
+<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">3</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">INT8 shrinks bytes, not M4 time; matched fine-tuning reveals a pruning accuracy cost.</p></div>
+</div>
+<p style="font-size:32px;color:#C9D1DE">Thank you · questions welcome</p>
+<aside>To sum up. First, for a decoder this small, the number and choice of electrodes is the real lever: it sets the compute, the activation memory and the latency, and it is also the hardware cost. Second, sixteen electrodes picked by any task-aware rule were enough on a new day, but the redundancy term did not beat simply ranking by relevance. Third, the original finalist had similar mean accuracy and smaller weights; the new matched-budget control reveals a pruning cost, but the weights were never the bottleneck, and on this CPU INT8 was even slower with most kernel time spent in the quantized grouped spatial convolution.</aside>
+</section>
+</main>
+<nav id="toolbar" aria-label="Slide controls"><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button><button id="toggleNotes">Notes (N)</button><button id="fullscreen">Full screen (F)</button><span>Arrow keys · Home/End · click demo to play</span></nav>
+<aside id="notes" hidden aria-label="Speaker notes"></aside><script>
+const slides=[...document.querySelectorAll('.slide')],notes=document.getElementById('notes');let current=0;
+const initial=slides.findIndex(s=>s.id===decodeURIComponent(location.hash.slice(1)));if(initial>=0)current=initial;
+function layout(){const scale=Math.min(innerWidth/1920,(innerHeight-45)/1080);for(const s of slides){s.style.transform=`scale(${scale})`;s.style.left=`${(innerWidth-1920*scale)/2}px`;s.style.top=`${Math.max(0,(innerHeight-45-1080*scale)/2)}px`;}}
+function show(n){current=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>{s.hidden=i!==current;s.setAttribute('aria-hidden',String(i!==current));if(i!==current)s.querySelectorAll('video').forEach(v=>v.pause());});document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;notes.textContent=slides[current].querySelector('aside')?.textContent||'No speaker notes';history.replaceState(null,'','#'+slides[current].id);layout();}
+function fullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();}
+document.getElementById('previous').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
+document.getElementById('toggleNotes').onclick=()=>notes.hidden=!notes.hidden;document.getElementById('fullscreen').onclick=fullscreen;
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1);}else if(['ArrowLeft','PageUp'].includes(e.key))show(current-1);else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key.toLowerCase()==='n')notes.hidden=!notes.hidden;else if(e.key.toLowerCase()==='f')fullscreen();});
+document.querySelectorAll('[data-video]').forEach(img=>{img.tabIndex=0;img.setAttribute('role','button');img.setAttribute('aria-label','Play recorded EEG replay');function play(){const video=document.createElement('video');video.src=img.dataset.video;video.poster=img.src;video.controls=true;video.style.cssText=img.style.cssText;img.replaceWith(video);video.play();}img.onclick=play;img.onkeydown=e=>{if(e.key==='Enter'){e.stopPropagation();play();}};});
+addEventListener('resize',layout);show(current);
+</script></body></html>

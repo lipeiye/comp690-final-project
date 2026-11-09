@@ -1,0 +1,21 @@
+<section id="whynot" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Why the penalty changed so little</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">0.74</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">mean |ρ| between two electrodes’ band power (0.66–0.84 by person)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">0.13</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">spread of the penalty across candidates, against relevance gaps of 0.1–0.3</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">6–7 of 9</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">people got identical subsets from both rules</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#14213D">Power rises and falls across the whole scalp from trial to trial, so every candidate looks equally redundant.</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">The weight-based rule asks the trained network which inputs it uses, which may be why it held up best at 8 electrodes.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 10 · penalty measured at the 8th pick, final fit on all of day 1</p>
+<aside>The redundancy measure is the absolute Spearman correlation of band power across trials. It averages 0.74, so almost every pair of electrodes looks redundant. When the eighth electrode is chosen, the penalty differs by only 0.13 between candidates, while the relevance of the leading candidates differs by 0.1 to 0.3, so the penalty can only reorder near-ties. A measure that first removes the activity shared by all electrodes might behave differently; that is future work.</aside>
+</section>

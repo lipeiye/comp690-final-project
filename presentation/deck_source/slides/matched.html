@@ -1,0 +1,15 @@
+<section id="matched" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:100px 128px 130px;display:flex;flex-direction:column;gap:25px">
+<p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#B5591A">Supplementary M5 reproduction · added after original test results</p>
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:60px;font-weight:600;line-height:1.1">Equal fine-tuning reveals a cost of 50% pruning</h2>
+<p style="font-size:29px;line-height:1.35">Both original bases, all 9 participants and 3 seeds; every branch gets 100 extra epochs at 1e-4.</p>
+<div style="display:flex;align-items:center;gap:40px">
+<img src="../../../docs/assets/matched_budget_effects.png" alt="Pruned minus equally fine-tuned unpruned accuracy with 95 percent participant bootstrap intervals; relevance-16 with 50 percent pruning is lower in both FP32 and INT8" style="width:1110px;height:565px;object-fit:contain;background:white;border-radius:12px">
+<div style="display:flex;flex-direction:column;gap:22px;flex:1">
+<p style="font-size:72px;font-weight:600;color:#B5591A;line-height:1">−1.56 points</p>
+<p style="font-size:29px;line-height:1.4">16-electrode INT8, 50% pruned versus unpruned with the same extra training.</p>
+<p style="font-size:27px;line-height:1.4">95% exploratory interval: −2.86 to −0.42 points.</p>
+<p style="font-size:25px;line-height:1.4;color:#526177">216 models evaluated in FP32 and INT8. The historical M4 finalist is retained.</p>
+</div></div>
+<p style="position:absolute;left:128px;bottom:55px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · supplementary, post-test comparison · M5 independent reproduction, not original-weight recovery</p>
+<aside>The original unpruned baseline did not get the 100 additional epochs used after pruning. I added a controlled comparison: all three branches start from the same independently reproduced base and receive the same fine-tuning schedule. For relevance-16 INT8, 50 percent pruning is 1.56 points worse than the equally fine-tuned unpruned model, with an exploratory participant interval entirely below zero. This qualifies the earlier near-baseline mean; it does not retrospectively change the original finalist. The supplementary run used an M5, not the original M4, and was added after the test outcomes were known.</aside>
+</section>

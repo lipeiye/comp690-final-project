@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/run_matched_control.py", line 261, in <module>
+    main()
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/run_matched_control.py", line 229, in main
+    create_plan(args.rebuild_bases);return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/run_matched_control.py", line 55, in create_plan
+    plan = load_plan()
+           ^^^^^^^^^^^
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/run_matched_control.py", line 46, in load_plan
+    raise RuntimeError(f"Planned training/evaluation source changed: {relative}; start a new supplementary directory")
+RuntimeError: Planned training/evaluation source changed: scripts/run_matched_control.py; start a new supplementary directory

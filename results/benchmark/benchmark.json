@@ -1,0 +1,1710 @@
+{
+ "environment": {
+  "python": "3.12.12",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "cpu": "Apple M4",
+  "torch_threads": 4,
+  "packages": {
+   "torch": "2.15.0",
+   "braindecode": "2.0.0",
+   "numpy": "2.5.4",
+   "scipy": "1.18.1",
+   "scikit-learn": "1.9.1"
+  },
+  "onnxruntime": "1.31.1",
+  "machine": "arm64",
+  "power": {
+   "source": "AC",
+   "low_power_mode": "0"
+  },
+  "ort_threads": {
+   "intra_op": 1,
+   "inter_op": 1
+  }
+ },
+ "models": "final models of subject 1, seed 0",
+ "rows": [
+  {
+   "condition": "full-22",
+   "precision": "fp32",
+   "electrodes": 22,
+   "F2": 16,
+   "params": 2420,
+   "macs": 5885088,
+   "input_bytes": 44000,
+   "peak_activation_bytes": 396704,
+   "file_bytes": 28022,
+   "parameter_bytes": 9576,
+   "latency_median_ms": 0.279875,
+   "latency_p95_ms": 0.28587914999999997,
+   "latency_mean_ms": 0.27915186900000005,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "full-22",
+   "precision": "int8",
+   "electrodes": 22,
+   "F2": 16,
+   "params": 2420,
+   "macs": 5885088,
+   "input_bytes": 11000,
+   "peak_activation_bytes": 99176,
+   "file_bytes": 26871,
+   "parameter_bytes": 3260,
+   "latency_median_ms": 0.358083,
+   "latency_p95_ms": 0.364125,
+   "latency_mean_ms": 0.357986409,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "proposed-16",
+   "precision": "fp32",
+   "electrodes": 16,
+   "F2": 16,
+   "params": 2324,
+   "macs": 4297920,
+   "input_bytes": 32000,
+   "peak_activation_bytes": 288576,
+   "file_bytes": 27638,
+   "parameter_bytes": 9192,
+   "latency_median_ms": 0.20320850000000001,
+   "latency_p95_ms": 0.2085021,
+   "latency_mean_ms": 0.20322745600000003,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "proposed-16",
+   "precision": "int8",
+   "electrodes": 16,
+   "F2": 16,
+   "params": 2324,
+   "macs": 4297920,
+   "input_bytes": 8000,
+   "peak_activation_bytes": 72144,
+   "file_bytes": 26775,
+   "parameter_bytes": 3164,
+   "latency_median_ms": 0.257667,
+   "latency_p95_ms": 0.2621521,
+   "latency_mean_ms": 0.25678645699999997,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "proposed-8",
+   "precision": "fp32",
+   "electrodes": 8,
+   "F2": 16,
+   "params": 2196,
+   "macs": 2181696,
+   "input_bytes": 16000,
+   "peak_activation_bytes": 160320,
+   "file_bytes": 27125,
+   "parameter_bytes": 8680,
+   "latency_median_ms": 0.114958,
+   "latency_p95_ms": 0.11858714999999999,
+   "latency_mean_ms": 0.115112517,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "proposed-8",
+   "precision": "int8",
+   "electrodes": 8,
+   "F2": 16,
+   "params": 2196,
+   "macs": 2181696,
+   "input_bytes": 4000,
+   "peak_activation_bytes": 40080,
+   "file_bytes": 26655,
+   "parameter_bytes": 3036,
+   "latency_median_ms": 0.147834,
+   "latency_p95_ms": 0.1508351,
+   "latency_mean_ms": 0.148340704,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16",
+   "precision": "fp32",
+   "electrodes": 16,
+   "F2": 16,
+   "params": 2324,
+   "macs": 4297920,
+   "input_bytes": 32000,
+   "peak_activation_bytes": 288576,
+   "file_bytes": 27638,
+   "parameter_bytes": 9192,
+   "latency_median_ms": 0.206083,
+   "latency_p95_ms": 0.21241905,
+   "latency_mean_ms": 0.206161995,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16",
+   "precision": "int8",
+   "electrodes": 16,
+   "F2": 16,
+   "params": 2324,
+   "macs": 4297920,
+   "input_bytes": 8000,
+   "peak_activation_bytes": 72144,
+   "file_bytes": 26775,
+   "parameter_bytes": 3164,
+   "latency_median_ms": 0.259375,
+   "latency_p95_ms": 0.26646105,
+   "latency_mean_ms": 0.25991613799999996,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "full-22-prune25",
+   "precision": "fp32",
+   "electrodes": 22,
+   "F2": 12,
+   "params": 2108,
+   "macs": 5876784,
+   "input_bytes": 44000,
+   "peak_activation_bytes": 396704,
+   "file_bytes": 26790,
+   "parameter_bytes": 8344,
+   "latency_median_ms": 0.273292,
+   "latency_p95_ms": 0.280125,
+   "latency_mean_ms": 0.273825623,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "full-22-prune25",
+   "precision": "int8",
+   "electrodes": 22,
+   "F2": 12,
+   "params": 2108,
+   "macs": 5876784,
+   "input_bytes": 11000,
+   "peak_activation_bytes": 99176,
+   "file_bytes": 26499,
+   "parameter_bytes": 2888,
+   "latency_median_ms": 0.3549585,
+   "latency_p95_ms": 0.361584,
+   "latency_mean_ms": 0.355006749,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "full-22-prune50",
+   "precision": "fp32",
+   "electrodes": 22,
+   "F2": 8,
+   "params": 1796,
+   "macs": 5868480,
+   "input_bytes": 44000,
+   "peak_activation_bytes": 396704,
+   "file_bytes": 25555,
+   "parameter_bytes": 7112,
+   "latency_median_ms": 0.279,
+   "latency_p95_ms": 0.28421104999999997,
+   "latency_mean_ms": 0.27954814400000005,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "full-22-prune50",
+   "precision": "int8",
+   "electrodes": 22,
+   "F2": 8,
+   "params": 1796,
+   "macs": 5868480,
+   "input_bytes": 11000,
+   "peak_activation_bytes": 99176,
+   "file_bytes": 26125,
+   "parameter_bytes": 2516,
+   "latency_median_ms": 0.35425,
+   "latency_p95_ms": 0.36018574999999997,
+   "latency_mean_ms": 0.354244618,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16-prune25",
+   "precision": "fp32",
+   "electrodes": 16,
+   "F2": 12,
+   "params": 2012,
+   "macs": 4289616,
+   "input_bytes": 32000,
+   "peak_activation_bytes": 288576,
+   "file_bytes": 26406,
+   "parameter_bytes": 7960,
+   "latency_median_ms": 0.2057295,
+   "latency_p95_ms": 0.21762705000000002,
+   "latency_mean_ms": 0.206405008,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16-prune25",
+   "precision": "int8",
+   "electrodes": 16,
+   "F2": 12,
+   "params": 2012,
+   "macs": 4289616,
+   "input_bytes": 8000,
+   "peak_activation_bytes": 72144,
+   "file_bytes": 26403,
+   "parameter_bytes": 2792,
+   "latency_median_ms": 0.25875,
+   "latency_p95_ms": 0.26542325,
+   "latency_mean_ms": 0.259173301,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "precision": "fp32",
+   "electrodes": 16,
+   "F2": 8,
+   "params": 1700,
+   "macs": 4281312,
+   "input_bytes": 32000,
+   "peak_activation_bytes": 288576,
+   "file_bytes": 25171,
+   "parameter_bytes": 6728,
+   "latency_median_ms": 0.2012915,
+   "latency_p95_ms": 0.2072101,
+   "latency_mean_ms": 0.20120212499999998,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Conv": 4,
+    "Elu": 2,
+    "AveragePool": 2,
+    "Gemm": 1
+   }
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "precision": "int8",
+   "electrodes": 16,
+   "F2": 8,
+   "params": 1700,
+   "macs": 4281312,
+   "input_bytes": 8000,
+   "peak_activation_bytes": 72144,
+   "file_bytes": 26029,
+   "parameter_bytes": 2420,
+   "latency_median_ms": 0.257083,
+   "latency_p95_ms": 0.26196010000000003,
+   "latency_mean_ms": 0.25616051400000006,
+   "latency_warmup": 100,
+   "latency_runs": 1000,
+   "executed_ops": {
+    "QuantizeLinear": 3,
+    "Unsqueeze": 1,
+    "Reshape": 2,
+    "Transpose": 4,
+    "QLinearConv": 4,
+    "DequantizeLinear": 3,
+    "Elu": 2,
+    "AveragePool": 2,
+    "QGemm": 1
+   }
+  }
+ ],
+ "preprocessing": {
+  "8": {
+   "median_ms": 0.041166,
+   "p95_ms": 0.04234229999999999
+  },
+  "16": {
+   "median_ms": 0.07075,
+   "p95_ms": 0.07158605
+  },
+  "22": {
+   "median_ms": 0.092458,
+   "p95_ms": 0.09512705
+  }
+ },
+ "op_profile_us": {
+  "full-22 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0566666666666666,
+   "Reshape:node_Reshape_88": 1.01,
+   "Conv:node_Conv_90": 239.4,
+   "Conv:node_Conv_92": 12.763333333333334,
+   "Elu:node_Elu_41": 4.913333333333333,
+   "AveragePool:node_avg_pool2d": 4.013333333333334,
+   "Conv:node_Conv_95": 5.766666666666667,
+   "Conv:node_Conv_97": 2.01,
+   "Elu:node_Elu_61": 1.9233333333333333,
+   "AveragePool:node_avg_pool2d_1": 1.0033333333333334,
+   "Reshape:node_Reshape_102": 1.0033333333333334,
+   "Gemm:node_linear": 1.0833333333333333
+  },
+  "full-22 int8": {
+   "QuantizeLinear:eeg_q": 3.0433333333333334,
+   "Unsqueeze:node_unsqueeze": 1.0,
+   "Reshape:node_Reshape_88": 1.0033333333333334,
+   "Transpose:Transpose": 1.0133333333333334,
+   "QLinearConv:node_Conv_90_token_1": 148.25,
+   "QLinearConv:node_Conv_92_token_4": 184.89,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.52,
+   "Elu:node_Elu_41": 4.85,
+   "AveragePool:node_avg_pool2d": 4.03,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.0133333333333334,
+   "Transpose:Transpose_token_6": 1.0133333333333334,
+   "QLinearConv:node_Conv_95_token_8": 3.0366666666666666,
+   "QLinearConv:node_Conv_97_token_11": 2.0433333333333334,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0,
+   "Elu:node_Elu_61": 1.8833333333333333,
+   "AveragePool:node_avg_pool2d_1": 1.0066666666666666,
+   "QuantizeLinear:avg_pool2d_1_q": 1.01,
+   "Reshape:node_Reshape_102": 0.9933333333333333,
+   "QGemm:node_linear": 1.92,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0033333333333334
+  },
+  "proposed-16 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0133333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Conv:node_Conv_90": 172.23333333333332,
+   "Conv:node_Conv_92": 9.046666666666667,
+   "Elu:node_Elu_41": 4.95,
+   "AveragePool:node_avg_pool2d": 4.02,
+   "Conv:node_Conv_95": 5.95,
+   "Conv:node_Conv_97": 2.0,
+   "Elu:node_Elu_61": 1.96,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "Reshape:node_Reshape_102": 1.0,
+   "Gemm:node_linear": 1.1033333333333333
+  },
+  "proposed-16 int8": {
+   "QuantizeLinear:eeg_q": 2.9266666666666667,
+   "Unsqueeze:node_unsqueeze": 1.0033333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.0,
+   "QLinearConv:node_Conv_90_token_1": 109.68666666666667,
+   "QLinearConv:node_Conv_92_token_4": 127.25666666666666,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.9266666666666667,
+   "Elu:node_Elu_41": 4.8933333333333335,
+   "AveragePool:node_avg_pool2d": 4.0633333333333335,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.04,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.03,
+   "QLinearConv:node_Conv_97_token_11": 2.006666666666667,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0,
+   "Elu:node_Elu_61": 1.93,
+   "AveragePool:node_avg_pool2d_1": 1.0166666666666666,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0166666666666666,
+   "Reshape:node_Reshape_102": 1.0,
+   "QGemm:node_linear": 1.9966666666666666,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "proposed-8 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.02,
+   "Reshape:node_Reshape_88": 1.0266666666666666,
+   "Conv:node_Conv_90": 88.31333333333333,
+   "Conv:node_Conv_92": 5.703333333333333,
+   "Elu:node_Elu_41": 4.943333333333333,
+   "AveragePool:node_avg_pool2d": 4.016666666666667,
+   "Conv:node_Conv_95": 5.99,
+   "Conv:node_Conv_97": 2.006666666666667,
+   "Elu:node_Elu_61": 1.9866666666666666,
+   "AveragePool:node_avg_pool2d_1": 1.0066666666666666,
+   "Reshape:node_Reshape_102": 1.0,
+   "Gemm:node_linear": 1.1166666666666667
+  },
+  "proposed-8 int8": {
+   "QuantizeLinear:eeg_q": 1.9933333333333334,
+   "Unsqueeze:node_unsqueeze": 1.0,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 0.9666666666666667,
+   "QLinearConv:node_Conv_90_token_1": 55.06666666666667,
+   "QLinearConv:node_Conv_92_token_4": 70.91666666666667,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.78,
+   "Elu:node_Elu_41": 4.796666666666667,
+   "AveragePool:node_avg_pool2d": 4.06,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.01,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.0033333333333334,
+   "QLinearConv:node_Conv_97_token_11": 2.0,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0,
+   "Elu:node_Elu_61": 1.8666666666666667,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 0.9933333333333333,
+   "QGemm:node_linear": 1.93,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "relevance-16 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0133333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Conv:node_Conv_90": 171.13333333333333,
+   "Conv:node_Conv_92": 8.976666666666667,
+   "Elu:node_Elu_41": 4.933333333333334,
+   "AveragePool:node_avg_pool2d": 4.04,
+   "Conv:node_Conv_95": 5.883333333333334,
+   "Conv:node_Conv_97": 2.0,
+   "Elu:node_Elu_61": 1.91,
+   "AveragePool:node_avg_pool2d_1": 1.0033333333333334,
+   "Reshape:node_Reshape_102": 1.0066666666666666,
+   "Gemm:node_linear": 1.0333333333333334
+  },
+  "relevance-16 int8": {
+   "QuantizeLinear:eeg_q": 2.84,
+   "Unsqueeze:node_unsqueeze": 1.0,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.0,
+   "QLinearConv:node_Conv_90_token_1": 108.81,
+   "QLinearConv:node_Conv_92_token_4": 126.28666666666666,
+   "Transpose:Transpose_token_3": 1.0033333333333334,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.7933333333333332,
+   "Elu:node_Elu_41": 4.803333333333334,
+   "AveragePool:node_avg_pool2d": 4.093333333333334,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.01,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.033333333333333,
+   "QLinearConv:node_Conv_97_token_11": 2.0033333333333334,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0033333333333334,
+   "Elu:node_Elu_61": 1.86,
+   "AveragePool:node_avg_pool2d_1": 1.01,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 1.0,
+   "QGemm:node_linear": 1.9566666666666668,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "full-22-prune25 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0166666666666666,
+   "Reshape:node_Reshape_88": 1.0033333333333334,
+   "Conv:node_Conv_90": 243.88666666666666,
+   "Conv:node_Conv_92": 12.956666666666667,
+   "Elu:node_Elu_41": 4.84,
+   "AveragePool:node_avg_pool2d": 4.01,
+   "Conv:node_Conv_95": 5.77,
+   "Conv:node_Conv_97": 2.0,
+   "Elu:node_Elu_61": 1.0266666666666666,
+   "AveragePool:node_avg_pool2d_1": 1.03,
+   "Reshape:node_Reshape_102": 0.9933333333333333,
+   "Gemm:node_linear": 1.0066666666666666
+  },
+  "full-22-prune25 int8": {
+   "QuantizeLinear:eeg_q": 3.0166666666666666,
+   "Unsqueeze:node_unsqueeze": 1.0033333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.01,
+   "QLinearConv:node_Conv_90_token_1": 149.07333333333332,
+   "QLinearConv:node_Conv_92_token_4": 185.62666666666667,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.76,
+   "Elu:node_Elu_41": 4.886666666666667,
+   "AveragePool:node_avg_pool2d": 4.026666666666666,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.0066666666666666,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.01,
+   "QLinearConv:node_Conv_97_token_11": 2.013333333333333,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.04,
+   "Elu:node_Elu_61": 1.0433333333333332,
+   "AveragePool:node_avg_pool2d_1": 1.01,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 0.9866666666666667,
+   "QGemm:node_linear": 1.93,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "full-22-prune50 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0233333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Conv:node_Conv_90": 242.94333333333333,
+   "Conv:node_Conv_92": 13.096666666666666,
+   "Elu:node_Elu_41": 4.946666666666666,
+   "AveragePool:node_avg_pool2d": 4.023333333333333,
+   "Conv:node_Conv_95": 5.9,
+   "Conv:node_Conv_97": 1.9666666666666666,
+   "Elu:node_Elu_61": 1.0166666666666666,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "Reshape:node_Reshape_102": 1.0166666666666666,
+   "Gemm:node_linear": 1.0133333333333334
+  },
+  "full-22-prune50 int8": {
+   "QuantizeLinear:eeg_q": 3.026666666666667,
+   "Unsqueeze:node_unsqueeze": 1.0,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.0,
+   "QLinearConv:node_Conv_90_token_1": 148.06333333333333,
+   "QLinearConv:node_Conv_92_token_4": 185.38333333333333,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.8433333333333333,
+   "Elu:node_Elu_41": 4.8566666666666665,
+   "AveragePool:node_avg_pool2d": 4.066666666666666,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.0333333333333334,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.013333333333333,
+   "QLinearConv:node_Conv_97_token_11": 2.01,
+   "Transpose:Transpose_token_10": 0.89,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0233333333333334,
+   "Elu:node_Elu_61": 1.0133333333333334,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 0.9933333333333333,
+   "QGemm:node_linear": 1.96,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "relevance-16-prune25 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.02,
+   "Reshape:node_Reshape_88": 1.0233333333333334,
+   "Conv:node_Conv_90": 173.63,
+   "Conv:node_Conv_92": 9.303333333333333,
+   "Elu:node_Elu_41": 4.906666666666666,
+   "AveragePool:node_avg_pool2d": 4.016666666666667,
+   "Conv:node_Conv_95": 5.95,
+   "Conv:node_Conv_97": 2.01,
+   "Elu:node_Elu_61": 1.0433333333333332,
+   "AveragePool:node_avg_pool2d_1": 1.01,
+   "Reshape:node_Reshape_102": 1.0,
+   "Gemm:node_linear": 1.02
+  },
+  "relevance-16-prune25 int8": {
+   "QuantizeLinear:eeg_q": 2.8866666666666667,
+   "Unsqueeze:node_unsqueeze": 1.0,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.0,
+   "QLinearConv:node_Conv_90_token_1": 109.59666666666666,
+   "QLinearConv:node_Conv_92_token_4": 126.91333333333333,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.61,
+   "Elu:node_Elu_41": 4.87,
+   "AveragePool:node_avg_pool2d": 4.026666666666666,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.0266666666666666,
+   "Transpose:Transpose_token_6": 1.01,
+   "QLinearConv:node_Conv_95_token_8": 3.01,
+   "QLinearConv:node_Conv_97_token_11": 2.0566666666666666,
+   "Transpose:Transpose_token_10": 1.0,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0,
+   "Elu:node_Elu_61": 1.0366666666666666,
+   "AveragePool:node_avg_pool2d_1": 1.0033333333333334,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 1.0,
+   "QGemm:node_linear": 1.91,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  },
+  "relevance-16-prune50 fp32": {
+   "Unsqueeze:node_unsqueeze": 1.0166666666666666,
+   "Reshape:node_Reshape_88": 1.0033333333333334,
+   "Conv:node_Conv_90": 171.87666666666667,
+   "Conv:node_Conv_92": 9.04,
+   "Elu:node_Elu_41": 4.916666666666667,
+   "AveragePool:node_avg_pool2d": 4.02,
+   "Conv:node_Conv_95": 5.883333333333334,
+   "Conv:node_Conv_97": 1.9633333333333334,
+   "Elu:node_Elu_61": 1.0366666666666666,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "Reshape:node_Reshape_102": 1.0133333333333334,
+   "Gemm:node_linear": 1.01
+  },
+  "relevance-16-prune50 int8": {
+   "QuantizeLinear:eeg_q": 2.8633333333333333,
+   "Unsqueeze:node_unsqueeze": 1.0033333333333334,
+   "Reshape:node_Reshape_88": 1.0,
+   "Transpose:Transpose": 1.0,
+   "QLinearConv:node_Conv_90_token_1": 109.25333333333333,
+   "QLinearConv:node_Conv_92_token_4": 126.56333333333333,
+   "Transpose:Transpose_token_3": 1.0,
+   "DequantizeLinear:getitem_3_DequantizeLinear": 1.8966666666666667,
+   "Elu:node_Elu_41": 4.866666666666666,
+   "AveragePool:node_avg_pool2d": 4.043333333333333,
+   "QuantizeLinear:avg_pool2d_QuantizeLinear": 1.0433333333333332,
+   "Transpose:Transpose_token_6": 1.0,
+   "QLinearConv:node_Conv_95_token_8": 3.01,
+   "QLinearConv:node_Conv_97_token_11": 2.02,
+   "Transpose:Transpose_token_10": 0.93,
+   "DequantizeLinear:getitem_6_DequantizeLinear": 1.0,
+   "Elu:node_Elu_61": 1.0,
+   "AveragePool:node_avg_pool2d_1": 1.0,
+   "QuantizeLinear:avg_pool2d_1_q": 1.0,
+   "Reshape:node_Reshape_102": 1.0,
+   "QGemm:node_linear": 1.93,
+   "DequantizeLinear:logits_DequantizeLinear": 1.0
+  }
+ },
+ "layer_costs": {
+  "full-22": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     22,
+     501
+    ],
+    "in_elems": 11000,
+    "out_elems": 88176,
+    "macs": 5643264,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 88176,
+    "out_elems": 8016,
+    "macs": 176352,
+    "params": 352
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     15
+    ],
+    "in_elems": 2016,
+    "out_elems": 240,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 240,
+    "out_elems": 4,
+    "macs": 960,
+    "params": 964
+   }
+  ],
+  "proposed-16": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     16,
+     501
+    ],
+    "in_elems": 8000,
+    "out_elems": 64128,
+    "macs": 4104192,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 64128,
+    "out_elems": 8016,
+    "macs": 128256,
+    "params": 256
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     15
+    ],
+    "in_elems": 2016,
+    "out_elems": 240,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 240,
+    "out_elems": 4,
+    "macs": 960,
+    "params": 964
+   }
+  ],
+  "proposed-8": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     8,
+     501
+    ],
+    "in_elems": 4000,
+    "out_elems": 32064,
+    "macs": 2052096,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 32064,
+    "out_elems": 8016,
+    "macs": 64128,
+    "params": 128
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     15
+    ],
+    "in_elems": 2016,
+    "out_elems": 240,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 240,
+    "out_elems": 4,
+    "macs": 960,
+    "params": 964
+   }
+  ],
+  "relevance-16": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     16,
+     501
+    ],
+    "in_elems": 8000,
+    "out_elems": 64128,
+    "macs": 4104192,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 64128,
+    "out_elems": 8016,
+    "macs": 128256,
+    "params": 256
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 2016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     15
+    ],
+    "in_elems": 2016,
+    "out_elems": 240,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 240,
+    "out_elems": 4,
+    "macs": 960,
+    "params": 964
+   }
+  ],
+  "full-22-prune25": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     22,
+     501
+    ],
+    "in_elems": 11000,
+    "out_elems": 88176,
+    "macs": 5643264,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 88176,
+    "out_elems": 8016,
+    "macs": 176352,
+    "params": 352
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     12,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 1512,
+    "macs": 24192,
+    "params": 192
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     12,
+     1,
+     126
+    ],
+    "in_elems": 1512,
+    "out_elems": 1512,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     12,
+     1,
+     15
+    ],
+    "in_elems": 1512,
+    "out_elems": 180,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 180,
+    "out_elems": 4,
+    "macs": 720,
+    "params": 724
+   }
+  ],
+  "full-22-prune50": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     22,
+     501
+    ],
+    "in_elems": 11000,
+    "out_elems": 88176,
+    "macs": 5643264,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 88176,
+    "out_elems": 8016,
+    "macs": 176352,
+    "params": 352
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 1008,
+    "macs": 16128,
+    "params": 128
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     8,
+     1,
+     126
+    ],
+    "in_elems": 1008,
+    "out_elems": 1008,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     8,
+     1,
+     15
+    ],
+    "in_elems": 1008,
+    "out_elems": 120,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 120,
+    "out_elems": 4,
+    "macs": 480,
+    "params": 484
+   }
+  ],
+  "relevance-16-prune25": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     16,
+     501
+    ],
+    "in_elems": 8000,
+    "out_elems": 64128,
+    "macs": 4104192,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 64128,
+    "out_elems": 8016,
+    "macs": 128256,
+    "params": 256
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     12,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 1512,
+    "macs": 24192,
+    "params": 192
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     12,
+     1,
+     126
+    ],
+    "in_elems": 1512,
+    "out_elems": 1512,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     12,
+     1,
+     15
+    ],
+    "in_elems": 1512,
+    "out_elems": 180,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 180,
+    "out_elems": 4,
+    "macs": 720,
+    "params": 724
+   }
+  ],
+  "relevance-16-prune50": [
+   {
+    "layer": "conv_temporal",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     16,
+     501
+    ],
+    "in_elems": 8000,
+    "out_elems": 64128,
+    "macs": 4104192,
+    "params": 512
+   },
+   {
+    "layer": "conv_spatial",
+    "type": "Conv2dWithConstraint",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 64128,
+    "out_elems": 8016,
+    "macs": 128256,
+    "params": 256
+   },
+   {
+    "layer": "elu_1",
+    "type": "ELU",
+    "out_shape": [
+     16,
+     1,
+     501
+    ],
+    "in_elems": 8016,
+    "out_elems": 8016,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_1",
+    "type": "AvgPool2d",
+    "out_shape": [
+     16,
+     1,
+     125
+    ],
+    "in_elems": 8016,
+    "out_elems": 2000,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "conv_separable_depth",
+    "type": "Conv2d",
+    "out_shape": [
+     16,
+     1,
+     126
+    ],
+    "in_elems": 2000,
+    "out_elems": 2016,
+    "macs": 32256,
+    "params": 256
+   },
+   {
+    "layer": "conv_separable_point",
+    "type": "Conv2d",
+    "out_shape": [
+     8,
+     1,
+     126
+    ],
+    "in_elems": 2016,
+    "out_elems": 1008,
+    "macs": 16128,
+    "params": 128
+   },
+   {
+    "layer": "elu_2",
+    "type": "ELU",
+    "out_shape": [
+     8,
+     1,
+     126
+    ],
+    "in_elems": 1008,
+    "out_elems": 1008,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "pool_2",
+    "type": "AvgPool2d",
+    "out_shape": [
+     8,
+     1,
+     15
+    ],
+    "in_elems": 1008,
+    "out_elems": 120,
+    "macs": 0,
+    "params": 0
+   },
+   {
+    "layer": "final_layer.linearconstraint",
+    "type": "LinearWithConstraint",
+    "out_shape": [
+     4
+    ],
+    "in_elems": 120,
+    "out_elems": 4,
+    "macs": 480,
+    "params": 484
+   }
+  ]
+ }
+}

@@ -1,0 +1,2857 @@
+--- a/README.md
++++ b/README.md
+@@ -13,7 +13,7 @@
+ Requires [uv](https://docs.astral.sh/uv/). From the project folder:
+ 
+ ```bash
+-uv sync
++UV_PROJECT_ENVIRONMENT=.venv.nosync uv sync --locked
+ ```
+ 
+ The project sits in an iCloud-synced folder, so the virtual environment and the data
+@@ -24,13 +24,14 @@
+ ## Reproducing everything
+ 
+ ```bash
+-scripts/run_all.sh
++MIBCI_DATA_DIR="$PWD/reproduction.nosync/data" \
++MIBCI_RESULTS_DIR="$PWD/reproduction.nosync/results" \
++  bash scripts/run_all.sh
+ ```
+ 
+-runs the whole pipeline in the order it was run (about 3 hours on an Apple M4 laptop).
++runs the whole pipeline in the order it was run (originally reported as about 3 hours on the author’s Apple M4 Mac mini).
+ Participants 1-6 train on the Apple GPU (MPS) while 7-9 train on the CPU, so both run
+-at once; every condition of a participant uses the same device, and repeating a run
+-with its seed reproduces its weights exactly on either device.
++at once; every condition of a participant uses the same device, with recorded seeds and a pinned environment. Cross-device or cross-release bitwise equality is not promised.
+ 
+ | Step | Script | Data it may read |
+ | --- | --- | --- |
+@@ -109,12 +110,39 @@
+   (−0.0 / −1.5 points); it beat random subsets by 3.3 / 2.3 points.
+ - INT8 changed accuracy by at most 0.5 points but ran 28% slower on the Apple M4 CPU: ONNX
+   Runtime's 8-bit grouped spatial convolution took 185 µs against 12.8 µs in FP32.
+-- The final configuration has 4.0x fewer parameter bytes (2,420 vs 9,576) and 5.5x less peak
+-  activation memory (72 vs 397 KB) than the 22-electrode FP32 model.
++- The final configuration has 4.0x fewer initializer/parameter bytes (2,420 vs 9,576). The whole ONNX file shrinks only 7.1% (26,029 vs 28,022 bytes).
++- Its 5.5x activation-tensor ratio (72 vs 397 KB) is a uniform-precision analytical estimate, not measured runtime memory or MCU SRAM. Both ONNX interfaces receive float32 EEG; QDQ conversions and mixed-precision buffers are excluded.
++- Similar mean accuracy does not establish equivalence: the current retained tables show 4 of 9 participants losing more than two percentage points; the paired 95% interval is approximately −2.2 to +2.4 points.
+ 
+ See `results/analysis/summary.md` for every table, `results/analysis/*.png` for the figures
+ (`slides/` holds large-type copies), `results/frozen_config.json` for the plan that was fixed
+ before session 2 was scored, and `results/demo/replay_participant3.mp4` for the replay video.
+-The written report and the slide deck are Claude artifacts:
++Local deliverables: [research report](docs/REPORT.md), [report PDF](docs/REPORT.pdf), [portable slide deck](presentation/index.html), [reproduction guide](docs/REPRODUCIBILITY.md), [supplementary protocol](docs/SUPPLEMENTARY_PROTOCOL.md), and [Chinese work log](docs/WORK_LOG.md).
++
++The earlier written report and slide deck were also saved as Claude artifacts:
+ [report](https://claude.ai/artifact/N6p2t4rHvykJbiuMGfK3E8) and
+ [slides](https://claude.ai/artifact/PJ8FHGfKYWt5uDsZd2fe4w) (private until shared).
++
++
++## Completion and evidence maintenance (2026-11-04)
++
++The original experiment is complete as recorded on the author's M4 Mac mini. Its historical records, frozen configuration and benchmark are retained. Missing weights in a copied project do not mean the original experiment was unfinished.
++
++The current copy's locked environment and raw/processed data can be restored separately. Source downloads can be verified against the original SHA-256 list. Training/export/evaluation now check required artifacts before resuming, and refuse to silently retrain over orphan historical JSON records. `MIBCI_DATA_DIR` and `MIBCI_RESULTS_DIR` isolate fresh reproductions. An already frozen analysis cannot be refrozen or have its epoch budget silently changed.
++
++A matched-budget supplementary pruning comparison gives the unpruned and pruned branches the same 100 extra epochs. It was added after test results were known, cannot change the historical finalist, and labels independently rebuilt weights explicitly. Its actual execution status and commands are recorded in `docs/WORK_LOG.md`; see the generated report for verified results rather than treating the existence of a script as an executed experiment.
++
++```bash
++python3 scripts/audit_project.py --deep
++.venv.nosync/bin/python -m unittest discover -s tests -v
++.venv.nosync/bin/python scripts/build_report.py
++python3 scripts/build_presentation.py
++```
++
++The historical INT8 `input_bytes` values use a modeled one-byte representation. The updated benchmark separates this from actual float32 graph-interface inputs. `scripts/benchmark_memory.py` measures isolated-process RSS when model exports are available; this also is not MCU SRAM. The original pruning comparison has extra-training confounding; use the matched-budget supplementary analysis for the corresponding controlled contrast.
++
++### Completed supplementary result
++
++The post-test M5 reproduction completed 54 bases and 162 matched-budget branches, with FP32/INT8 evaluation of all 216 models. At relevance-16 INT8, 50% pruning loses **1.56 percentage points** against the equally fine-tuned unpruned model (95% participant bootstrap interval **−2.86 to −0.42**). This qualifies the original near-baseline mean: pruning is not necessarily accuracy-free. The original M4 results and finalist are retained. See the report and `results/supplementary/matched_budget/` for all contrasts and provenance.
++
++Isolated M5 ONNX Runtime process peaks are around 57–59 MiB, including interpreter/runtime overhead. They do not verify the modeled 5.5x activation ratio or MCU SRAM. Portable FP32/INT8 predictions were checked against all 288 predictions of the corresponding supplementary evaluation.
+--- a/src/mibci/env.py
++++ b/src/mibci/env.py
+@@ -8,16 +8,20 @@
+ 
+ 
+ def environment() -> dict:
++    ram_bytes = None
+     try:
+         cpu = subprocess.run(
+             ["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True
+         ).stdout.strip()
++        ram = subprocess.run(["sysctl", "-n", "hw.memsize"], capture_output=True, text=True).stdout.strip()
++        ram_bytes = int(ram) if ram.isdigit() else None
+     except FileNotFoundError:  # not macOS
+         cpu = platform.processor()
+     return {
+         "python": platform.python_version(),
+         "os": platform.platform(),
+         "cpu": cpu,
++        "physical_memory_bytes": ram_bytes,
+         "torch_threads": torch.get_num_threads(),
+         "packages": {
+             p: md.version(p) for p in ["torch", "braindecode", "numpy", "scipy", "scikit-learn"]
+--- a/src/mibci/experiment.py
++++ b/src/mibci/experiment.py
+@@ -3,6 +3,7 @@
+ from __future__ import annotations
+ 
+ import json
++import os
+ import time
+ from concurrent.futures import ProcessPoolExecutor, as_completed
+ from dataclasses import asdict
+@@ -12,17 +13,29 @@
+ import torch
+ 
+ from mibci import data, splits
++from mibci.artifacts import write_json
+ from mibci.model import build_eegnet, save_bundle
+ from mibci.train import ChannelStandardizer, TrainConfig, fit, predict, scores, set_seed
+ 
+-RESULTS_DIR = data.PROJECT_ROOT / "results"
++RESULTS_DIR = Path(os.environ.get("MIBCI_RESULTS_DIR", data.PROJECT_ROOT / "results")).expanduser().resolve()
+ MODELS_DIR = data.DATA_DIR / "models"
+ 
+ 
+ def device_for(subject: int) -> str:
+-    """Fixed before any run so the GPU and CPU can work at once: subjects 1-6 train on
+-    the Apple GPU (MPS), 7-9 on the CPU. All conditions of a subject share one device,
+-    and both backends give identical weights when a run is repeated with its seed."""
++    """Preserve the original per-subject MPS/CPU allocation unless explicitly overridden.
++
++    New runs may request cpu, mps or cuda with MIBCI_DEVICE. Backend changes must be
++    recorded as independent reproductions; bitwise equality across devices is not promised.
++    """
++    requested = os.environ.get("MIBCI_DEVICE", "legacy")
++    if requested not in {"legacy", "cpu", "mps", "cuda"}:
++        raise ValueError("MIBCI_DEVICE must be legacy, cpu, mps or cuda")
++    if requested == "cuda" and not torch.cuda.is_available():
++        raise RuntimeError("MIBCI_DEVICE=cuda requested, but CUDA is unavailable")
++    if requested == "mps" and not torch.backends.mps.is_available():
++        raise RuntimeError("MIBCI_DEVICE=mps requested, but MPS is unavailable")
++    if requested != "legacy":
++        return requested
+     return "mps" if subject <= 6 and torch.backends.mps.is_available() else "cpu"
+ 
+ 
+@@ -72,14 +85,14 @@
+     return record
+ 
+ 
+-def write_json(path: Path, obj) -> None:
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    path.write_text(json.dumps(obj, indent=1))
+-
+-
+ def run_pool(fn, jobs: list[tuple[str, dict]], workers: int, threads: int) -> None:
+     """Run fn(**kwargs) for every (name, kwargs) job across `workers` processes,
+     each limited to `threads` intra-op threads."""
++    if workers < 1 or threads < 1:
++        raise ValueError("workers and threads must be positive")
++    if not jobs:
++        print("No pending jobs (all required artifacts checked).", flush=True)
++        return
+     start = time.perf_counter()
+     with ProcessPoolExecutor(workers, initializer=torch.set_num_threads, initargs=(threads,)) as pool:
+         futures = {pool.submit(fn, **kwargs): name for name, kwargs in jobs}
+--- a/src/mibci/costs.py
++++ b/src/mibci/costs.py
+@@ -58,7 +58,9 @@
+         "params": sum(p.numel() for p in deploy_copy(model).parameters()),
+         "input_elems": rows[0]["in_elems"],
+         "peak_activation_elems": peak,
+-        # bytes at 4 (FP32) or 1 (INT8) byte per element
+-        "input_bytes": {"fp32": 4 * rows[0]["in_elems"], "int8": rows[0]["in_elems"]},
++        # Both exported graphs accept float32 EEG. Quantization occurs inside QDQ.
++        "input_bytes": {"fp32": 4 * rows[0]["in_elems"], "int8": 4 * rows[0]["in_elems"]},
++        "modeled_input_bytes": {"fp32": 4 * rows[0]["in_elems"], "int8": rows[0]["in_elems"]},
+         "peak_activation_bytes": {"fp32": 4 * peak, "int8": peak},
++        "activation_memory_kind": "idealized layer input+output, uniformly 4 or 1 byte per element; not measured QDQ/ORT memory",
+     }
+--- a/src/mibci/data.py
++++ b/src/mibci/data.py
+@@ -17,7 +17,7 @@
+ 
+ PROJECT_ROOT = Path(__file__).resolve().parents[2]
+ # Documents is synced by iCloud; the `.nosync` suffix keeps raw and cached data local.
+-DATA_DIR = PROJECT_ROOT / "data.nosync"
++DATA_DIR = Path(os.environ.get("MIBCI_DATA_DIR", PROJECT_ROOT / "data.nosync")).expanduser().resolve()
+ RAW_DIR = DATA_DIR / "raw"
+ PROCESSED_DIR = DATA_DIR / "processed"
+ 
+--- a/scripts/benchmark.py
++++ b/scripts/benchmark.py
+@@ -30,10 +30,13 @@
+ 
+ 
+ def power_state() -> dict:
++    if platform.system() != "Darwin":
++        return {"source": "unknown", "low_power_mode": "unknown", "note": "pmset unavailable on this OS"}
+     batt = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True).stdout
+     settings = subprocess.run(["pmset", "-g"], capture_output=True, text=True).stdout
+     low_power = [ln.split()[-1] for ln in settings.splitlines() if "lowpowermode" in ln]
+-    return {"source": "AC" if "AC Power" in batt else "battery", "low_power_mode": low_power[0] if low_power else "n/a"}
++    source = "AC" if "AC Power" in batt else ("battery" if "Battery Power" in batt else "unknown")
++    return {"source": source, "low_power_mode": low_power[0] if low_power else "n/a", "raw_pmset": batt.strip()}
+ 
+ 
+ def preprocessing_ms(n_chans: int, runs: int = 1000) -> dict:
+@@ -53,6 +56,8 @@
+ 
+ 
+ def main() -> None:
++    if (OUT / "benchmark.json").exists():
++        raise SystemExit("Benchmark exists. Preserve historical measurements; use a fresh MIBCI_RESULTS_DIR with a copied frozen_config.json")
+     frozen = json.loads((RESULTS_DIR / "frozen_config.json").read_text())
+     base = frozen["pruning"]["bases"][1]
+     # One model per architecture: 22, 16 and 8 electrodes, plus the pruned variants.
+@@ -74,7 +79,9 @@
+                 "condition": condition, "precision": precision, "electrodes": len(b["channels"]),
+                 "F2": b["F2"], "params": costs["params"], "macs": costs["macs"],
+                 "input_bytes": costs["input_bytes"][precision],
++                "modeled_input_bytes": costs["modeled_input_bytes"][precision],
+                 "peak_activation_bytes": costs["peak_activation_bytes"][precision],
++                "activation_memory_kind": costs["activation_memory_kind"],
+                 **deploy.size_bytes(onnx_path),
+                 **{f"latency_{k}": v for k, v in deploy.latency(onnx_path, inputs).items()},
+                 "executed_ops": deploy.executed_ops(onnx_path),
+@@ -87,6 +94,8 @@
+         "environment": {**environment(), "onnxruntime": ort.__version__, "machine": platform.machine(),
+                         "power": power_state(), "ort_threads": {"intra_op": 1, "inter_op": 1}},
+         "models": f"final models of subject {SUBJECT}, seed {SEED}",
++        "input_memory_note": "Both ONNX interfaces receive float32 arrays; modeled_input_bytes assumes uniform target precision internally.",
++        "activation_memory_note": "Analytical tensor accounting, excluding QDQ conversions, mixed-precision live tensors, workspaces, runtime and allocator overhead; not measured SRAM or process RSS.",
+         "rows": rows,
+         "preprocessing": {str(n): preprocessing_ms(n) for n in sorted({r["electrodes"] for r in rows})},
+         "op_profile_us": profiles,
+--- a/scripts/prepare_data.py
++++ b/scripts/prepare_data.py
+@@ -6,33 +6,36 @@
+ 
+ import argparse
+ import csv
+-import hashlib
+ import importlib.metadata as md
+ import json
++from pathlib import Path
+ 
+ import numpy as np
+ 
+ from mibci import data
+-
+-
+-def sha256(path) -> str:
+-    h = hashlib.sha256()
+-    with open(path, "rb") as f:
+-        for chunk in iter(lambda: f.read(1 << 20), b""):
+-            h.update(chunk)
+-    return h.hexdigest()
++from mibci.artifacts import sha256 as file_sha256
++from mibci.experiment import RESULTS_DIR
+ 
+ 
+ def main() -> None:
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--subjects", type=int, nargs="+", default=data.SUBJECTS)
++    parser.add_argument("--expected-summary", type=Path,
++                        help="Verify source SHA-256 against a historical data_summary.csv before caching")
+     args = parser.parse_args()
+     data.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
++    expected = {}
++    if args.expected_summary:
++        with args.expected_summary.open(newline="") as stream:
++            expected = {(int(r["subject"]), int(r["session"])): r["source_sha256"] for r in csv.DictReader(stream)}
+ 
+     for subject in args.subjects:
+         for session, mat_path in data.download(subject).items():
++            source_hash = file_sha256(mat_path)
++            if expected and source_hash != expected.get((subject, session)):
++                raise ValueError(f"Source SHA-256 differs from historical data: subject {subject}, session {session}")
+             arrays = data.preprocess_session(mat_path)
+-            np.savez(data.session_path(subject, session), source_sha256=sha256(mat_path), **arrays)
++            np.savez(data.session_path(subject, session), source_sha256=source_hash, **arrays)
+             print(
+                 f"sub-{subject:02d} ses-{session}: {len(arrays['y'])} trials, "
+                 f"{np.unique(arrays['run']).size} runs, {arrays['artifact'].sum()} flagged, "
+@@ -68,8 +71,8 @@
+                 "first_window_s": round(float(f["first_window_s"]), 2),
+                 "source_sha256": str(f["source_sha256"]),
+             })
+-    out = data.PROJECT_ROOT / "results" / "data_summary.csv"
+-    out.parent.mkdir(exist_ok=True)
++    out = RESULTS_DIR / "data_summary.csv"
++    out.parent.mkdir(parents=True, exist_ok=True)
+     with open(out, "w", newline="") as f:
+         writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+         writer.writeheader()
+--- a/scripts/evaluate_test.py
++++ b/scripts/evaluate_test.py
+@@ -10,6 +10,7 @@
+ from pathlib import Path
+ 
+ from mibci import data, deploy
++from mibci.artifacts import completed, model_exports, require_files
+ from mibci.experiment import MODELS_DIR, RESULTS_DIR, run_pool, write_json
+ from mibci.model import load_bundle
+ from mibci.train import predict, scores
+@@ -46,9 +47,14 @@
+     frozen_config()  # the analysis plan must be frozen before session 2 is read
+ 
+     jobs = []
+-    for bundle in sorted((MODELS_DIR / "final").glob("sub-*.pt")):
++    records = sorted((RESULTS_DIR / "final" / "runs").glob("sub-*.json"))
++    if not records:
++        raise SystemExit("No final training records; refusing an empty test evaluation")
++    bundles = [MODELS_DIR / "final" / f"{p.stem}.pt" for p in records]
++    require_files([p for bundle in bundles for p in (bundle, *model_exports(bundle))], "test evaluation")
++    for bundle in bundles:
+         record = RESULTS_DIR / "test" / f"{bundle.stem}.json"
+-        if not record.exists():
++        if not completed(record, (bundle, *model_exports(bundle)), {"name": bundle.stem}):
+             jobs.append((bundle.stem, dict(bundle_path=str(bundle), record_path=str(record))))
+     run_pool(eval_job, jobs, args.workers, threads=1)
+     print(f"scored {len(jobs)} models; summaries come from analyze.py")
+--- a/scripts/run_all.sh
++++ b/scripts/run_all.sh
+@@ -4,7 +4,14 @@
+ # (see device_for in src/mibci/experiment.py); two_pools runs both groups at once.
+ set -euo pipefail
+ cd "$(dirname "$0")/.."
+-mkdir -p data.nosync/logs
++export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-.venv.nosync}"
++export MIBCI_DATA_DIR="${MIBCI_DATA_DIR:-$PWD/data.nosync}"
++export MIBCI_RESULTS_DIR="${MIBCI_RESULTS_DIR:-$PWD/results}"
++if [[ -f "$MIBCI_RESULTS_DIR/frozen_config.json" ]]; then
++  echo "Analysis already frozen. Use fresh MIBCI_RESULTS_DIR and MIBCI_DATA_DIR paths; see docs/REPRODUCIBILITY.md." >&2
++  exit 1
++fi
++mkdir -p "$MIBCI_DATA_DIR/logs"
+ 
+ two_pools() {
+   uv run python "$@" --subjects 1 2 3 4 5 6 --workers 3 &
+--- a/scripts/run_pruning.py
++++ b/scripts/run_pruning.py
+@@ -10,6 +10,7 @@
+ import json
+ from pathlib import Path
+ 
++from mibci.artifacts import completed, require_files
+ from mibci.experiment import MODELS_DIR, RESULTS_DIR, device_for, run_pool, session1, write_json
+ from mibci.model import load_bundle, save_bundle
+ from mibci.prune import FINETUNE_EPOCHS, FINETUNE_LR, FRACTIONS, prune_pointwise
+@@ -54,11 +55,16 @@
+     jobs = []
+     for subject in args.subjects:
+         for base in (FULL, reduced):
+-            for base_path in sorted((MODELS_DIR / args.phase).glob(f"sub-{subject:02d}_*_{base}.pt")):
++            labels = [f"fold-{f}" for f in range(3)] if args.phase == "validation" else [
++                f"seed-{s}" for s in json.loads((RESULTS_DIR / "frozen_config.json").read_text())["seeds"]]
++            base_paths = [MODELS_DIR / args.phase / f"sub-{subject:02d}_{label}_{base}.pt" for label in labels]
++            require_files(base_paths, f"{args.phase} pruning inputs")
++            for base_path in base_paths:
+                 for fraction in FRACTIONS:
+                     name = f"{base_path.stem}-prune{round(100 * fraction)}"
+                     record = RESULTS_DIR / args.phase / "runs" / f"{name}.json"
+-                    if not record.exists():
++                    if not completed(record, [base_path.with_name(f"{name}.pt")],
++                                     {"subject": subject, "fraction": fraction}):
+                         jobs.append((name, dict(base_path=str(base_path), fraction=fraction, record_path=str(record),
+                                                 out_path=str(base_path.with_name(f"{name}.pt")))))
+     run_pool(prune_job, jobs, args.workers, threads=1)
+--- a/scripts/summarize_validation.py
++++ b/scripts/summarize_validation.py
+@@ -91,6 +91,10 @@
+     parser.add_argument("--freeze", action="store_true")
+     args = parser.parse_args()
+ 
++    if (RESULTS_DIR / "frozen_config.json").exists():
++        raise SystemExit("This analysis is already frozen. Preserve its tables/configuration; "
++                         "use a fresh MIBCI_RESULTS_DIR for a new validation analysis.")
++
+     runs = load_runs()
+     summary, per_subject = summarize(runs)
+     summary.to_csv(VAL_DIR / "summary.csv", index=False, float_format="%.4f")
+--- a/scripts/run_validation.py
++++ b/scripts/run_validation.py
+@@ -15,8 +15,9 @@
+ import torch
+ 
+ from mibci import data, selection
++from mibci.artifacts import completed
+ from mibci.experiment import MODELS_DIR, RESULTS_DIR, device_for, run_pool, session1, train_run, write_json
+-from mibci.model import build_eegnet, save_bundle
++from mibci.model import build_eegnet, load_bundle, save_bundle
+ from mibci.train import ChannelStandardizer, TrainConfig, predict, scores
+ 
+ VAL_DIR = RESULTS_DIR / "validation"
+@@ -47,6 +48,10 @@
+     """The 22-channel model of this fold at the frozen budget, saved and scored like any run."""
+     name = f"sub-{subject:02d}_{split}"
+     X, y, tr, va = session1(subject, split)
++    bundle_path = VAL_MODELS / f"{name}_{selection.FULL}.pt"
++    record_path = VAL_DIR / "runs" / f"{name}_{selection.FULL}.json"
++    if completed(record_path, [bundle_path], {"epochs": epochs, "subject": subject, "split": split}):
++        return load_bundle(bundle_path)[0], X[tr], y[tr]
+     scaler = ChannelStandardizer().fit(X[tr])
+     model = build_eegnet(X.shape[1])
+     model.load_state_dict(torch.load(VAL_MODELS / f"{name}_full-22_checkpoints.pt", weights_only=True)[epochs])
+@@ -76,7 +81,10 @@
+         for subject in args.subjects:
+             for split in SPLITS:
+                 name = f"sub-{subject:02d}_{split}"
+-                if not (VAL_DIR / "full" / f"{name}.json").exists():
++                if not completed(VAL_DIR / "full" / f"{name}.json",
++                                 [VAL_MODELS / f"{name}_full-22_max.pt",
++                                  VAL_MODELS / f"{name}_full-22_checkpoints.pt"],
++                                 {"subject": subject, "split": split, "epochs": MAX_EPOCHS}):
+                     jobs.append((name, dict(subject=subject, split=split)))
+         run_pool(full_job, jobs, args.workers, args.threads)
+         return
+@@ -86,11 +94,18 @@
+         for split in SPLITS:
+             name = f"sub-{subject:02d}_{split}"
+             full_model, X_train, y_train = full_at_budget(subject, split, epochs)
+-            ranking = selection.rank_channels(X_train, y_train, full_model)
+-            subsets = selection.condition_subsets(ranking["orders"])
+-            write_json(VAL_DIR / "rankings" / f"{name}.json", {**ranking, "subsets": subsets})
++            ranking_path = VAL_DIR / "rankings" / f"{name}.json"
++            if ranking_path.exists():
++                subsets = json.loads(ranking_path.read_text())["subsets"]
++            else:
++                ranking = selection.rank_channels(X_train, y_train, full_model)
++                subsets = selection.condition_subsets(ranking["orders"])
++                write_json(ranking_path, {**ranking, "subsets": subsets})
+             for condition, channels in subsets.items():
+-                if condition != selection.FULL and not (VAL_DIR / "runs" / f"{name}_{condition}.json").exists():
++                if condition != selection.FULL and not completed(
++                        VAL_DIR / "runs" / f"{name}_{condition}.json",
++                        [VAL_MODELS / f"{name}_{condition}.pt"],
++                        {"subject": subject, "split": split, "condition": condition, "epochs": epochs}):
+                     jobs.append((f"{name}_{condition}", dict(subject=subject, split=split, condition=condition,
+                                                               channels=channels, epochs=epochs)))
+     run_pool(subset_job, jobs, args.workers, args.threads)
+--- a/scripts/train_final.py
++++ b/scripts/train_final.py
+@@ -12,6 +12,7 @@
+ import json
+ 
+ from mibci import selection
++from mibci.artifacts import completed, require_files
+ from mibci.experiment import MODELS_DIR, RESULTS_DIR, run_pool, session1, train_run, write_json
+ from mibci.model import load_bundle
+ from mibci.train import TrainConfig
+@@ -51,13 +52,22 @@
+             if args.stage == "full":
+                 subsets = {selection.FULL: list(range(22))}
+             else:
+-                full_model = load_bundle(FINAL_MODELS / f"{prefix}_{selection.FULL}.pt")[0]
+-                ranking = selection.rank_channels(X[train_mask], y[train_mask], full_model)
+-                subsets = selection.condition_subsets(ranking["orders"])
+-                write_json(FINAL_DIR / "rankings" / f"{prefix}.json", {**ranking, "subsets": subsets})
++                full_path = FINAL_MODELS / f"{prefix}_{selection.FULL}.pt"
++                require_files([full_path], "channel selection")
++                ranking_path = FINAL_DIR / "rankings" / f"{prefix}.json"
++                if ranking_path.exists():
++                    subsets = json.loads(ranking_path.read_text())["subsets"]
++                else:
++                    full_model = load_bundle(full_path)[0]
++                    ranking = selection.rank_channels(X[train_mask], y[train_mask], full_model)
++                    subsets = selection.condition_subsets(ranking["orders"])
++                    write_json(ranking_path, {**ranking, "subsets": subsets})
+                 subsets.pop(selection.FULL)
+             for condition, channels in subsets.items():
+-                if not (FINAL_DIR / "runs" / f"{prefix}_{condition}.json").exists():
++                if not completed(FINAL_DIR / "runs" / f"{prefix}_{condition}.json",
++                                 [FINAL_MODELS / f"{prefix}_{condition}.pt"],
++                                 {"subject": subject, "seed": seed, "condition": condition,
++                                  "epochs": config["epochs"]}):
+                     jobs.append((f"{prefix}_{condition}", dict(subject=subject, seed=seed, condition=condition,
+                                                                channels=channels, epochs=config["epochs"])))
+     run_pool(final_job, jobs, args.workers, threads=1)
+--- a/scripts/quantize_models.py
++++ b/scripts/quantize_models.py
+@@ -12,6 +12,7 @@
+ import numpy as np
+ 
+ from mibci import deploy
++from mibci.artifacts import completed, model_exports, require_files
+ from mibci.experiment import MODELS_DIR, RESULTS_DIR, run_pool, session1, write_json
+ from mibci.model import load_bundle
+ from mibci.train import predict, scores
+@@ -24,9 +25,15 @@
+     X = X[:, b["channels"]]
+     fp32, int8 = path.with_suffix(".onnx"), path.with_name(f"{path.stem}_int8.onnx")
+     deploy.export_onnx(model, fp32)
++    check_X = scaler.transform(X[tr][:32])
++    check_torch = predict(model, check_X)
++    check_onnx = deploy.logits(deploy.session(fp32), check_X)
++    if not np.allclose(check_torch, check_onnx, rtol=1e-4, atol=1e-5):
++        raise RuntimeError(f"FP32 ONNX export exceeds tolerance: {path}")
+     deploy.quantize_int8(fp32, int8, scaler.transform(X[tr]))
+     record = {"name": path.stem, "subject": b["subject"], "split": b["split"], "condition": b["condition"],
+-              "seed": b["seed"], "size": {"fp32": deploy.size_bytes(fp32), "int8": deploy.size_bytes(int8)}}
++              "seed": b["seed"], "training_export_max_abs_diff": float(np.abs(check_torch-check_onnx).max()),
++              "size": {"fp32": deploy.size_bytes(fp32), "int8": deploy.size_bytes(int8)}}
+     if va is not None:
+         X_va = scaler.transform(X[va])
+         ref = predict(model, X_va)
+@@ -50,11 +57,14 @@
+ 
+     out_dir = RESULTS_DIR / args.phase / "quant"
+     jobs = []
+-    for bundle in sorted((MODELS_DIR / args.phase).glob("sub-*.pt")):
+-        if bundle.stem.endswith(("_max", "_checkpoints")):
+-            continue
++    records = sorted((RESULTS_DIR / args.phase / "runs").glob("sub-*.json"))
++    if not records:
++        raise SystemExit(f"No training records in {RESULTS_DIR / args.phase / 'runs'}")
++    bundles = [MODELS_DIR / args.phase / f"{p.stem}.pt" for p in records]
++    require_files(bundles, "quantization training bundles")
++    for bundle in bundles:
+         record = out_dir / f"{bundle.stem}.json"
+-        if not record.exists():
++        if not completed(record, model_exports(bundle), {"name": bundle.stem}):
+             jobs.append((bundle.stem, dict(bundle_path=str(bundle), record_path=str(record))))
+     run_pool(quant_job, jobs, args.workers, threads=1)
+ 
+--- a/scripts/choose_budget.py
++++ b/scripts/choose_budget.py
+@@ -24,6 +24,8 @@
+ 
+ 
+ def main() -> None:
++    if (VAL_DIR.parent / "frozen_config.json").exists():
++        raise SystemExit("Analysis already frozen; use a fresh MIBCI_RESULTS_DIR to choose a new budget")
+     records = [json.loads(p.read_text()) for p in sorted((VAL_DIR / "full").glob("sub-*.json"))]
+     curves = np.array([r["history"]["val_acc"] for r in records])
+     mean = curves.mean(0)
+--- a/presentation/deck_source/slides/efficiency.html
++++ b/presentation/deck_source/slides/efficiency.html
+@@ -1,13 +1,13 @@
+ <section id="efficiency" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+ <h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Electrode count sets compute, memory and latency</h2>
+ <table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:30px;color:#14213D;background:#FDFCF9;border-radius:12px">
+-<tr style="background:#E9E6DD"><th style="width:28%;text-align:left">Model</th><th style="width:20%;text-align:right">Param. bytes FP32 / INT8</th><th style="width:12%;text-align:right">MACs</th><th style="width:20%;text-align:right">Peak activations FP32 / INT8</th><th style="width:20%;text-align:right">Latency FP32 / INT8</th></tr>
++<tr style="background:#E9E6DD"><th style="width:28%;text-align:left">Model</th><th style="width:20%;text-align:right">Param. bytes FP32 / INT8</th><th style="width:12%;text-align:right">MACs</th><th style="width:20%;text-align:right">Modeled activations FP32 / INT8</th><th style="width:20%;text-align:right">Latency FP32 / INT8</th></tr>
+ <tr><td>22 electrodes</td><td style="text-align:right">9,576 / 3,260</td><td style="text-align:right">5.89 M</td><td style="text-align:right">397 / 99 KB</td><td style="text-align:right">0.280 / 0.358 ms</td></tr>
+ <tr><td>16 electrodes</td><td style="text-align:right">9,192 / 3,164</td><td style="text-align:right">4.30 M</td><td style="text-align:right">289 / 72 KB</td><td style="text-align:right">0.206 / 0.259 ms</td></tr>
+ <tr><td>8 electrodes</td><td style="text-align:right">8,680 / 3,036</td><td style="text-align:right">2.18 M</td><td style="text-align:right">160 / 40 KB</td><td style="text-align:right">0.115 / 0.148 ms</td></tr>
+ <tr style="background:#F3E6D8"><td>16, 50% pruned (final)</td><td style="text-align:right">6,728 / 2,420</td><td style="text-align:right">4.28 M</td><td style="text-align:right">289 / 72 KB</td><td style="text-align:right">0.201 / 0.257 ms</td></tr>
+ </table>
+-<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Pruning half of the final filters removed 27% of the parameters but only 0.4% of the MACs, and left latency unchanged. Preprocessing a window takes 0.04–0.09 ms.</p>
++<p style="font-size:30px;line-height:1.4;color:#3D4A5C">Pruning half of the final filters removed 27% of the parameters but only 0.4% of the MACs, and left latency unchanged. Preprocessing takes 0.04–0.09 ms. Activation bytes are modeled, not measured ORT memory.</p>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 13 · Apple M4 CPU, batch 1, one thread, 1,000 timed calls; 95th percentile within 0.012 ms of the median</p>
+ <aside>Going from 22 to 16 to 8 electrodes cut latency by 27% and 59%, almost exactly in step with the multiply-accumulates, because the first layer runs once per electrode. INT8 and pruning shrink the parameter bytes, which were never the bottleneck at about ten kilobytes. Note also that every number here is well under a millisecond, against a 2-second observation window, so on a desktop compute is not what a user would feel; on a wearable it is memory and energy that matter.</aside>
+ </section>
+--- a/presentation/deck_source/slides/takeaways.html
++++ b/presentation/deck_source/slides/takeaways.html
+@@ -2,9 +2,9 @@
+ <p style="font-size:28px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#F2A65A">Takeaways</p>
+ <div style="display:flex;flex-direction:column;gap:44px">
+ <div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">1</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">Which electrodes, and how many, matter more than how the weights are stored.</p></div>
+-<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">2</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">Sixteen task-chosen electrodes kept full accuracy; modelling redundancy added nothing over relevance.</p></div>
+-<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">3</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">INT8 and pruning shrink bytes, not time: on this CPU, kernel coverage decided latency.</p></div>
++<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">2</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">Sixteen task-chosen electrodes kept similar mean accuracy; redundancy showed no clear gain over relevance.</p></div>
++<div style="display:flex;gap:40px;align-items:start"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1;color:#F2A65A">3</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:500;line-height:1.2;color:#F6F5F1">INT8 shrinks bytes, not M4 time; matched fine-tuning reveals a pruning accuracy cost.</p></div>
+ </div>
+ <p style="font-size:32px;color:#C9D1DE">Thank you · questions welcome</p>
+-<aside>To sum up. First, for a decoder this small, the number and choice of electrodes is the real lever: it sets the compute, the activation memory and the latency, and it is also the hardware cost. Second, sixteen electrodes picked by any task-aware rule were enough on a new day, but the redundancy term did not beat simply ranking by relevance. Third, INT8 and pruning were free in accuracy and shrank the weights, but the weights were never the bottleneck, and on this CPU INT8 was even slower because of one missing integer kernel.</aside>
++<aside>To sum up. First, for a decoder this small, the number and choice of electrodes is the real lever: it sets the compute, the activation memory and the latency, and it is also the hardware cost. Second, sixteen electrodes picked by any task-aware rule were enough on a new day, but the redundancy term did not beat simply ranking by relevance. Third, the original finalist had similar mean accuracy and smaller weights; the new matched-budget control reveals a pruning cost, but the weights were never the bottleneck, and on this CPU INT8 was even slower with most kernel time spent in the quantized grouped spatial convolution.</aside>
+ </section>
+--- a/presentation/deck_source/slides/final.html
++++ b/presentation/deck_source/slides/final.html
+@@ -1,13 +1,13 @@
+ <section id="final" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+-<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">The frozen choice matched all 22 electrodes on day 2</h2>
++<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">The frozen choice had similar mean accuracy on day 2</h2>
+ <p style="font-size:30px;line-height:1.4;color:#14213D;background:#F3E6D8;padding:20px 32px;border-radius:12px">16 electrodes by relevance · half of the final filters pruned · INT8, chosen on day-1 validation before day 2 was scored</p>
+ <div style="display:flex;gap:32px">
+ <div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#B5591A">65.0%</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">day-2 accuracy; all 22 in FP32: 65.0%</p></div>
+ <div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">4.0×</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">fewer parameter bytes (2,420 vs 9,576)</p></div>
+-<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">5.5×</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">less peak activation memory (72 vs 397 KB)</p></div>
++<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">5.5×</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">smaller modeled tensor peak (72 vs 397 KB)</p></div>
+ <div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:40px;border:1px solid #E2DFD6;border-radius:16px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:80px;font-weight:600;line-height:1;color:#14213D">4 of 9</p><p style="font-size:28px;line-height:1.35;color:#3D4A5C">people lost more than 2 points; one gained 7.3</p></div>
+ </div>
+ <p style="font-size:30px;line-height:1.4;color:#3D4A5C">Validation had predicted 64.9%. Across people, accuracy ranged from 45.6% to 83.0%, far wider than any gap between conditions.</p>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 14 · mean difference vs all 22 FP32: −0.0 points (95% interval −2.2 to 2.4)</p>
+-<aside>The decision rule picked this configuration on validation data: the fewest electrodes within 2 points of the full model, then the smallest model. On the held-out day it scored exactly the same mean accuracy as all 22 electrodes, with four times fewer parameter bytes and five and a half times less activation memory. The average hides spread: four people lost more than two points, and one gained over seven. Validation predicted 64.9%, so the selection did not overfit day 1.</aside>
++<aside>The decision rule picked this configuration on validation data: the fewest electrodes within 2 points of the full model, then the smallest model. On the held-out day it scored nearly the same mean accuracy as all 22 electrodes, with four times fewer parameter bytes and a 5.5-fold modeled activation-tensor ratio, not measured runtime memory. The average hides spread: four people lost more than two points, and one gained over seven. Validation predicted 64.9%; the close mean does not establish equivalence or rule out selection overfitting. The complete ONNX file shrank by only 7.1%.</aside>
+ </section>
+--- a/presentation/deck_source/slides/redundancy.html
++++ b/presentation/deck_source/slides/redundancy.html
+@@ -6,7 +6,7 @@
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #4E8A3E;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs spatial-weight norm</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#14213D">−0.0 / −1.5 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">weights did better for 7 of 9 at 8 electrodes</p></div>
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #B5591A;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs random subsets</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#B5591A">+3.3 / +2.3 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">better for 8 of 9 people</p></div>
+ </div>
+-<img src="/_blob/6b8a3b42aed135268ad8e5398a26c935" alt="Paired accuracy differences, proposed minus each control, with 95 percent participant bootstrap intervals, at 16 and 8 electrodes in FP32 and INT8" style="width:908px;height:567px;object-fit:contain;background:#FFFFFF;border-radius:12px">
++<img src="../../../results/analysis/slides/fig_forest.png" alt="Paired accuracy differences, proposed minus each control, with 95 percent participant bootstrap intervals, at 16 and 8 electrodes in FP32 and INT8" style="width:908px;height:567px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+ </div>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 9 · values are 16 / 8 electrodes, FP32; INT8 within 0.3 points of each</p>
+ <aside>This slide answers the research question. Proposed minus relevance-only is under one point, and the intervals cross zero, because for most people the two rules picked exactly the same electrodes. Against the weight-based rule it ties at 16 electrodes and loses 1.5 points at 8. The only reliable gain is over random subsets, about 2 to 3 points, for 8 of the 9 participants. All of this is unchanged after INT8.</aside>
+--- a/presentation/deck_source/slides/maps.html
++++ b/presentation/deck_source/slides/maps.html
+@@ -1,7 +1,7 @@
+ <section id="maps" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+ <h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Every rule favours C3, C4, CP3 and CP4</h2>
+ <div style="display:flex;gap:48px;align-items:center">
+-<img src="/_blob/392e66aee46799142856276d63af2062" alt="Electrode maps: share of the nine participants choosing each electrode, for the redundancy-aware, relevance-only and weight-based rules at 8 and 16 electrodes, plus the mean relevance score; lateral central and centro-parietal sites dominate" style="width:1250px;height:643px;object-fit:contain;background:#FFFFFF;border-radius:12px">
++<img src="../../../results/analysis/slides/fig_selection_maps.png" alt="Electrode maps: share of the nine participants choosing each electrode, for the redundancy-aware, relevance-only and weight-based rules at 8 and 16 electrodes, plus the mean relevance score; lateral central and centro-parietal sites dominate" style="width:1250px;height:643px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+ <div style="flex:1;display:flex;flex-direction:column;gap:28px">
+ <p style="font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#7A808A">Subset overlap</p>
+ <div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">0.74–0.85</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">band-power rules, across folds</p></div>
+--- a/presentation/deck_source/slides/accuracy.html
++++ b/presentation/deck_source/slides/accuracy.html
+@@ -1,6 +1,6 @@
+ <section id="accuracy" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+ <h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">16 chosen electrodes match all 22; 8 cost 3–5 points</h2>
+-<img src="/_blob/285af12923df279b7d297bbcaa50d0e6" alt="Session-2 accuracy by electrode count for each selection rule, FP32 and INT8: 16-electrode task-aware subsets at 66 to 67 percent, all 22 electrodes at 65 percent, 8-electrode subsets at 58 to 62 percent" style="width:1664px;height:620px;object-fit:contain;background:#FFFFFF;border-radius:12px">
++<img src="../../../results/analysis/slides/fig_accuracy_vs_electrodes.png" alt="Session-2 accuracy by electrode count for each selection rule, FP32 and INT8: 16-electrode task-aware subsets at 66 to 67 percent, all 22 electrodes at 65 percent, 8-electrode subsets at 58 to 62 percent" style="width:1664px;height:620px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 8 · session 2, artifact-free trials, 9 participants, seeds averaged</p>
+ <aside>On the held-out day, all 22 electrodes gave 65.0% accuracy, where chance is 25%. Every task-aware rule at 16 electrodes landed at 66 to 67%, slightly above the full set, with intervals that include zero, so call it a match. At 8 electrodes every rule lost accuracy: the proposed rule 4.4 points, relevance-only 5.1, the weight-based rule 2.9. The INT8 panel on the right is practically identical to FP32.</aside>
+ </section>
+--- a/presentation/deck_source/slides/limits.html
++++ b/presentation/deck_source/slides/limits.html
+@@ -3,11 +3,11 @@
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 56px">
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Nine people, one dataset</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Wide intervals; no claim for new users, headsets or implants.</p></div>
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Desktop timing</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Not microcontroller latency, SRAM or energy.</p></div>
+-<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Pruning confound</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Pruned models got 100 extra fine-tuning epochs.</p></div>
++<div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Original pruning confound</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Original pruned models got 100 extra epochs; the added M5 control matches this budget.</p></div>
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Per-person electrodes</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">A headset would need one fixed set for everyone.</p></div>
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">One redundancy measure</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">Band-power correlation only; others may differ.</p></div>
+ <div style="display:flex;flex-direction:column;gap:6px;border-left:4px solid #C9C4B8;padding-left:28px"><p style="font-size:30px;font-weight:600;line-height:1.3">Offline replay</p><p style="font-size:26px;line-height:1.4;color:#3D4A5C">No closed-loop or asynchronous use was tested.</p></div>
+ </div>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 16</p>
+-<aside>I want to be explicit about the claim boundaries. With nine participants the bootstrap intervals are exploratory. All timing is from a desktop CPU, so it says nothing direct about a microcontroller. The pruned models had extra training, which muddies the pruning comparison. And electrodes were chosen separately for each person, while a real headset has one fixed layout.</aside>
++<aside>I want to be explicit about the claim boundaries. With nine participants the bootstrap intervals are exploratory. All timing is from a desktop CPU, so it says nothing direct about a microcontroller. The original pruned models had extra training. The supplementary M5 control now provides the equally fine-tuned comparison, with a post-test analysis caveat. And electrodes were chosen separately for each person, while a real headset has one fixed layout.</aside>
+ </section>
+--- a/presentation/deck_source/slides/cost.html
++++ b/presentation/deck_source/slides/cost.html
+@@ -15,7 +15,7 @@
+ </div>
+ </div>
+ <p style="font-size:34px;line-height:1.4;color:#14213D">Compute and activation memory scale with the electrode count; parameters barely do.</p>
+-<p style="font-size:30px;line-height:1.4;color:#3D4A5C">At 8 electrodes: 2.2 M MACs (−63%), 160 KB of peak activations (−60%), but still 2,196 parameters (−9%).</p>
++<p style="font-size:30px;line-height:1.4;color:#3D4A5C">At 8 electrodes: 2.2 M MACs (−63%), 160 KB of modeled peak activations (−60%), but still 2,196 parameters (−9%).</p>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 5 · analytical counts for one 2-s window, batch 1</p>
+ <aside>This is the systems lens for the rest of the talk. The weights are tiny, about ten kilobytes. The work is in the first layer, a temporal convolution applied to every electrode separately, and its output is also the largest tensor. So the knob that really moves compute and memory is the number of electrodes, not the number of weights.</aside>
+ </section>
+--- a/presentation/deck_source/slides/int8.html
++++ b/presentation/deck_source/slides/int8.html
+@@ -6,9 +6,9 @@
+ <div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#14213D">2.9× fewer</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">parameter bytes (9,576 → 3,260)</p></div>
+ <div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">28% slower</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">0.358 vs 0.280 ms, 22 electrodes</p></div>
+ </div>
+-<img src="/_blob/d03a42d86b5ce61af06eef0131fb9351" alt="CPU kernel time per layer for FP32 and INT8 at 22 and 8 electrodes: INT8 speeds up the temporal convolution but the grouped spatial convolution becomes about 14 times slower" style="width:1068px;height:427px;object-fit:contain;background:#FFFFFF;border-radius:12px">
++<img src="../../../results/analysis/slides/fig_int8_layers.png" alt="CPU kernel time per layer for FP32 and INT8 at 22 and 8 electrodes: INT8 speeds up the temporal convolution but the grouped spatial convolution becomes about 14 times slower" style="width:1068px;height:427px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+ </div>
+-<p style="font-size:30px;line-height:1.4;color:#14213D">The temporal convolution got 38% faster in INT8, but the grouped spatial convolution ran 14× slower (185 vs 12.8 µs): kernel coverage, not bit width, set the speed.</p>
++<p style="font-size:30px;line-height:1.4;color:#14213D">The temporal convolution got 38% faster in INT8, but the grouped spatial convolution ran 14× slower (185 vs 12.8 µs): the quantized spatial operator dominated this profile.</p>
+ <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 12 · ONNX Runtime 1.31.1 on an Apple M4 CPU; per-node times from its profiler</p>
+-<aside>Quantization was free in accuracy: every condition moved by half a point or less, and INT8 and FP32 agreed on 97% of trials. The weights shrink about threefold. But on this CPU the INT8 model was slower. The profiler shows why: the big temporal convolution did get faster, but ONNX Runtime has no fast 8-bit kernel for EEGNet’s grouped spatial convolution, which became fourteen times slower and dominated the total. On a microcontroller with dedicated integer kernels this could be very different, which is exactly why it has to be measured.</aside>
++<aside>Mean quantization effects were small: every condition moved by half a point or less, and INT8 and FP32 agreed on 97% of trials. The weights shrink about threefold. But on this CPU the INT8 model was slower. The profiler shows why: the big temporal convolution did get faster, but the executed quantized grouped spatial operator became fourteen times slower and dominated the total. QLinearConv kernels were present; this profile does not establish a missing integer kernel. On a microcontroller with dedicated integer kernels this could be very different, which is exactly why it has to be measured.</aside>
+ </section>
+--- a/presentation/deck_source/slides/demo.html
++++ b/presentation/deck_source/slides/demo.html
+@@ -1,7 +1,7 @@
+ <section id="demo" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+ <h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Real-time replay through the frozen decoder</h2>
+ <div style="display:flex;gap:48px;align-items:center">
+-<img src="/_blob/45a00d63633327007254a268c7bf14f4" data-video="/_blob/73e979db31874303b83fb28aecdb27f4" data-video-start="click" alt="Frame of the replay: causally filtered EEG at C4, Cz and C3 with the cue, the shaded 2-second observation window and the decision marker, beside a cursor moved by the decoded class and a timing panel" style="width:1180px;height:629px;object-fit:contain;background:#FFFFFF;border-radius:12px">
++<img src="../../../results/demo/replay_participant3_still.png" data-video="../../../results/demo/replay_participant3.mp4" data-video-start="click" alt="Frame of the replay: causally filtered EEG at C4, Cz and C3 with the cue, the shaded 2-second observation window and the decision marker, beside a cursor moved by the decoded class and a timing panel" style="width:1180px;height:629px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+ <div style="flex:1;display:flex;flex-direction:column;gap:28px">
+ <div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">6 of 8</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">trials correct, participant 3, day 2</p></div>
+ <div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:56px;font-weight:600;line-height:1.05;color:#14213D">0.35 ms</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">compute per decision, INT8</p></div>
+--- a/.gitignore
++++ b/.gitignore
+@@ -3,3 +3,6 @@
+ data.nosync/
+ __pycache__/
+ *.pyc
++
++reproduction.nosync/
++release/
+--- /dev/null
++++ b/scripts/audit_project.py
+@@ -0,0 +1,170 @@
++"""Audit existing results without PyTorch, downloads, training or changing old evidence.
++
++Run with system Python: python3 scripts/audit_project.py [--deep]. Deep mode
++recomputes trial metrics and cross-checks every stored test prediction. A normal
++audit checks coverage, frozen hashes, tables and required model/data artifacts.
++"""
++
++from __future__ import annotations
++
++import argparse
++import collections
++from concurrent.futures import ThreadPoolExecutor
++import csv
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import statistics
++import sys
++import time
++from datetime import datetime
++from zoneinfo import ZoneInfo
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / "src"))
++from mibci.artifacts import sha256, write_json
++
++
++def read_csv(path):
++    with Path(path).open(newline="") as stream:
++        return list(csv.DictReader(stream))
++
++
++def read_bytes_retry(path):
++    """Retry transient iCloud hydration cancellation without changing the source."""
++    for attempt in range(3):
++        try:
++            return path.read_bytes()
++        except OSError as error:
++            if error.errno not in {11, 35, 60, 89} or attempt == 2:
++                raise
++            time.sleep(0.2 * (attempt + 1))
++
++
++def metrics(pred, y, artifact, clean):
++    if not (len(pred) == len(y) == len(artifact)):
++        raise ValueError("prediction, target and artifact lengths differ")
++    pairs = [(int(a), int(b)) for a, b, f in zip(pred, y, artifact) if not clean or not f]
++    if not pairs or any(not (0 <= a < 4 and 0 <= b < 4) for a, b in pairs):
++        raise ValueError("empty selection or invalid four-class label")
++    cm = [[sum(a == j and b == i for a, b in pairs) for j in range(4)] for i in range(4)]
++    recalls, f1s = [], []
++    for i in range(4):
++        tp = cm[i][i]
++        actual, predicted = sum(cm[i]), sum(row[i] for row in cm)
++        recalls.append(tp / actual if actual else 0.0)
++        f1s.append(2 * tp / (actual + predicted) if actual + predicted else 0.0)
++    return {"acc": sum(a == b for a, b in pairs) / len(pairs), "macro_f1": statistics.mean(f1s),
++            "recall": recalls, "confusion": cm, "n": len(pairs)}
++
++
++def audit(root: Path, data_dir: Path, deep: bool) -> dict:
++    results = root / "results"
++    frozen = json.loads((results / "frozen_config.json").read_text())
++    conditions = ["full-22"] + [f"{method}-{k}" for k in frozen["channel_counts"] for method in frozen["methods"]]
++    conditions += [f"{base}-prune{round(100*f)}" for base in frozen["pruning"]["bases"]
++                   for f in frozen["pruning"]["fractions"]]
++    checks, missing, metric_errors, table_errors = {}, [], [], []
++    counts = {}
++    for phase, axis, indices in [("validation", "fold", range(3)), ("final", "seed", frozen["seeds"])]:
++        expected = {f"sub-{s:02d}_{axis}-{i}_{c}" for s in range(1, 10) for i in indices for c in conditions}
++        for group in ["runs", "quant"]:
++            actual = {p.stem for p in (results / phase / group).glob("*.json")}
++            name = f"{phase}/{group}"
++            counts[name] = len(actual)
++            checks[name] = {"missing": sorted(expected - actual), "unexpected": sorted(actual - expected)}
++        if phase == "final":
++            actual = {p.stem for p in (results / "test").glob("*.json")}
++            counts["test"] = len(actual)
++            checks["test"] = {"missing": sorted(expected - actual), "unexpected": sorted(actual - expected)}
++        for stem in sorted(expected):
++            for suffix in [".pt", ".onnx", "_int8.onnx"]:
++                path = data_dir / "models" / phase / (stem + suffix)
++                if not path.is_file() or not path.stat().st_size:
++                    missing.append(str(path))
++    processed_missing = [str(data_dir / "processed" / f"sub-{s:02d}_ses-{day}.npz")
++                         for s in range(1,10) for day in [1,2]
++                         if not (data_dir / "processed" / f"sub-{s:02d}_ses-{day}.npz").is_file()]
++    hash_ok = sha256(results / "validation/summary.csv") == frozen["validation_summary_sha256"]
++    pp = read_csv(results / "analysis/per_participant_primary.csv")
++    groups = collections.defaultdict(list)
++    for r in pp:
++        groups[(r["condition"], r["precision"])].append(float(r["acc"]))
++    summary = read_csv(results / "analysis/conditions_primary.csv")
++    for r in summary:
++        values = groups[(r["condition"], r["precision"])]
++        if len(values) != 9 or abs(statistics.mean(values) - float(r["acc_mean"])) > 0.00011:
++            table_errors.append(f"participant-to-condition mismatch: {r['condition']} {r['precision']}")
++    final = frozen["final_configuration"]
++    baseline = {int(r["subject"]):float(r["acc"]) for r in pp if r["condition"] == "full-22" and r["precision"] == "fp32"}
++    selected = [r for r in pp if r["condition"] == final["condition"] and r["precision"] == final["precision"]]
++    losses = [{"subject":int(r["subject"]), "difference_pp":100*(float(r["acc"])-baseline[int(r["subject"])])}
++              for r in selected if float(r["acc"]) - baseline[int(r["subject"])] < -0.02]
++    recomputed = collections.defaultdict(list)
++    source_digest = hashlib.sha256()
++    if deep:
++        paths = sorted((results / "test").glob("*.json"))
++        # iCloud may hydrate independent files slowly; bounded concurrent reads
++        # avoid serial hydration while retaining deterministic filename order.
++        reader = ThreadPoolExecutor(max_workers=12)
++        contents = reader.map(read_bytes_retry, paths)
++        for number, (path, content) in enumerate(zip(paths, contents), 1):
++            source_digest.update(path.name.encode() + b"\0" + hashlib.sha256(content).digest())
++            r = json.loads(content)
++            for precision in ["fp32", "int8"]:
++                for analysis in ["primary", "secondary"]:
++                    m = metrics(r["pred"][precision], r["y"], r["artifact"], analysis == "primary")
++                    for key in ["acc", "macro_f1"]:
++                        if not math.isclose(m[key], r[analysis][precision][key], abs_tol=1e-10):
++                            metric_errors.append(f"{path.name}: {analysis}/{precision}/{key}")
++                    for key in ["recall", "confusion"]:
++                        if m[key] != r[analysis][precision][key]:
++                            metric_errors.append(f"{path.name}: {analysis}/{precision}/{key}")
++                    if m["n"] != r["n_clean" if analysis == "primary" else "n_trials"]:
++                        metric_errors.append(f"{path.name}: {analysis} count")
++                    recomputed[(analysis, r["condition"], precision, r["subject"])].append(m)
++            if number % 50 == 0 or number == len(paths):
++                print(f"Prediction audit: {number}/{len(paths)}", flush=True)
++        reader.shutdown()
++        for analysis, filename in [("primary","conditions_primary.csv"),("secondary","conditions_secondary.csv")]:
++            for row in read_csv(results / "analysis" / filename):
++                for metric, column in [("acc","acc_mean"),("macro_f1","f1_mean")]:
++                    value = statistics.mean(statistics.mean(m[metric] for m in recomputed[(analysis,row["condition"],row["precision"],s)]) for s in range(1,10))
++                    if abs(value-float(row[column])) > 0.000051:
++                        table_errors.append(f"predictions-to-table mismatch: {analysis}/{row['condition']}/{row['precision']}/{metric}")
++    coverage_ok = all(not r["missing"] and not r["unexpected"] for r in checks.values())
++    return {"audited_at":datetime.now(ZoneInfo("America/New_York")).isoformat(), "root":str(root),
++            "data_dir":str(data_dir), "deep":deep, "counts":counts, "coverage":checks,
++            "historical_evidence_consistent":coverage_ok and hash_ok and not metric_errors and not table_errors,
++            "frozen_validation_hash_matches":hash_ok, "prediction_metric_errors":metric_errors,
++            "table_errors":table_errors, "test_prediction_aggregate_sha256":source_digest.hexdigest() if deep else None,
++            "replay_and_training_ready":not missing and not processed_missing,
++            "missing_model_artifact_count":len(missing), "missing_model_artifacts":missing,
++            "missing_processed_data":processed_missing,
++            "final_configuration":final, "final_participants_losing_more_than_2pp":losses,
++            "limits":["Consistency checks do not independently reproduce training or validate original data provenance.",
++                       "Historical frozen time and hashes do not by themselves prove prospective registration.",
++                       "This audit does not deserialize model files, verify raw downloads or measure runtime memory.",
++                       "The 100-epoch matched fine-tuning control is supplementary and not in the original 17 conditions."]}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root",type=Path,default=ROOT)
++    parser.add_argument("--data-dir",type=Path,default=Path(os.environ.get("MIBCI_DATA_DIR", ROOT / "data.nosync")))
++    parser.add_argument("--deep",action="store_true")
++    parser.add_argument("--require-artifacts",action="store_true",help="Fail also when original models/data are missing")
++    parser.add_argument("--output",type=Path,default=ROOT / "results/maintenance/audit.json")
++    args=parser.parse_args()
++    report=audit(args.root.resolve(),args.data_dir.resolve(),args.deep)
++    write_json(args.output,report)
++    print(json.dumps({k:report[k] for k in ['counts','historical_evidence_consistent','replay_and_training_ready',
++                    'missing_model_artifact_count','final_participants_losing_more_than_2pp']},indent=2))
++    if not report['historical_evidence_consistent'] or (args.require_artifacts and not report['replay_and_training_ready']):
++        raise SystemExit(1)
++
++
++if __name__ == "__main__":
++    main()
+--- /dev/null
++++ b/scripts/benchmark_memory.py
+@@ -0,0 +1,77 @@
++"""Measure isolated ONNX Runtime process RSS, keeping it distinct from tensor estimates.
++
++The parent prepares normalized session-1 inputs. Each precision runs in a fresh
++child that never imports PyTorch. Peak RSS includes interpreter, ORT, allocator,
++graph initialization and input arrays; it is not per-inference tensor memory or MCU SRAM.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++import platform
++import subprocess
++import sys
++import tempfile
++
++
++def child(model,inputs,runs):
++    import resource
++    import numpy as np
++    import onnxruntime as ort
++    import psutil
++    process=psutil.Process()
++    baseline=process.memory_info().rss
++    opts=ort.SessionOptions();opts.intra_op_num_threads=1;opts.inter_op_num_threads=1
++    opts.execution_mode=ort.ExecutionMode.ORT_SEQUENTIAL
++    session=ort.InferenceSession(str(model),opts,providers=["CPUExecutionProvider"])
++    after_session=process.memory_info().rss
++    array=np.load(inputs)
++    name=session.get_inputs()[0].name
++    for i in range(100+runs):
++        session.run(None,{name:array[i%len(array):i%len(array)+1]})
++    peak=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
++    print(json.dumps({"baseline_rss_bytes":baseline,"after_session_rss_bytes":after_session,
++        "after_inference_rss_bytes":process.memory_info().rss,
++        "process_lifetime_peak_rss_bytes":int(peak*(1 if platform.system()=="Darwin" else 1024)),
++        "runtime_input_type":session.get_inputs()[0].type,"input_array_bytes":array.nbytes,
++        "warmup":100,"runs":runs,"onnxruntime":ort.__version__}))
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--bundle",type=Path)
++    parser.add_argument("--output",type=Path)
++    parser.add_argument("--runs",type=int,default=1000)
++    parser.add_argument("--child-model",type=Path,help=argparse.SUPPRESS)
++    parser.add_argument("--child-input",type=Path,help=argparse.SUPPRESS)
++    args=parser.parse_args()
++    if args.runs<1:parser.error("runs must be positive")
++    if args.child_model:
++        child(args.child_model,args.child_input,args.runs);return
++    if not args.bundle or not args.output:parser.error("--bundle and --output are required")
++    from mibci.artifacts import model_exports,require_files,sha256,write_json
++    from mibci.model import load_bundle
++    from mibci.experiment import session1
++    import numpy as np
++    paths=model_exports(args.bundle);require_files([args.bundle,*paths],"process memory benchmark")
++    if args.output.exists():raise SystemExit("Output exists; choose a new file to retain previous measurements")
++    _,scaler,b=load_bundle(args.bundle)
++    X,_,tr,_=session1(b["subject"],"final")
++    inputs=scaler.transform(X[tr][:32,b["channels"]])
++    rows={}
++    with tempfile.TemporaryDirectory() as temp:
++        input_path=Path(temp)/"inputs.npy";np.save(input_path,inputs)
++        for precision,path in zip(["fp32","int8"],paths):
++            run=subprocess.run([sys.executable,str(Path(__file__).resolve()),"--child-model",str(path),
++                "--child-input",str(input_path),"--runs",str(args.runs)],capture_output=True,text=True,check=True)
++            rows[precision]={"model_sha256":sha256(path),**json.loads(run.stdout)}
++    write_json(args.output,{"bundle":str(args.bundle.resolve()),"bundle_sha256":sha256(args.bundle),
++        "platform":platform.platform(),"rows":rows,
++        "definition":"Process RSS in separate children without PyTorch; includes initialization and runtime overhead. Peak is lifetime high-water mark, not incremental inference memory.",
++        "limits":"Not MCU SRAM, tensor liveness, allocation tracing, or a proof of a 4x activation-memory reduction."})
++    print(json.dumps(rows,indent=2))
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/build_presentation.py
+@@ -0,0 +1,65 @@
++"""Package the existing 17 HTML slides with local assets and keyboard navigation."""
++
++from __future__ import annotations
++
++import html
++import json
++from pathlib import Path
++import re
++import shutil
++
++ROOT=Path(__file__).resolve().parents[1]
++PRESENTATION=ROOT/"presentation"
++SOURCE=PRESENTATION/"deck_source"
++
++
++def main():
++    deck=json.loads((SOURCE/"deck.json").read_text())
++    assets=PRESENTATION/"assets";assets.mkdir(exist_ok=True)
++    slides=[]
++    for number,identifier in enumerate(deck["order"],1):
++        path=SOURCE/"slides"/f"{identifier}.html"
++        source=path.read_text()
++        source=re.sub(r'(Peiye Li · COMP 690 · )\d+',lambda m:m.group(1)+str(number),source)
++        if "/_blob/" in source:raise RuntimeError(f"Unresolved private asset in {path}")
++        def copy_asset(match):
++            name,value=match.group(1),html.unescape(match.group(2))
++            if value.startswith(("http:","https:","data:")):return match.group(0)
++            origin=(path.parent/value).resolve()
++            if not origin.is_file():raise FileNotFoundError(origin)
++            destination=assets/origin.name
++            shutil.copy2(origin,destination)
++            return f'{name}="assets/{html.escape(origin.name,quote=True)}"'
++        source=re.sub(r'(src|data-video)="([^"]+)"',copy_asset,source)
++        slides.append(source.replace("<section ",'<section class="slide" ',1))
++    title=html.escape(deck["title"])
++    page='''<!doctype html><html lang="en"><head><meta charset="utf-8">
++<meta name="viewport" content="width=device-width,initial-scale=1">
++<title>'''+title+'''</title><style>
++*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#171a20;color:white;font-family:Arial,sans-serif}
++#stage{position:absolute;inset:0;overflow:hidden}.slide{position:absolute!important;width:1920px;height:1080px;transform-origin:top left;overflow:hidden;margin:0}
++[hidden]{display:none!important}.slide p,.slide h2,.slide h3{margin:0}.slide ul{margin:0;padding-left:1.1em}.slide th,.slide td{padding:14px 12px}.slide aside{display:none}
++#toolbar{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;background:#171a20e8;padding:7px 15px;border-radius:7px;font-size:13px;z-index:3}
++button{background:#f6f5f1;border:0;border-radius:3px;padding:6px 12px;color:#14213d;cursor:pointer}button:focus-visible{outline:3px solid #f2a65a}
++#notes{position:fixed;bottom:62px;left:8%;right:8%;padding:20px;background:#fff;color:#14213d;border:2px solid #b5591a;max-height:35vh;overflow:auto;line-height:1.5;z-index:5}
++video{object-fit:contain;background:black}
++@media print{@page{size:1920px 1080px;margin:0}html,body{width:auto;height:auto;background:white}#stage{position:static;overflow:visible}.slide,.slide[hidden]{position:relative!important;display:flex!important;transform:none!important;left:0!important;top:0!important;page-break-after:always;break-after:page;width:1920px;height:1080px}#toolbar,#notes{display:none!important}}
++</style></head><body><main id="stage" aria-label="Presentation">'''+"\n".join(slides)+'''</main>
++<nav id="toolbar" aria-label="Slide controls"><button id="previous" aria-label="Previous slide">←</button><span id="counter"></span><button id="next" aria-label="Next slide">→</button><button id="toggleNotes">Notes (N)</button><button id="fullscreen">Full screen (F)</button><span>Arrow keys · Home/End · click demo to play</span></nav>
++<aside id="notes" hidden aria-label="Speaker notes"></aside><script>
++const slides=[...document.querySelectorAll('.slide')],notes=document.getElementById('notes');let current=0;
++const initial=slides.findIndex(s=>s.id===decodeURIComponent(location.hash.slice(1)));if(initial>=0)current=initial;
++function layout(){const scale=Math.min(innerWidth/1920,(innerHeight-45)/1080);for(const s of slides){s.style.transform=`scale(${scale})`;s.style.left=`${(innerWidth-1920*scale)/2}px`;s.style.top=`${Math.max(0,(innerHeight-45-1080*scale)/2)}px`;}}
++function show(n){current=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>{s.hidden=i!==current;s.setAttribute('aria-hidden',String(i!==current));if(i!==current)s.querySelectorAll('video').forEach(v=>v.pause());});document.getElementById('counter').textContent=`${current+1} / ${slides.length}`;notes.textContent=slides[current].querySelector('aside')?.textContent||'No speaker notes';history.replaceState(null,'','#'+slides[current].id);layout();}
++function fullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();}
++document.getElementById('previous').onclick=()=>show(current-1);document.getElementById('next').onclick=()=>show(current+1);
++document.getElementById('toggleNotes').onclick=()=>notes.hidden=!notes.hidden;document.getElementById('fullscreen').onclick=fullscreen;
++addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1);}else if(['ArrowLeft','PageUp'].includes(e.key))show(current-1);else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key.toLowerCase()==='n')notes.hidden=!notes.hidden;else if(e.key.toLowerCase()==='f')fullscreen();});
++document.querySelectorAll('[data-video]').forEach(img=>{img.tabIndex=0;img.setAttribute('role','button');img.setAttribute('aria-label','Play recorded EEG replay');function play(){const video=document.createElement('video');video.src=img.dataset.video;video.poster=img.src;video.controls=true;video.style.cssText=img.style.cssText;img.replaceWith(video);video.play();}img.onclick=play;img.onkeydown=e=>{if(e.key==='Enter'){e.stopPropagation();play();}};});
++addEventListener('resize',layout);show(current);
++</script></body></html>'''
++    (PRESENTATION/"index.html").write_text(page)
++    print(f"Built {len(slides)} slides with {len(list(assets.iterdir()))} local assets.")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/build_report.py
+@@ -0,0 +1,299 @@
++"""Build a portable Markdown research report from retained experiment evidence.
++
++Does not train, choose models or overwrite historical tables/figures. New charts
++and derived tables are written only under results/maintenance and docs/assets.
++"""
++
++from __future__ import annotations
++
++import collections
++import csv
++import json
++from pathlib import Path
++import statistics
++
++import matplotlib
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++
++ROOT=Path(__file__).resolve().parents[1]
++DOCS=ROOT/"docs"
++ASSETS=DOCS/"assets"
++RESULTS=ROOT/"results"
++
++
++def read_csv(relative):
++    with (RESULTS/relative).open(newline="") as stream:return list(csv.DictReader(stream))
++
++
++def table(headers,rows):
++    return "| "+" | ".join(headers)+" |\n| "+" | ".join(["---"]*len(headers))+" |\n"+"\n".join(
++        "| "+" | ".join(map(str,r))+" |" for r in rows)
++
++
++def main():
++    ASSETS.mkdir(parents=True,exist_ok=True)
++    frozen=json.loads((RESULTS/"frozen_config.json").read_text())
++    chosen=frozen["final_configuration"]
++    pp=read_csv("analysis/per_participant_primary.csv")
++    summary=read_csv("analysis/conditions_primary.csv")
++    secondary=read_csv("analysis/conditions_secondary.csv")
++    efficiencies=read_csv("analysis/efficiency.csv")
++    comparisons=read_csv("analysis/comparisons_primary.csv")
++    conditions={(r["condition"],r["precision"]):r for r in summary}
++    costs={(r["condition"],r["precision"]):r for r in efficiencies}
++    selected_key=(chosen["condition"],chosen["precision"])
++    baseline_key=("full-22","fp32")
++    b,f=conditions[baseline_key],conditions[selected_key]
++    bc,fc=costs[baseline_key],costs[selected_key]
++    participant={(r["condition"],r["precision"],int(r["subject"])):r for r in pp}
++    participant_rows=[]
++    stage_rows=[]
++    for subject in range(1,10):
++        before=participant[(*baseline_key,subject)];after=participant[(*selected_key,subject)]
++        participant_rows.append([subject,float(before["acc"])*100,float(after["acc"])*100,
++                                 (float(after["acc"])-float(before["acc"]))*100])
++        stages=[float(participant[(c,p,subject)]["acc"]) for c,p in [baseline_key,
++                ("relevance-16","fp32"),("relevance-16-prune50","fp32"),selected_key]]
++        stage_rows.append([subject,*[100*(stages[i+1]-stages[i]) for i in range(3)]])
++    loss_count=sum(r[3]<-2 for r in participant_rows)
++    if loss_count!=int(f["n_losing_more_than_2pts"]):raise RuntimeError("Participant loss count disagrees with summary")
++    plt.rcParams.update({"font.size":11,"axes.spines.top":False,"axes.spines.right":False,"figure.facecolor":"white"})
++    fig,ax=plt.subplots(figsize=(8.6,4.9),layout="constrained")
++    differences=[r[3] for r in participant_rows]
++    ax.barh([f"P{r[0]}" for r in participant_rows],differences,color=["#2e75b6" if v>=0 else "#b5591a" for v in differences])
++    for i,value in enumerate(differences):ax.text(value+(.15 if value>=0 else -.15),i,f"{value:+.2f}",va="center",ha="left" if value>=0 else "right")
++    ax.axvline(0,color="#333333",lw=.8);ax.axvline(-2,color="#555555",ls="--",lw=1,label="2-point loss threshold")
++    ax.set(xlim=(-6,9),xlabel="Final INT8 minus full-22 FP32 accuracy (percentage points)",
++           title="Final configuration: participant-level accuracy differences")
++    ax.invert_yaxis();ax.legend(loc="lower right",frameon=False)
++    fig.savefig(ASSETS/"participant_differences.png",dpi=170);plt.close(fig)
++    class_columns=["recall_left_hand","recall_right_hand","recall_feet","recall_tongue"]
++    class_rows=[]
++    for column in class_columns:
++        a=statistics.mean(float(participant[(*baseline_key,s)][column]) for s in range(1,10))*100
++        z=statistics.mean(float(participant[(*selected_key,s)][column]) for s in range(1,10))*100
++        class_rows.append([column.removeprefix("recall_").replace("_"," "),a,z,z-a])
++    fig,ax=plt.subplots(figsize=(8.6,4.3),layout="constrained")
++    x=list(range(4))
++    ax.bar([v-.18 for v in x],[r[1] for r in class_rows],width=.36,color="#555555",label="Full-22 FP32")
++    ax.bar([v+.18 for v in x],[r[2] for r in class_rows],width=.36,color="#2e75b6",hatch="//",label="Frozen final INT8")
++    ax.set(xticks=x,xticklabels=[r[0] for r in class_rows],ylim=(0,100),ylabel="Mean participant recall (%)",title="Class recall across nine participants")
++    ax.legend(frameon=False)
++    fig.savefig(ASSETS/"class_recall.png",dpi=170);plt.close(fig)
++    with (RESULTS/"maintenance/participant_differences.csv").open("w",newline="") as stream:
++        writer=csv.writer(stream);writer.writerow(["subject","baseline_accuracy_pct","final_accuracy_pct","difference_pp"]);writer.writerows(participant_rows)
++    with (RESULTS/"maintenance/class_recall.csv").open("w",newline="") as stream:
++        writer=csv.writer(stream);writer.writerow(["class","baseline_recall_pct","final_recall_pct","difference_pp"]);writer.writerows(class_rows)
++    parameter_ratio=float(bc["parameter_bytes"])/float(fc["parameter_bytes"])
++    file_reduction=100*(1-float(fc["file_bytes"])/float(bc["file_bytes"]))
++    modeled_ratio=float(bc["peak_activation_bytes"])/float(fc["peak_activation_bytes"])
++    shown=[baseline_key,("full-22","int8"),("proposed-16","fp32"),("relevance-16","fp32"),
++           ("weightnorm-16","fp32"),("proposed-8","fp32"),selected_key]
++    result_table=table(["Condition","Precision","Accuracy (%)","Macro-F1 (%)","Difference vs baseline (pp)","95% paired interval (pp)"],
++        [[c,p,f"{100*float(conditions[(c,p)]['acc_mean']):.2f}",f"{100*float(conditions[(c,p)]['f1_mean']):.2f}",
++          f"{100*float(conditions[(c,p)]['diff_vs_full_fp32']):+.2f}",
++          f"[{100*float(conditions[(c,p)]['diff_ci_low']):+.2f}, {100*float(conditions[(c,p)]['diff_ci_high']):+.2f}]"] for c,p in shown])
++    selection_table=table(["Electrodes","Precision","Control","Proposed minus control (pp)","95% paired interval (pp)"],
++        [[r["electrodes"],r["precision"],r["family"].removeprefix("proposed vs "),f"{100*float(r['mean_diff']):+.2f}",
++          f"[{100*float(r['ci_low']):+.2f}, {100*float(r['ci_high']):+.2f}]"] for r in comparisons if r["family"].startswith("proposed vs")])
++    size_table=table(["Quantity","Full-22 FP32","Frozen final INT8","Interpretation"],[
++        ["Initializer/parameter bytes",bc["parameter_bytes"],fc["parameter_bytes"],f"{parameter_ratio:.2f}x ratio; includes initializers such as scales"],
++        ["Serialized ONNX bytes",bc["file_bytes"],fc["file_bytes"],f"{file_reduction:.2f}% file reduction"],
++        ["Modeled peak activation bytes",bc["peak_activation_bytes"],fc["peak_activation_bytes"],f"{modeled_ratio:.2f}x ratio under uniform-precision tensor assumptions"],
++        ["Actual ONNX float32 input bytes","44000","32000","Both graph interfaces accept float32; quantization is internal"],
++        ["Median CPU latency (ms)",bc["latency_median_ms"],fc["latency_median_ms"],"Historical batch-1, one-thread measurement"],
++        ["MACs",bc["macs"],fc["macs"],"Analytical convolution/dense multiply-accumulate count"]])
++    memory_rows=[]
++    for name,label in [("memory_full22","Full-22"),("memory_final_candidate","16 electrodes, 50% pruned")]:
++        path=RESULTS/"supplementary/matched_budget"/(name+".json")
++        if path.exists():
++            result=json.loads(path.read_text())
++            for precision,row in result["rows"].items():
++                memory_rows.append([label,precision,*[f"{row[key]/1048576:.2f}" for key in
++                    ["baseline_rss_bytes","after_session_rss_bytes","after_inference_rss_bytes","process_lifetime_peak_rss_bytes"]]])
++    memory_text=("### 4.1 Additional isolated-process measurements on the M5 reproduction\n\n"+
++        table(["Model","Precision","Baseline RSS (MiB)","After session (MiB)","After inference (MiB)","Lifetime peak (MiB)"],memory_rows)+
++        "\n\nEach row is one fresh process without PyTorch, using 100 warm-up and 1,000 inference calls. "
++        "These are M5 measurements of independently reproduced models, not replacements for the historical M4 timing. "
++        "Process RSS includes interpreter, runtime, graph setup, input arrays and allocator overhead; its lifetime high-water mark is not incremental tensor memory or MCU SRAM. "
++        "No uncertainty interval or pure activation-memory compression ratio is inferred from these process measurements.") if memory_rows else ""
++    supplement_path=RESULTS/"supplementary/matched_budget/analysis.json"
++    matched_summary=""
++    if supplement_path.exists():
++        supplement=json.loads(supplement_path.read_text())
++        contrasts=[r for r in supplement["comparisons"] if r["a"] in ["25","50"] and r["b"]=="0"]
++        fig,ax=plt.subplots(figsize=(8.6,4.9),layout="constrained")
++        for i,row in enumerate(contrasts):
++            color="#2e75b6" if row["precision"]=="int8" else "#555555"
++            ax.hlines(i,row["ci_low_pp"],row["ci_high_pp"],color=color,lw=1.4)
++            ax.scatter(row["difference_pp"],i,marker="s" if row["a"]=="50" else "o",s=38,color=color,zorder=3)
++        ax.axvline(0,color="#333333",ls="--",lw=.8)
++        ax.set_yticks(range(len(contrasts)),[f"{r['base']} | {r['precision'].upper()} | prune {r['a']}%" for r in contrasts])
++        ax.invert_yaxis()
++        ax.set(title="Pruning versus an equally fine-tuned unpruned model",
++               xlabel="Paired accuracy difference (percentage points)\n95% participant bootstrap interval; n = 9")
++        fig.savefig(ASSETS/"matched_budget_effects.png",dpi=170);plt.close(fig)
++        origin="independent reproduction" if supplement["base_origin"]=="independent_reproduction" else "matched branching from original bundles"
++        supplement_text=(f"The additional experiment has been executed as **{origin}**, after the original test results were known. "
++            "Both historical pruning bases and all nine participants/three seeds were retained; no finalist was reselected. "
++            "Every base was branched into 0%, 25% and 50% pruning, all with the same 100-epoch, 1e-4 Adam fine-tuning budget.\n\n"+
++            table(["Base","Precision","Branch A","Branch B","A minus B (pp)","95% paired interval (pp)"],
++                [[r['base'],r['precision'],r['a'],r['b'],f"{r['difference_pp']:+.2f}",f"[{r['ci_low_pp']:+.2f}, {r['ci_high_pp']:+.2f}]"] for r in supplement['comparisons']])+"\n\n"
++            "Here `base` is the 475-epoch model with the recorded origin; `0` is unpruned plus 100 more epochs; `25` and `50` are equally fine-tuned pruned branches. "
++            "The `0 - base` contrast estimates the extra-training effect. The `25/50 - 0` contrasts compare structural pruning at equal fine-tuning budgets. "
++            "Intervals are exploratory participant-level bootstrap intervals. "
++            "See the [supplementary protocol](../results/supplementary/matched_budget/protocol.json) and [all paired comparisons](../results/supplementary/matched_budget/paired_comparisons.csv).")
++        supplement_text+="\n\n![Matched-budget pruning contrasts with participant intervals](assets/matched_budget_effects.png)"
++        selected_contrast=next(r for r in supplement["comparisons"] if r["base"]=="relevance-16" and r["precision"]=="int8" and r["a"]=="50" and r["b"]=="0")
++        matched_summary=(f"The added **M5 matched-budget reproduction** found that 50% pruning of the relevance-16 INT8 model "
++            f"reduced mean accuracy by **{abs(selected_contrast['difference_pp']):.2f} percentage points** against an unpruned model given the same 100 extra epochs "
++            f"(95% exploratory interval **[{selected_contrast['ci_low_pp']:+.2f}, {selected_contrast['ci_high_pp']:+.2f}]**). "
++            "Thus, similar performance to the original shorter-trained baseline does not imply pruning is accuracy-free. "
++            "This supplementary analysis was added after test outcomes were known; it preserves the historical finalist.")
++        supplement_text+=(f"\n\nFor relevance-16 INT8, the 50%-pruned branch differed from the equally fine-tuned unpruned branch by "
++            f"{selected_contrast['difference_pp']:+.2f} points, with a 95% interval "
++            f"[{selected_contrast['ci_low_pp']:+.2f}, {selected_contrast['ci_high_pp']:+.2f}]. "
++            "This isolates the structural comparison within the recorded fine-tuning procedure more closely than the original baseline contrast. "
++            "It remains a post-test, nine-participant reproduction on different hardware and does not replace the original study.")
++        agreements=[]
++        for path in (RESULTS/"supplementary/matched_budget/test").glob("*.json"):
++            record=json.loads(path.read_text())
++            agreements.extend((record.get("historical_prediction_agreement") or {}).values())
++        if agreements:
++            supplement_text+=(f"\n\nAcross {len(agreements)} model/precision pairs comparable with a historical condition, "
++                f"mean full-trial prediction agreement was {100*statistics.mean(agreements):.2f}% "
++                f"(range {100*min(agreements):.2f}–{100*max(agreements):.2f}%). "
++                "Agreement is a reproduction diagnostic, not proof of identical weights; mismatching runs remain included.")
++    else:
++        supplement_text=("A supplementary matched-budget experiment is implemented in `scripts/run_matched_control.py`. "
++            "Its analysis is **pending**, and no additional empirical outcome is claimed here. "
++            "It branches each of the two historical bases into unpruned, 25%-pruned and 50%-pruned models, all given 100 epochs at 1e-4 with the same seed and batch schedule. "
++            "Missing original weights require explicitly labeled independent base reproduction. "
++            "This analysis was added after the original test outcomes were known; it cannot be represented as preregistered or used to reselect the historical finalist.")
++    report=f'''# Fewer EEG electrodes preserve average decoding accuracy, while INT8 does not improve M4 CPU latency
++
++Peiye Li · COMP 690-193 · Fall 2026  
++Local report assembled from retained experiment evidence; maintenance date: 2026-11-04.
++
++## Executive summary
++
++The frozen 16-electrode, 50%-pruned INT8 configuration reached **{100*float(f['acc_mean']):.2f}%** held-out-session accuracy, compared with **{100*float(b['acc_mean']):.2f}%** for the full 22-electrode FP32 baseline. The mean paired difference was **{100*float(f['diff_vs_full_fp32']):+.2f} percentage points**, with a 95% participant bootstrap interval of **[{100*float(f['diff_ci_low']):+.2f}, {100*float(f['diff_ci_high']):+.2f}]**. This is close average performance, not proof of equivalence: **{loss_count}/9 participants lost more than two points**.
++
++Redundancy-aware electrode selection did not show a clear advantage over relevance-only or spatial-weight selection. It outperformed the mean of three fixed random subsets, but most comparisons against the stronger controls had intervals crossing zero. The results support a controlled negative finding about this particular redundancy proxy, rather than a new superior selection algorithm.
++
++Initializer bytes fell by approximately {parameter_ratio:.1f}x, but the complete ONNX file shrank by only {file_reduction:.1f}%. INT8 inference of the full model was about 28% slower than FP32 on the measured Apple M4 CPU. The large activation-memory ratio is an analytical tensor estimate; actual ONNX Runtime memory and MCU SRAM were not measured in the historical experiment.
++
++{matched_summary}
++
++## 1. Research question and relation to prior work
++
++The question is whether EEG electrodes selected for both class relevance and low band-power redundancy preserve four-class motor-imagery information across recording days, and whether any advantage survives INT8 quantization. Electrode count describes physical measurements; pruning removes learned internal features. Their costs and information loss should be evaluated separately.
++
++EEGNet uses depthwise and separable convolutions for compact EEG decoding [1]. Q-EEGNet studies an 8-bit, hardware-aware embedded EEGNet implementation [2]. MI-BMInet combines spatial-filter channel selection, quantization and embedded evaluation [3]. The present project is a controlled software comparison within one fixed EEGNet pipeline. The spatial-weight baseline is inspired by MI-BMInet; it is not a reproduction of that architecture or its deployment results.
++
++## 2. Data and experimental protocol
++
++BCI Competition IV 2a / BNCI 2014-001 contains nine participants, two recording sessions on different days, 22 EEG channels at 250 Hz and four classes: left hand, right hand, feet and tongue. Each session has 288 trials in six runs. EOG is excluded. The primary analysis removes expert-flagged artifacts, while the secondary analysis evaluates the same models on all trials. Counts and source-file SHA-256 values are retained in [data_summary.csv](../results/data_summary.csv).
++
++Each run is processed with a causal fourth-order Butterworth 4–38 Hz band-pass, resetting state at run boundaries. Each trial supplies a two-second window from 0.5 to 2.5 seconds after the cue. Normalization uses training-partition channel means and standard deviations only.
++
++Session 1 supplies training and three validation folds, each holding out two complete runs. Channel rankings, normalization and PTQ calibration are fitted only to the applicable training partition. Session 2 is the final test day. The source code requires an explicit final-evaluation flag to load it. The retained [frozen configuration](../results/frozen_config.json) fixes the training budget at 475 epochs and seeds at 0, 1 and 2. The stored validation-table hash can be checked; this consistency check is not independent proof of the original chronology.
++
++The decoder is Braindecode 2.0.0 EEGNet with F1=8, D=2, F2=16, temporal kernel 64, dropout 0.5 and max-norm constraints. Adam uses learning rate 1e-3, batch size 64 and the same fixed epoch budget for the electrode-selection conditions. The 22-channel model has 2,420 trainable parameters.
++
++For selection, Welch log power is calculated in 8–13 Hz and 13–30 Hz bands. Relevance is the average multiclass Fisher score, scaled to 0–1 across electrodes. Redundancy is the mean absolute Spearman correlation across bands. Greedy selection maximizes relevance minus 0.5 times mean redundancy to the already chosen electrodes. Controls use relevance alone, spatial-weight L2 norms and three fixed random subsets. Models are retrained with 16 or 8 electrodes. These feature correlations do not identify shared neural sources.
++
++Static INT8 PTQ uses ONNX QDQ format, signed activations, per-channel weights and training-only min-max calibration. The original bounded pruning comparison drops 25% or 50% of final pointwise filters by L1 norm, slices BatchNorm and classifier tensors, and adds 100 fine-tuning epochs at 1e-4. The original unpruned baseline lacks those extra epochs, so pruning-versus-baseline accuracy differences confound removal and additional optimization.
++
++The finalist was chosen using validation: fewest electrodes within two points of full-channel FP32 accuracy, then fewest parameter bytes, then highest accuracy. Test accuracy never changes this historical choice. Accuracy, macro-F1, per-class recall and confusion matrices are retained. Seeds are averaged within participant; participants, not seeds or trials, are the nine independent resampling units. Paired intervals use 10,000 percentile bootstrap resamples and seed 690. Intervals are exploratory and are not adjusted for all comparisons.
++
++## 3. Held-out-session decoding results
++
++{result_table}
++
++The full tables include all 17 conditions in both precisions: [primary](../results/analysis/conditions_primary.csv) and [secondary](../results/analysis/conditions_secondary.csv). These are within-participant transfers to another session, not tests on previously unseen people. Differences below are percentage points, not relative percentage changes.
++
++### 3.1 Redundancy-aware selection against its controls
++
++{selection_table}
++
++The redundancy term often leaves the selected set unchanged: in the final seed-0 rankings, proposed and relevance-only subsets are identical for 6/9 participants at 16 electrodes and 7/9 at 8. The small observed advantages against relevance-only cannot establish a reliable improvement, while spatial-weight ranking is competitive. Beating three random subsets supports task-aware selection in this setting; it does not establish superiority to stronger channel-selection algorithms or robustness over all possible random layouts.
++
++![Paired selection comparisons with participant bootstrap intervals](../results/analysis/slides/fig_forest.png)
++
++### 3.2 Participant variation changes the interpretation of the mean
++
++{table(["Participant","Full-22 FP32 (%)","Frozen final INT8 (%)","Difference (pp)"],[[s,f"{a:.2f}",f"{z:.2f}",f"{d:+.2f}"] for s,a,z,d in participant_rows])}
++
++![Final configuration minus baseline by participant](assets/participant_differences.png)
++
++The losses are concentrated in participants {", ".join("P"+str(r[0]) for r in participant_rows if r[3]<-2)}. A similar group mean can coexist with useful gains for some people and material losses for others. The exploratory interval does not establish a two-point noninferiority margin. Electrode lists are fitted separately per person, so this experiment does not validate a universal headset layout.
++
++The observed path to the final model can also be decomposed arithmetically:
++
++{table(["Participant","22 to 16 electrodes + retraining (pp)","Pruning + 100 extra epochs (pp)","INT8 conversion (pp)"],[[s,f"{a:+.2f}",f"{z:+.2f}",f"{d:+.2f}"] for s,a,z,d in stage_rows])}
++
++These columns sum to each participant's final difference up to displayed rounding. They are an accounting of observed conditions, not a causal decomposition: electrode models were retrained, and the original pruning step also adds optimization. The matched-budget experiment below addresses the latter confounding explicitly.
++
++### 3.3 Class-specific outcomes
++
++{table(["Class","Baseline recall (%)","Final recall (%)","Difference (pp)"],[[c,f"{a:.2f}",f"{z:.2f}",f"{d:+.2f}"] for c,a,z,d in class_rows])}
++
++![Mean participant recall by class](assets/class_recall.png)
++
++Class recall is averaged within participant rather than pooled across all trials. These descriptive differences help locate errors; they do not establish a causal neural mechanism or a statistically reliable class-specific effect. The retained [confusion matrices](../results/analysis/fig_confusion.png) show the complementary pooled error pattern.
++
++## 4. Efficiency: storage, modeled tensors and measured time
++
++{size_table}
++
++The historical measurement used the author's Apple M4 **Mac mini**, ONNX Runtime 1.31.1, batch size one and one inference thread, with 100 warm-up calls and 1,000 timed calls. The original hardware record does not establish the RAM capacity; the machine type is corrected from the author's clarification. Preprocessing is timed separately. These are local CPU measurements, not end-to-end remote-serving latency.
++
++The finalist is about 8% faster than full-22 FP32, but about 25% slower than the unpruned relevance-16 FP32 model (0.257 versus 0.206 ms). Its small speed advantage over the full-channel baseline comes from a smaller input, not evidence that INT8 accelerated this decoder. The validation decision rule prioritizes electrode count and initializer bytes under an accuracy tolerance; it does not select the lowest-latency configuration.
++
++Initializer bytes include weights, biases and quantization metadata. The serialized file also contains the graph and other metadata, explaining why a nearly fourfold initializer reduction produces only a small complete-file reduction.
++
++Activation bytes are estimated under a layer-input-plus-output schedule with uniform four-byte FP32 or one-byte INT8 tensors. The real QDQ graph includes float operations and conversion buffers; both input interfaces receive float32 arrays. The historical `input_bytes` field for INT8 describes the modeled quantized tensor, not the actual interface buffer. New benchmark code records those separately. The estimate excludes live mixed-precision tensors, allocator behavior, runtime overhead and kernel workspaces. It is neither a measured runtime peak nor verified MCU SRAM usage.
++
++The isolated-process tool `scripts/benchmark_memory.py` can measure process RSS separately. Its lifetime peak includes Python, ORT, graph initialization and input arrays; even that measurement must not be labeled tensor memory or MCU SRAM.
++
++The profiler attributes the INT8 slowdown mainly to the grouped spatial convolution: about 185 microseconds versus 12.8 microseconds in FP32. This observation identifies an expensive quantized operator on this runtime; it does not prove an integer kernel is missing. The optimized graph in fact contains QLinearConv operators. Reduced electrode count lowers the expensive early temporal-convolution work, while pruning only the late pointwise filters changes MACs very little. This explains why parameter count alone predicts latency poorly here. ONNX Runtime documents the dependence of quantization performance on hardware, model structure and conversion overhead [4].
++
++![Historical per-layer CPU profile](../results/analysis/slides/fig_int8_layers.png)
++
++The decoder needs a two-second observation window and makes its primary decision 2.5 seconds after the cue plus processing time. Sub-millisecond compute does not imply sub-millisecond intention-to-action latency.
++
++{memory_text}
++
++## 5. Supplementary matched-budget pruning comparison
++
++{supplement_text}
++
++## 6. Demonstration and claim boundaries
++
++The [recorded replay](../results/demo/replay_participant3.mp4) streams prerecorded EEG at 250 Hz through causal preprocessing and displays predictions, cursor movement and compute time. The recorded participant cannot respond to the feedback. This validates a replay implementation, not online closed-loop control, asynchronous intent detection, power consumption or clinical utility.
++
++Nine participants and one dataset limit uncertainty and generalization. Removing artifacts is an expert-assisted offline primary analysis; the all-trials secondary analysis is retained to expose that dependency. There is no MCU latency, SRAM or energy measurement, and no claim about implants or new users. A negative result for one fixed band-power redundancy penalty does not rule out other redundancy measures. The original pruning accuracy comparison needs the matched-budget control above.
++
++## 7. Reproducibility and delivery
++
++The repository retains fixed splits, channel lists, seeds, source hashes, configuration, predictions and measurement scripts. See [reproduction instructions](REPRODUCIBILITY.md), [work log](WORK_LOG.md), [supplementary protocol](SUPPLEMENTARY_PROTOCOL.md) and the [machine-readable audit](../results/maintenance/audit.json). The local [slide deck](../presentation/index.html) replaces private blob references with packaged project assets.
++
++Original missing weights must be restored or independently reproduced in separate paths. New artifact checks refuse to silently retrain over historical records when model files are missing. Matching predictions from a reproduction do not prove identical original weights. Cross-backend bitwise equality is not promised; preserve the recorded software and per-participant device allocation [5].
++
++## References and evidence
++
++1. Lawhern et al. EEGNet: a compact convolutional neural network for EEG-based brain-computer interfaces. J. Neural Eng. 15, 056013 (2018). [Author paper](https://arxiv.org/abs/1611.08024), DOI 10.1088/1741-2552/aace8c.
++2. Schneider et al. Q-EEGNet: an Energy-Efficient 8-bit Quantized Parallel EEGNet Implementation for Edge Motor-Imagery Brain–Machine Interfaces (2020). [Author paper](https://arxiv.org/abs/2004.11690).
++3. Wang et al. MI-BMInet: An Efficient Convolutional Neural Network for Motor Imagery Brain–Machine Interfaces with EEG Channel Selection. [Author paper](https://arxiv.org/abs/2203.14592).
++4. ONNX Runtime. [Quantize ONNX models](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html), including mixed graph representation and performance limitations.
++5. PyTorch. [Reproducibility](https://docs.pytorch.org/docs/stable/notes/randomness.html).
++
++Numerical claims are derived from the linked local CSV/JSON evidence and the reproducible generator `scripts/build_report.py`. The audit verifies internal consistency, not independent provenance of the original training run. The full original result tables and figures remain available under `results/analysis/`; no historical result was replaced by this report.
++'''
++    (DOCS/"REPORT.md").write_text(report)
++    print("Wrote docs/REPORT.md and source-backed charts.")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/complete_supplement.py
+@@ -0,0 +1,122 @@
++"""Finish the already-authorized supplementary run and record every remaining stage.
++
++This is an immediate local pipeline, not a scheduled job. It waits for the existing
++training processes, exports/evaluates the complete fixed grid, validates stored
++predictions, measures process RSS and prepares report files for final visual QA.
++"""
++
++from __future__ import annotations
++
++import argparse
++from datetime import datetime
++import importlib.util
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++from zoneinfo import ZoneInfo
++
++ROOT=Path(__file__).resolve().parents[1]
++OUT=ROOT/"results/supplementary/matched_budget"
++MODELS=ROOT/"data.nosync/models/supplementary/matched_budget"
++EVIDENCE=ROOT/"docs/evidence"
++STATUS=EVIDENCE/"completion_status.json"
++
++
++def status(phase,**extra):
++    value={"at":datetime.now(ZoneInfo("America/New_York")).isoformat(),"phase":phase,**extra}
++    temp=STATUS.with_suffix(".tmp");temp.write_text(json.dumps(value,indent=2)+"\n");temp.replace(STATUS)
++    print(json.dumps(value),flush=True)
++
++
++def alive(pid):
++    try:os.kill(pid,0);return True
++    except ProcessLookupError:return False
++
++
++def run(name,command):
++    status(name,command=command)
++    with (EVIDENCE/(name+".log")).open("w") as log:
++        process=subprocess.Popen(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,bufsize=1)
++        for line in process.stdout:
++            log.write(line);log.flush()
++            if line.startswith(("[","Wrote","Matched","scored")):
++                print(line.rstrip(),flush=True)
++        code=process.wait()
++    if code:raise RuntimeError(f"Stage {name} failed with exit {code}; inspect its log")
++
++
++def validate_supplement():
++    spec=importlib.util.spec_from_file_location("audit_helpers",ROOT/"scripts/audit_project.py")
++    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
++    errors=[];paths=sorted((OUT/"test").glob("sub-*.json"))
++    if len(paths)!=216:errors.append(f"Expected 216 evaluated models, found {len(paths)}")
++    for path in paths:
++        r=json.loads(path.read_text())
++        for precision in ["fp32","int8"]:
++            for analysis in ["primary","secondary"]:
++                metrics=module.metrics(r["pred"][precision],r["y"],r["artifact"],analysis=="primary")
++                for key in ["acc","macro_f1"]:
++                    if abs(metrics[key]-r[analysis][precision][key])>1e-10:errors.append(f"{path.name}/{precision}/{analysis}/{key}")
++                if metrics["confusion"]!=r[analysis][precision]["confusion"]:errors.append(f"{path.name}/confusion")
++    target=EVIDENCE/"supplement_validation.json"
++    target.write_text(json.dumps({"models":len(paths),"errors":errors,"passed":not errors,
++        "scope":"Recomputed supplementary stored prediction metrics; complete 54 bases + 162 branches. No new finalist selection."},indent=2)+"\n")
++    if errors:raise RuntimeError(f"Supplementary validation failed: {errors[:5]}")
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--training-pids",nargs="+",type=int,required=True)
++    parser.add_argument("--artifact-python",required=True)
++    args=parser.parse_args()
++    try:
++        last=None
++        while True:
++            bases=len(list((OUT/"bases").glob("*.json")))
++            branches=len(list((OUT/"runs").glob("*.json")))
++            progress=(bases,branches)
++            if progress!=last:
++                status("training",bases=bases,expected_bases=54,branches=branches,expected_branches=162)
++                last=progress
++            for name in ["matched_train_mps.log","matched_train_cpu.log"]:
++                text=(EVIDENCE/name).read_text()
++                if "Traceback (most recent call last)" in text:raise RuntimeError(f"Training failed; inspect {name}")
++            if bases==54 and branches==162:break
++            if not any(alive(pid) for pid in args.training_pids):raise RuntimeError("Training exited before the complete grid was saved")
++            time.sleep(20)
++        run("matched_evaluation",[sys.executable,"-u","scripts/run_matched_control.py","--stage","evaluate","--workers","6"])
++        run("matched_analysis",[sys.executable,"-u","scripts/run_matched_control.py","--stage","analyze"])
++        status("validating_supplementary_predictions")
++        validate_supplement()
++        for name,bundle in [("memory_full22",MODELS/"bases/sub-01_seed-0_full-22.pt"),
++                            ("memory_final_candidate",MODELS/"branches/sub-01_seed-0_relevance-16-matched50.pt")]:
++            output=OUT/(name+".json")
++            if not output.exists():run(name,[sys.executable,"-u","scripts/benchmark_memory.py","--bundle",str(bundle),"--output",str(output)])
++        bundle=MODELS/"branches/sub-03_seed-0_relevance-16-matched50.pt"
++        expected=json.loads((OUT/"test"/(bundle.stem+".json")).read_text())
++        for precision in ["fp32","int8"]:
++            output=OUT/("portable_"+precision+".json")
++            if not output.exists():run("portable_inference_"+precision,[sys.executable,"-u","scripts/infer_bundle.py",
++                "--bundle",str(bundle),"--input-npz",str(ROOT/"data.nosync/processed/sub-03_ses-2.npz"),
++                "--precision",precision,"--output",str(output)])
++            if json.loads(output.read_text())["pred"]!=expected["pred"][precision]:raise RuntimeError("Portable inference predictions do not match evaluation")
++        run("report_final_build",[sys.executable,"scripts/build_report.py"])
++        run("report_final_pdf",[args.artifact_python,"scripts/export_report_pdf.py"])
++        analysis=json.loads((OUT/"analysis.json").read_text())
++        contrast=[r for r in analysis["comparisons"] if r["base"]=="relevance-16" and r["precision"]=="int8" and r["a"]=="50" and r["b"]=="0"][0]
++        with (ROOT/"docs/WORK_LOG.md").open("a") as log:
++            log.write("\n## 补充实验执行完成（自动流水线记录）\n\n")
++            log.write(f"完成时间：{datetime.now(ZoneInfo('America/New_York')).isoformat()}。54 个独立重建基础模型及 162 条等预算分支均完成；216 个模型分别导出/量化并评价 FP32/INT8。\n\n")
++            log.write("全量补充预测指标重算通过。基于原固定被试、种子和通道列表，没有重新选择最终模型。新运行环境为记录中的 M5，历史 M4 性能结果未替换。\n\n")
++            log.write(f"最终候选对应的 relevance-16 INT8，50% 剪枝相对不剪枝、同样微调 100 epoch 的配对差异为 {contrast['difference_pp']:+.3f} 个百分点，95% 探索性区间 [{contrast['ci_low_pp']:+.3f}, {contrast['ci_high_pp']:+.3f}]。这是事后补充复现实验，不是新增独立被试或原预注册结果。\n\n")
++            log.write("已执行独立进程 RSS 测量及可重定位推理 CLI 核验，FP32/INT8 预测与评价记录完全一致。报告 Markdown/PDF 已用补充结果重建，仍待最终逐页视觉检查与交付包校验。相关命令与输出保存在 docs/evidence。\n")
++        status("ready_for_final_review",matched_contrast=contrast)
++    except BaseException as error:
++        status("failed",error=f"{type(error).__name__}: {error}")
++        raise
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/export_report_pdf.py
+@@ -0,0 +1,131 @@
++"""Render the reviewed Markdown report as a portable, typeset PDF.
++
++Use the bundled artifact Python runtime (reportlab + Pillow); training dependencies
++and uv.lock are not changed. Regenerate after build_report.py updates the evidence.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import os
++import re
++import tempfile
++from xml.sax.saxutils import escape
++
++from reportlab.lib import colors
++from reportlab.lib.enums import TA_LEFT
++from reportlab.lib.pagesizes import letter
++from reportlab.lib.styles import ParagraphStyle,getSampleStyleSheet
++from reportlab.pdfbase import pdfmetrics
++from reportlab.pdfbase.ttfonts import TTFont
++from reportlab.platypus import SimpleDocTemplate,Paragraph,Spacer,Table,TableStyle,Image,PageBreak
++
++ROOT=Path(__file__).resolve().parents[1]
++SOURCE=ROOT/"docs/REPORT.md"
++TARGET=ROOT/"docs/REPORT.pdf"
++WIDTH=516
++NAVY=colors.HexColor("#14213D")
++BLUE=colors.HexColor("#2E75B6")
++
++
++def clean(text):
++    return text.replace("\u2013","-").replace("\u2014","-").replace("\u2011","-").replace("\u2212","-")
++
++
++def inline(text):
++    text=escape(clean(text))
++    def link(match):
++        label,target=match.groups()
++        if not target.startswith(("http:","https:")):
++            location=target.removeprefix("../") if target.startswith("../") else "docs/"+target
++            return label+f" <font size='8' color='#666666'>({location})</font>"
++        return f'<link href="{target}" color="#2E75B6">{label}</link>'
++    text=re.sub(r'\[([^\]]+)\]\(([^)]+)\)',link,text)
++    text=re.sub(r'\*\*(.+?)\*\*',r'<b>\1</b>',text)
++    text=re.sub(r'`([^`]+)`',r'<font name="Courier">\1</font>',text)
++    return text
++
++
++def setup_styles():
++    fonts=Path("/System/Library/Fonts/Supplemental")
++    names={"Report":"Arial.ttf","ReportBold":"Arial Bold.ttf","ReportItalic":"Arial Italic.ttf"}
++    if all((fonts/name).exists() for name in names.values()):
++        for name,file in names.items():pdfmetrics.registerFont(TTFont(name,str(fonts/file)))
++        pdfmetrics.registerFontFamily("Report",normal="Report",bold="ReportBold",italic="ReportItalic",boldItalic="ReportBold")
++        normal,bold="Report","ReportBold"
++    else:normal,bold="Helvetica","Helvetica-Bold"
++    styles=getSampleStyleSheet()
++    styles.add(ParagraphStyle("ReportTitle",fontName=bold,fontSize=23,leading=28,textColor=NAVY,spaceAfter=18))
++    styles.add(ParagraphStyle("ReportBody",fontName=normal,fontSize=10,leading=14.4,textColor=colors.HexColor("#253247"),spaceAfter=9,allowWidows=0,allowOrphans=0))
++    styles.add(ParagraphStyle("ReportH2",fontName=bold,fontSize=14,leading=18,textColor=NAVY,spaceBefore=17,spaceAfter=8,keepWithNext=True))
++    styles.add(ParagraphStyle("ReportH3",fontName=bold,fontSize=11.5,leading=15,textColor=NAVY,spaceBefore=12,spaceAfter=6,keepWithNext=True))
++    styles.add(ParagraphStyle("ReportCell",fontName=normal,fontSize=8.1,leading=10.5,spaceAfter=0))
++    styles.add(ParagraphStyle("ReportHeader",fontName=bold,fontSize=8.1,leading=10.5,textColor=colors.white))
++    styles.add(ParagraphStyle("ReportCaption",fontName=normal,fontSize=8,leading=10.5,textColor=colors.HexColor("#526177"),spaceAfter=12))
++    return styles,normal
++
++
++def make_table(lines,styles):
++    values=[[cell.strip() for cell in line.strip().strip("|").split("|")] for line in lines]
++    values=[row for row in values if not all(re.fullmatch(r'[:\- ]+',cell) for cell in row)]
++    count=len(values[0])
++    if count==6:weights=[1.55,.95,.9,.9,1.1,1.65]
++    elif count==5:weights=[.85,.8,1.35,1.4,1.6]
++    elif count==4:weights=[1.5,1.1,1.1,2.3] if values[0][0]=="Quantity" else [1.2,1.4,1.4,1.2]
++    else:weights=[1]*count
++    widths=[WIDTH*v/sum(weights) for v in weights]
++    cells=[[Paragraph(inline(cell),styles["ReportHeader" if i==0 else "ReportCell"]) for cell in row] for i,row in enumerate(values)]
++    result=Table(cells,colWidths=widths,repeatRows=1,hAlign="LEFT",splitByRow=1)
++    result.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY),("VALIGN",(0,0),(-1,-1),"TOP"),
++        ("LEFTPADDING",(0,0),(-1,-1),6),("RIGHTPADDING",(0,0),(-1,-1),6),
++        ("TOPPADDING",(0,0),(-1,-1),6),("BOTTOMPADDING",(0,0),(-1,-1),6),
++        ("ROWBACKGROUNDS",(0,1),(-1,-1),[colors.white,colors.HexColor("#F1F4F8")]),
++        ("LINEBELOW",(0,0),(-1,0),.6,NAVY),("LINEBELOW",(0,-1),(-1,-1),.4,colors.HexColor("#C8CFD9"))]))
++    return result
++
++
++def main():
++    styles,font=setup_styles()
++    lines=SOURCE.read_text().splitlines();story=[];i=0
++    while i<len(lines):
++        line=lines[i].strip()
++        if not line:i+=1;continue
++        if line.startswith("|"):
++            group=[]
++            while i<len(lines) and lines[i].strip().startswith("|"):
++                group.append(lines[i]);i+=1
++            story.extend([make_table(group,styles),Spacer(1,12)]);continue
++        if line.startswith("!["):
++            match=re.match(r'!\[([^\]]*)\]\(([^)]+)\)',line)
++            label,path=match.groups();path=(SOURCE.parent/path).resolve()
++            image=Image(str(path));ratio=min(WIDTH/image.imageWidth,330/image.imageHeight)
++            image.drawWidth=image.imageWidth*ratio;image.drawHeight=image.imageHeight*ratio
++            image.hAlign="CENTER"
++            story.extend([Spacer(1,5),image,Paragraph(inline(label),styles["ReportCaption"])]);i+=1;continue
++        if line.startswith("# "):story.append(Paragraph(inline(line[2:]),styles["ReportTitle"]));i+=1;continue
++        if line.startswith("## "):
++            if line.startswith("## 5. "):story.append(PageBreak())
++            story.append(Paragraph(inline(line[3:]),styles["ReportH2"]));i+=1;continue
++        if line.startswith("### "):story.append(Paragraph(inline(line[4:]),styles["ReportH3"]));i+=1;continue
++        group=[line];i+=1
++        while i<len(lines) and lines[i].strip() and not lines[i].startswith(("#","|","![")) and not re.match(r'^\d+\. ',lines[i]):
++            group.append(lines[i].strip());i+=1
++        story.append(Paragraph(inline(" ".join(group)),styles["ReportBody"]))
++    def page(canvas,doc):
++        canvas.saveState();canvas.setFont(font,8);canvas.setFillColor(colors.HexColor("#65748A"))
++        canvas.drawString(48,letter[1]-29,"EEG channel selection and model compression")
++        canvas.drawRightString(letter[0]-48,28,f"Peiye Li | COMP 690-193 | {doc.page}")
++        canvas.restoreState()
++    fd,temporary=tempfile.mkstemp(prefix=".REPORT.",suffix=".pdf",dir=TARGET.parent)
++    os.close(fd)
++    try:
++        document=SimpleDocTemplate(temporary,pagesize=letter,leftMargin=48,rightMargin=48,topMargin=49,bottomMargin=43,
++            title="EEG Channel Selection and Model Compression",author="Peiye Li",subject="Source-backed technical report with supplementary matched-budget experiment")
++        document.build(story,onFirstPage=page,onLaterPages=page)
++        os.replace(temporary,TARGET)
++    finally:
++        Path(temporary).unlink(missing_ok=True)
++    print(f"Wrote {TARGET}")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/infer_bundle.py
+@@ -0,0 +1,44 @@
++"""Portable inference from a model bundle and cached, causally filtered EEG windows.
++
++Input NPZ must contain X: trials x 22 electrodes x 500 samples, microvolts, after
++the project's causal filtering/windowing. This tool applies only the stored channel
++selection and training normalization. It does not treat arbitrary raw samples as
++already preprocessed, use labels, fit a scaler, or demonstrate online closed-loop use.
++"""
++
++import argparse
++from pathlib import Path
++
++import numpy as np
++
++from mibci import data,deploy
++from mibci.artifacts import model_exports,require_files,sha256,write_json
++from mibci.model import load_bundle
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--bundle",type=Path,required=True)
++    parser.add_argument("--input-npz",type=Path,required=True)
++    parser.add_argument("--precision",choices=["fp32","int8"],default="int8")
++    parser.add_argument("--output",type=Path,required=True)
++    args=parser.parse_args()
++    onnx=model_exports(args.bundle)[0 if args.precision=="fp32" else 1]
++    require_files([args.bundle,onnx,args.input_npz],"portable inference")
++    if args.output.exists():raise SystemExit("Output exists; choose a new predictions file")
++    _,scaler,b=load_bundle(args.bundle)
++    with np.load(args.input_npz) as inputs:X=inputs["X"]
++    if X.ndim!=3 or X.shape[1:]!=(22,500) or not len(X) or not np.isfinite(X).all():
++        raise ValueError("Expected finite, causally filtered X with shape (trials,22,500)")
++    logits=deploy.logits(deploy.session(onnx),scaler.transform(X[:,b["channels"]]))
++    pred=logits.argmax(1)
++    write_json(args.output,{"precision":args.precision,"subject":b.get("subject"),"seed":b.get("seed"),
++        "base_origin":b.get("base_origin","not embedded; consult the supplied training record/protocol"),
++        "bundle_sha256":sha256(args.bundle),"onnx_sha256":sha256(onnx),"input_sha256":sha256(args.input_npz),
++        "channels":[data.EEG_CHANNELS[c] for c in b["channels"]],
++        "pred":pred.tolist(),"labels":[data.CLASSES[p] for p in pred],"logits":logits.tolist(),
++        "input_contract":"Project-preprocessed EEG windows in microvolts; no test-label access or fitted normalization"})
++    print(f"Wrote {len(pred)} predictions to {args.output}")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/manifest_results.py
+@@ -0,0 +1,37 @@
++"""Hash and hydrate retained result files, without including mutable supplementary runs."""
++
++from concurrent.futures import ThreadPoolExecutor,as_completed
++import hashlib
++import json
++from pathlib import Path
++import time
++
++ROOT=Path(__file__).resolve().parents[1]
++
++
++def inspect(path):
++    for attempt in range(3):
++        try:
++            content=path.read_bytes()
++            return str(path.relative_to(ROOT)),{"bytes":len(content),"sha256":hashlib.sha256(content).hexdigest()}
++        except OSError as error:
++            if error.errno not in {11,35,60,89} or attempt==2:raise
++            time.sleep(.2*(attempt+1))
++
++
++def main():
++    paths=[ROOT/"results/frozen_config.json",ROOT/"results/data_summary.csv"]
++    for group in ["validation","final","test","analysis","benchmark","demo"]:
++        paths.extend(p for p in (ROOT/"results"/group).rglob("*") if p.is_file() and p.name!=".DS_Store")
++    results={}
++    with ThreadPoolExecutor(max_workers=12) as pool:
++        for number,future in enumerate(as_completed([pool.submit(inspect,p) for p in paths]),1):
++            name,row=future.result();results[name]=row
++            if number%100==0:print(f"Historical files hashed: {number}/{len(paths)}",flush=True)
++    target=ROOT/"docs/evidence/historical_results_manifest.json"
++    target.write_text(json.dumps({"files":dict(sorted(results.items())),
++        "scope":"All retained files in historical validation/final/test/analysis/benchmark/demo and frozen config/data summary; excludes new maintenance and supplementary results."},indent=2)+"\n")
++    print(f"Wrote {len(results)} historical hashes",flush=True)
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/package_release.py
+@@ -0,0 +1,54 @@
++"""Create a checksummed local release archive without environments or raw EEG data."""
++
++from __future__ import annotations
++
++import argparse
++from concurrent.futures import ThreadPoolExecutor
++import hashlib
++import json
++from pathlib import Path
++import zipfile
++
++ROOT=Path(__file__).resolve().parents[1]
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output",type=Path,required=True)
++    parser.add_argument("--model-dir",type=Path,help="Optional existing model directory; contents copied under models/")
++    args=parser.parse_args()
++    if args.output.exists():raise SystemExit("Release exists; use a new output filename")
++    if args.model_dir and not args.model_dir.is_dir():parser.error("model-dir does not exist")
++    files={}
++    for directory in ["src","scripts","tests","docs","presentation","results"]:
++        for p in (ROOT/directory).rglob("*"):
++            if p.is_file() and not set(p.parts)&{"__pycache__",".DS_Store"}:
++                files[str(p.relative_to(ROOT))]=p
++    for name in ["README.md","pyproject.toml","uv.lock",".python-version",".gitignore","COMP690_Project_Proposal.md","peer tutoring transcript.pdf"]:
++        p=ROOT/name
++        if p.is_file():files[name]=p
++    if args.model_dir:
++        for p in args.model_dir.rglob("*"):
++            if p.is_file() and p.suffix in [".pt",".onnx",".json"]:
++                files[str(Path("models")/p.relative_to(args.model_dir))]=p
++    manifest={"original_training_hardware":"Apple M4 Mac mini (author clarification)",
++              "models_included":bool(args.model_dir),"model_source_directory":str(args.model_dir) if args.model_dir else None,
++              "claim":"Source/results delivery archive. Included model origin must be read from its supplementary protocol or original metadata.",
++              "excluded":"virtual environments, raw/processed EEG, caches, unrelated files",
++              "files":{}}
++    args.output.parent.mkdir(parents=True,exist_ok=True)
++    try:
++        with zipfile.ZipFile(args.output,"x",compression=zipfile.ZIP_DEFLATED) as archive, ThreadPoolExecutor(max_workers=12) as reader:
++            entries=sorted(files.items())
++            contents=reader.map(lambda entry: entry[1].read_bytes(),entries)
++            for (name,p),content in zip(entries,contents):
++                manifest["files"][name]={"sha256":hashlib.sha256(content).hexdigest(),"bytes":len(content)}
++                archive.writestr(name,content)
++            archive.writestr("RELEASE_MANIFEST.json",json.dumps(manifest,indent=2)+"\n")
++    except BaseException:
++        args.output.unlink(missing_ok=True)
++        raise
++    print(f"Packaged {len(files)} files into {args.output}")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/record_maintenance.py
+@@ -0,0 +1,54 @@
++"""Record source changes and verify preservation of retained historical evidence."""
++
++from __future__ import annotations
++
++import difflib
++import hashlib
++import json
++from pathlib import Path
++
++ROOT=Path(__file__).resolve().parents[1]
++EVIDENCE=ROOT/"docs/evidence"
++
++
++def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def main():
++    before=json.loads((EVIDENCE/"before.sha256.json").read_text())
++    changed=[];preserved=[];patches=[]
++    for relative,old in before.items():
++        path=ROOT/relative
++        current=digest(path)
++        if relative.startswith("results/"):
++            if current!=old["sha256"]:raise RuntimeError(f"Historical evidence changed: {relative}")
++            preserved.append(relative)
++        if current!=old["sha256"]:
++            changed.append({"path":relative,"before_sha256":old["sha256"],"after_sha256":current})
++            original=EVIDENCE/"baseline"/relative
++            if original.exists():
++                patches.extend(difflib.unified_diff(original.read_text().splitlines(keepends=True),
++                    path.read_text().splitlines(keepends=True),fromfile="a/"+relative,tofile="b/"+relative))
++    new=[]
++    existing_without_byte_snapshot={"presentation/deck_source/deck.json"}
++    for directory in ["scripts","src","tests","docs","presentation"]:
++        for path in sorted((ROOT/directory).rglob("*")):
++            if not path.is_file() or "__pycache__" in path.parts or "evidence" in path.parts or path.name==".DS_Store":continue
++            relative=str(path.relative_to(ROOT))
++            if relative in existing_without_byte_snapshot:
++                changed.append({"path":relative,"before_sha256":None,"after_sha256":digest(path),
++                    "note":"Preexisting metadata file; initial byte snapshot was not captured. Inserted supplementary matched slide in its order; no byte-exact before diff is claimed."})
++                continue
++            if relative not in before:
++                new.append({"path":relative,"sha256":digest(path),"bytes":path.stat().st_size})
++                if path.suffix in [".py",".md"]:
++                    patches.extend(difflib.unified_diff([],path.read_text().splitlines(keepends=True),
++                        fromfile="/dev/null",tofile="b/"+relative))
++    (EVIDENCE/"changes.patch").write_text("".join(patches))
++    (EVIDENCE/"change_inventory.json").write_text(json.dumps({"modified":changed,"added":new,
++        "historical_evidence_verified_unchanged":preserved,
++        "limits":"Baseline hashes cover the initial saved source/evidence set. New runtime logs and large data/model artifacts are inventoried separately in their protocols and release manifests."},indent=2)+"\n")
++    print(f"{len(changed)} modified, {len(new)} added, {len(preserved)} historical source files unchanged.")
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/scripts/run_matched_control.py
+@@ -0,0 +1,261 @@
++"""Supplementary, post-test matched-budget pruning experiment.
++
++Plan first, then train/evaluate/analyze. Original evidence is read-only. Every
++base is branched into no pruning, 25% pruning and 50% pruning, each given the same
++100 epochs with a fresh Adam optimizer at 1e-4 and the same seed/batch schedule.
++With --rebuild-bases the 475-epoch bases are independently reproduced from the
++historical channel lists; these are never presented as restored original weights.
++"""
++
++from __future__ import annotations
++
++import argparse
++import collections
++from concurrent.futures import ThreadPoolExecutor
++import csv
++import hashlib
++from datetime import datetime
++import json
++from pathlib import Path
++import statistics
++from zoneinfo import ZoneInfo
++
++import numpy as np
++import torch
++
++from mibci import data, deploy
++from mibci.artifacts import completed, model_exports, require_files, sha256, write_json
++from mibci.env import environment
++from mibci.experiment import MODELS_DIR, RESULTS_DIR, device_for, run_pool, session1, train_run
++from mibci.model import load_bundle, save_bundle
++from mibci.prune import FINETUNE_EPOCHS, FINETUNE_LR, prune_pointwise
++from mibci.train import TrainConfig, fit, predict, scores, set_seed
++
++OUT = RESULTS_DIR / "supplementary/matched_budget"
++MODELS = MODELS_DIR / "supplementary/matched_budget"
++CORE = ["src/mibci/data.py", "src/mibci/model.py", "src/mibci/train.py", "src/mibci/prune.py",
++        "src/mibci/experiment.py", "src/mibci/deploy.py", "scripts/run_matched_control.py"]
++
++
++def load_plan() -> dict:
++    plan = json.loads((OUT / "protocol.json").read_text())
++    if sha256(RESULTS_DIR / "frozen_config.json") != plan["historical_frozen_config_sha256"]:
++        raise RuntimeError("Historical frozen configuration changed since supplementary plan")
++    for relative, digest in plan["source_code_sha256"].items():
++        if sha256(data.PROJECT_ROOT / relative) != digest:
++            raise RuntimeError(f"Planned training/evaluation source changed: {relative}; start a new supplementary directory")
++    for relative, digest in plan["ranking_sha256"].items():
++        if sha256(RESULTS_DIR / relative) != digest:
++            raise RuntimeError(f"Historical electrode ranking changed: {relative}")
++    return plan
++
++
++def create_plan(rebuild: bool) -> None:
++    if (OUT / "protocol.json").exists():
++        plan = load_plan()
++        if plan["base_origin"] != ("independent_reproduction" if rebuild else "original_bundles"):
++            raise RuntimeError("Existing protocol has a different base origin")
++        print("Existing supplementary protocol retained.")
++        return
++    frozen_path = RESULTS_DIR / "frozen_config.json"
++    frozen = json.loads(frozen_path.read_text())
++    inputs = [RESULTS_DIR / f"final/rankings/sub-{subject:02d}_seed-{seed}.json"
++              for subject in data.SUBJECTS for seed in frozen["seeds"]]
++    inputs += [RESULTS_DIR / f"final/runs/sub-{subject:02d}_seed-{seed}_{base}.json"
++               for subject in data.SUBJECTS for seed in frozen["seeds"] for base in frozen["pruning"]["bases"]]
++    with ThreadPoolExecutor(max_workers=12) as reader:
++        input_contents = dict(zip(inputs, reader.map(lambda p: p.read_bytes(), inputs)))
++    rows, ranking_hashes = [], {}
++    for subject in data.SUBJECTS:
++        for seed in frozen["seeds"]:
++            relative = f"final/rankings/sub-{subject:02d}_seed-{seed}.json"
++            ranking_path = RESULTS_DIR / relative
++            ranking_hashes[relative] = hashlib.sha256(input_contents[ranking_path]).hexdigest()
++            subsets = json.loads(input_contents[ranking_path])["subsets"]
++            for base in frozen["pruning"]["bases"]:
++                name = f"sub-{subject:02d}_seed-{seed}_{base}"
++                bundle = (MODELS / "bases" if rebuild else MODELS_DIR / "final") / f"{name}.pt"
++                original_record = RESULTS_DIR / "final/runs" / f"{name}.json"
++                metadata = json.loads(input_contents[original_record])
++                original_channels = [data.EEG_CHANNELS.index(c) for c in metadata["channels"]]
++                if subsets[base] != original_channels:
++                    raise RuntimeError(f"Ranking and original run channel lists disagree: {name}")
++                rows.append({"name":name, "subject":subject, "seed":seed, "condition":base,
++                             "channels":subsets[base], "base_bundle":str(bundle),
++                             "historical_run_sha256":hashlib.sha256(input_contents[original_record]).hexdigest(),
++                             "original_base_sha256":sha256(bundle) if not rebuild else None})
++    if not rebuild:
++        require_files([r["base_bundle"] for r in rows], "supplementary original bases")
++    plan = {"created_at":datetime.now(ZoneInfo("America/New_York")).isoformat(),
++            "status":"supplementary_post_test", "base_origin":"independent_reproduction" if rebuild else "original_bundles",
++            "historical_frozen_config_sha256":sha256(frozen_path),
++            "historical_test_results_already_known":True,
++            "purpose":"Separate extra optimization from the effect of removing final pointwise filters",
++            "selection":"Both historical pruning bases, all nine participants and all three historical seeds; no new selection",
++            "base_epochs":frozen["epochs"], "finetune_epochs":FINETUNE_EPOCHS, "finetune_lr":FINETUNE_LR,
++            "batch_size":64, "optimizer":"fresh Adam for every branch", "fractions":[0.0,0.25,0.5],
++            "primary":"artifact-free session-2 trials; average seeds within participant",
++            "secondary":"all session-2 trials", "precision":["fp32","int8"],
++            "bootstrap":{"resamples":10000,"seed":690,"level":0.95},
++            "claim_boundary":"Does not change the historical finalist or turn a post-test analysis into prospective evidence",
++            "source_code_sha256":{p:sha256(data.PROJECT_ROOT / p) for p in CORE},
++            "ranking_sha256":ranking_hashes, "jobs":rows}
++    write_json(OUT / "protocol.json", plan)
++    print(f"Planned {len(rows)} bases and {3*len(rows)} matched-budget branches.")
++
++
++def train_base(job: dict, epochs: int) -> None:
++    record_path = OUT / "bases" / f"{job['name']}.json"
++    path = Path(job["base_bundle"])
++    if completed(record_path,[path],{"subject":job["subject"],"seed":job["seed"],"epochs":epochs}):
++        return
++    record = train_run(job["subject"], "final", job["condition"], job["channels"],
++                       TrainConfig(epochs=epochs,seed=job["seed"]), path)
++    record.update(base_origin="independent_reproduction", protocol_sha256=sha256(OUT / "protocol.json"),
++                  model_sha256=sha256(path))
++    write_json(record_path,record)
++
++
++def branch_name(job: dict, fraction: float) -> str:
++    return f"{job['name']}-matched{round(100*fraction)}"
++
++
++def train_branch(job: dict, fraction: float, plan: dict) -> None:
++    base_path = Path(job["base_bundle"])
++    model,scaler,bundle = load_bundle(base_path)
++    if bundle["channels"] != job["channels"] or bundle["seed"] != job["seed"] or bundle["epochs"] != plan["base_epochs"]:
++        raise RuntimeError(f"Base metadata differs from protocol: {base_path}")
++    if plan["base_origin"] == "original_bundles" and sha256(base_path) != job["original_base_sha256"]:
++        raise RuntimeError(f"Original base changed since planning: {base_path}")
++    # Preserve the original pruning procedure: construct the branch before resetting its seed.
++    branch = prune_pointwise(model,fraction) if fraction else model
++    X,y,tr,_ = session1(job["subject"],"final")
++    X = scaler.transform(X[:,job["channels"]])
++    set_seed(job["seed"])
++    cfg = TrainConfig(epochs=plan["finetune_epochs"],lr=plan["finetune_lr"],seed=job["seed"],batch_size=plan["batch_size"])
++    training = fit(branch,X[tr],y[tr],cfg,device=device_for(job["subject"]))
++    name = branch_name(job,fraction)
++    path = MODELS / "branches" / f"{name}.pt"
++    path.parent.mkdir(parents=True,exist_ok=True)
++    save_bundle(path,branch,job["channels"],scaler,subject=job["subject"],seed=job["seed"],split="final",
++                condition=job["condition"],epochs=plan["base_epochs"],fraction=fraction,
++                finetune_epochs=cfg.epochs,base_sha256=sha256(base_path),base_origin=plan["base_origin"])
++    write_json(OUT / "runs" / f"{name}.json", {**job,"fraction":fraction,"base_origin":plan["base_origin"],
++               "finetune_epochs":cfg.epochs,"finetune_lr":cfg.lr,"train_time_s":training["train_time_s"],
++               "device":device_for(job["subject"]),"model_sha256":sha256(path),
++               "base_sha256":sha256(base_path),"protocol_sha256":sha256(OUT / "protocol.json")})
++
++
++def evaluate(job: dict, bundle_path: str, label: str) -> None:
++    path=Path(bundle_path)
++    model,scaler,b=load_bundle(path)
++    X,y,tr,_ = session1(job["subject"],"final")
++    calibration = scaler.transform(X[tr][:,b["channels"]])
++    fp32,int8=model_exports(path)
++    deploy.export_onnx(model,fp32)
++    deploy.quantize_int8(fp32,int8,calibration)
++    # Export verification uses session 1, not test labels, and has an explicit failure threshold.
++    reference=predict(model,calibration[:32])
++    exported=deploy.logits(deploy.session(fp32),calibration[:32])
++    error=float(np.abs(reference-exported).max())
++    if not np.allclose(reference,exported,atol=1e-5,rtol=1e-4):
++        raise RuntimeError(f"FP32 export failed tolerance for {path}: {error}")
++    ses=data.load_session(job["subject"],2,final_evaluation=True)
++    inputs=scaler.transform(ses["X"][:,b["channels"]])
++    clean=~ses["artifact"]
++    outputs={p:deploy.logits(deploy.session(q),inputs) for p,q in [("fp32",fp32),("int8",int8)]}
++    historical_condition = job["condition"] if label == "base" else (
++        f"{job['condition']}-prune{label}" if label in ["25","50"] else None)
++    historical_path=RESULTS_DIR / "test" / f"sub-{job['subject']:02d}_seed-{job['seed']}_{historical_condition}.json"
++    historical=json.loads(historical_path.read_text()) if historical_condition and historical_path.exists() else None
++    write_json(OUT / "test" / f"{path.stem}.json",{**job,"label":label,
++        "base_origin":load_plan()["base_origin"],"model_sha256":sha256(path),
++        "protocol_sha256":sha256(OUT / "protocol.json"),"export_max_abs_diff":error,
++        "primary":{p:scores(lg[clean],ses["y"][clean]) for p,lg in outputs.items()},
++        "secondary":{p:scores(lg,ses["y"]) for p,lg in outputs.items()},
++        "pred":{p:lg.argmax(1).tolist() for p,lg in outputs.items()},
++        "y":ses["y"].tolist(),"artifact":ses["artifact"].astype(int).tolist(),
++        "historical_prediction_agreement":{p:float((lg.argmax(1)==np.array(historical["pred"][p])).mean())
++                                           for p,lg in outputs.items()} if historical else None,
++        "historical_prediction_agreement_note":"Matching predictions do not prove identical weights.",
++        "size":{p:deploy.size_bytes(q) for p,q in [("fp32",fp32),("int8",int8)]}})
++
++
++def analyze(plan):
++    rows=[]
++    for job in plan["jobs"]:
++        for label in ["base","0","25","50"]:
++            name=job["name"] if label=="base" else branch_name(job,float(label)/100)
++            path=OUT / "test" / f"{name}.json"
++            require_files([path],"matched analysis complete grid")
++            r=json.loads(path.read_text())
++            if r["protocol_sha256"] != sha256(OUT / "protocol.json"):
++                raise RuntimeError(f"Result uses another protocol: {path}")
++            for precision in ["fp32","int8"]:
++                rows.append({"subject":job["subject"],"seed":job["seed"],"base":job["condition"],
++                             "branch":label,"precision":precision,"accuracy":r["primary"][precision]["acc"]})
++    groups=collections.defaultdict(list)
++    for r in rows:
++        groups[(r["base"],r["branch"],r["precision"],r["subject"])].append(r["accuracy"])
++    means={k:statistics.mean(v) for k,v in groups.items()}
++    comparisons=[]
++    rng=np.random.default_rng(plan["bootstrap"]["seed"])
++    for base in sorted({j["condition"] for j in plan["jobs"]}):
++        for precision in ["fp32","int8"]:
++            for a,b in [("0","base"),("25","0"),("50","0"),("25","base"),("50","base")]:
++                d=np.array([means[(base,a,precision,s)]-means[(base,b,precision,s)] for s in data.SUBJECTS])
++                interval=np.quantile(d[rng.integers(0,9,(plan["bootstrap"]["resamples"],9))].mean(1),[.025,.975])
++                comparisons.append({"base":base,"precision":precision,"a":a,"b":b,
++                    "difference_pp":100*d.mean(),"ci_low_pp":100*interval[0],"ci_high_pp":100*interval[1]})
++    for name,values in [("seed_accuracy.csv",rows),("paired_comparisons.csv",comparisons)]:
++        with (OUT / name).open("w",newline="") as stream:
++            writer=csv.DictWriter(stream,fieldnames=list(values[0]));writer.writeheader();writer.writerows(values)
++    write_json(OUT / "analysis.json",{"base_origin":plan["base_origin"],"status":"supplementary_post_test",
++               "protocol_sha256":sha256(OUT / "protocol.json"),"comparisons":comparisons,
++               "note":"0 vs base = extra-training effect; 25/50 vs 0 = matched-budget pruning effect. No finalist reselection."})
++    print("Matched-budget analysis complete.")
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--stage",choices=["plan","train","evaluate","analyze"],required=True)
++    parser.add_argument("--rebuild-bases",action="store_true",help="Plan an independent reproduction when original weights are unavailable")
++    parser.add_argument("--subjects",type=int,nargs="+",default=data.SUBJECTS)
++    parser.add_argument("--workers",type=int,default=3)
++    args=parser.parse_args()
++    if not set(args.subjects)<=set(data.SUBJECTS):
++        parser.error("subjects must be in 1..9")
++    if args.stage=="plan":
++        create_plan(args.rebuild_bases);return
++    plan=load_plan();selected=[j for j in plan["jobs"] if j["subject"] in args.subjects]
++    if args.stage=="train":
++        write_json(OUT / "environments" / ("subjects-"+"-".join(map(str,args.subjects))+".json"),
++                   {**environment(),"device_assignment":{str(s):device_for(s) for s in args.subjects}})
++        if plan["base_origin"]=="independent_reproduction":
++            jobs=[(j["name"],{"job":j,"epochs":plan["base_epochs"]}) for j in selected
++                  if not completed(OUT / "bases" / f"{j['name']}.json",[Path(j["base_bundle"])])]
++            run_pool(train_base,jobs,args.workers,1)
++        require_files([j["base_bundle"] for j in selected],"matched branch inputs")
++        jobs=[]
++        for j in selected:
++            for f in plan["fractions"]:
++                name=branch_name(j,f)
++                if not completed(OUT / "runs" / f"{name}.json",[MODELS / "branches" / f"{name}.pt"],
++                                 {"fraction":f,"finetune_epochs":plan["finetune_epochs"]}):
++                    jobs.append((name,{"job":j,"fraction":f,"plan":plan}))
++        run_pool(train_branch,jobs,args.workers,1)
++    elif args.stage=="evaluate":
++        jobs=[]
++        for j in selected:
++            for label in ["base","0","25","50"]:
++                path=Path(j["base_bundle"]) if label=="base" else MODELS / "branches" / f"{branch_name(j,float(label)/100)}.pt"
++                require_files([path],"matched evaluation inputs")
++                if not completed(OUT / "test" / f"{path.stem}.json",[path,*model_exports(path)]):
++                    jobs.append((path.stem,{"job":j,"bundle_path":str(path),"label":label}))
++        run_pool(evaluate,jobs,args.workers,1)
++    else:
++        analyze(plan)
++
++
++if __name__=="__main__":
++    main()
+--- /dev/null
++++ b/src/mibci/artifacts.py
+@@ -0,0 +1,77 @@
++"""Small, dependency-free safeguards for resumable research artifacts."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import tempfile
++from pathlib import Path
++
++
++class ArtifactError(RuntimeError):
++    """An existing result cannot safely be reused or replaced."""
++
++
++def sha256(path: Path) -> str:
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as stream:
++        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def require_files(paths, context: str = "operation") -> None:
++    missing = [str(p) for p in map(Path, paths) if not p.is_file() or p.stat().st_size == 0]
++    if missing:
++        raise ArtifactError(f"{context}: missing or empty artifacts:\n  " + "\n  ".join(missing)
++                            + "\nRestore original artifacts, or use fresh MIBCI_RESULTS_DIR and "
++                            "MIBCI_DATA_DIR directories to reproduce independently. "
++                            "Historical results will not be silently replaced.")
++
++
++def completed(record: Path, artifacts=(), expected: dict | None = None) -> bool:
++    """Reuse a result only with its artifacts and matching metadata.
++
++    A missing result can be retried after an interrupted write. An existing result
++    with missing artifacts is an error: retraining in place could replace weights
++    underlying already published test scores. This guard deliberately does not
++    claim that a nonempty model has been deserialized or cryptographically verified.
++    """
++    record = Path(record)
++    if not record.exists():
++        return False
++    try:
++        result = json.loads(record.read_text())
++    except (OSError, ValueError) as error:
++        raise ArtifactError(f"Invalid result JSON {record}; preserve it before recovery: {error}") from error
++    if not isinstance(result, dict):
++        raise ArtifactError(f"Expected a JSON object in {record}")
++    for key, value in (expected or {}).items():
++        if result.get(key) != value:
++            raise ArtifactError(f"{record}: expected {key}={value!r}, found {result.get(key)!r}; "
++                                "use a fresh results directory for different settings")
++    require_files(artifacts, f"resuming {record}")
++    return True
++
++
++def write_json(path: Path, obj) -> None:
++    """Write a complete JSON record atomically, including strict finite numbers."""
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = json.dumps(obj, indent=1, allow_nan=False) + "\n"
++    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
++    try:
++        with os.fdopen(fd, "w") as stream:
++            stream.write(payload)
++            stream.flush()
++            os.fsync(stream.fileno())
++        os.replace(temporary, path)
++    finally:
++        if os.path.exists(temporary):
++            os.unlink(temporary)
++
++
++def model_exports(bundle: Path) -> tuple[Path, Path]:
++    bundle = Path(bundle)
++    return bundle.with_suffix(".onnx"), bundle.with_name(f"{bundle.stem}_int8.onnx")
+--- /dev/null
++++ b/tests/test_artifacts.py
+@@ -0,0 +1,39 @@
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++from mibci.artifacts import ArtifactError, completed, write_json
++
++
++class ArtifactRecoveryTests(unittest.TestCase):
++    def test_orphan_record_never_silently_triggers_retraining(self):
++        with tempfile.TemporaryDirectory() as temp:
++            path=Path(temp)/"record.json"
++            write_json(path,{"seed":0})
++            before=path.read_bytes()
++            with self.assertRaisesRegex(ArtifactError,"Historical results"):
++                completed(path,[Path(temp)/"missing.pt"])
++            self.assertEqual(path.read_bytes(),before)
++
++    def test_resumes_only_complete_matching_artifacts(self):
++        with tempfile.TemporaryDirectory() as temp:
++            record=Path(temp)/"record.json";model=Path(temp)/"model.pt"
++            self.assertFalse(completed(record,[model]))
++            write_json(record,{"seed":0});model.write_bytes(b"nonempty fixture")
++            self.assertTrue(completed(record,[model],{"seed":0}))
++            with self.assertRaises(ArtifactError):completed(record,[model],{"seed":1})
++            model.write_bytes(b"")
++            with self.assertRaises(ArtifactError):completed(record,[model])
++
++    def test_corrupt_json_and_nonfinite_writes_preserve_existing_evidence(self):
++        with tempfile.TemporaryDirectory() as temp:
++            path=Path(temp)/"record.json";path.write_text("{broken")
++            with self.assertRaises(ArtifactError):completed(path)
++            write_json(path,{"valid":True});before=path.read_bytes()
++            with self.assertRaises(ValueError):write_json(path,{"bad":float("nan")})
++            self.assertEqual(path.read_bytes(),before)
++            self.assertEqual(json.loads(path.read_text()),{"valid":True})
++
++
++if __name__=="__main__":unittest.main()
+--- /dev/null
++++ b/tests/test_pipeline.py
+@@ -0,0 +1,74 @@
++from pathlib import Path
++import tempfile
++import unittest
++
++import numpy as np
++import torch
++
++from mibci import data,deploy
++from mibci.costs import cost_summary
++from mibci.model import build_eegnet
++from mibci.prune import prune_pointwise
++from mibci.splits import fold_masks
++from mibci.train import ChannelStandardizer,predict,set_seed
++
++
++class PipelineInvariantTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):torch.set_num_threads(1)
++
++    def test_heldout_session_requires_explicit_final_evaluation(self):
++        with self.assertRaises(PermissionError):data.load_session(1,2)
++
++    def test_run_folds_are_disjoint_and_cover_every_trial_once(self):
++        runs=np.repeat(np.arange(6),48)
++        heldout=[]
++        for fold in range(3):
++            train,val=fold_masks(runs,fold)
++            self.assertFalse(np.any(train&val))
++            self.assertTrue(np.all(train|val))
++            self.assertFalse(set(runs[train])&set(runs[val]))
++            heldout.append(val)
++        np.testing.assert_array_equal(np.sum(heldout,axis=0),np.ones(len(runs)))
++
++    def test_validation_values_do_not_change_training_normalization(self):
++        rng=np.random.default_rng(1)
++        train=rng.normal(size=(8,3,500)).astype(np.float32)
++        scaler=ChannelStandardizer().fit(train)
++        mean,std=scaler.mean.copy(),scaler.std.copy()
++        scaler.transform(np.full((4,3,500),1e6,dtype=np.float32))
++        np.testing.assert_array_equal(scaler.mean,mean)
++        np.testing.assert_array_equal(scaler.std,std)
++        np.testing.assert_allclose(scaler.transform(train).mean(axis=(0,2)),0,atol=1e-6)
++
++    def test_structured_pruning_reduces_real_tensors_and_keeps_valid_outputs(self):
++        set_seed(0);model=build_eegnet(22).eval()
++        pruned=prune_pointwise(model,.5).eval()
++        self.assertEqual(pruned.F2,8)
++        self.assertEqual(pruned.conv_separable_point.weight.shape[0],8)
++        self.assertEqual(pruned.bnorm_2.num_features,8)
++        self.assertEqual(sum(p.numel() for p in pruned.parameters()),1796)
++        logits=predict(pruned,np.zeros((2,22,500),dtype=np.float32))
++        self.assertEqual(logits.shape,(2,4));self.assertTrue(np.isfinite(logits).all())
++
++    def test_export_parity_quantization_and_actual_float32_input_contract(self):
++        set_seed(1);model=build_eegnet(8).eval()
++        X=np.random.default_rng(2).normal(size=(8,8,500)).astype(np.float32)
++        with tempfile.TemporaryDirectory() as temp:
++            fp32,int8=Path(temp)/"model.onnx",Path(temp)/"model_int8.onnx"
++            deploy.export_onnx(model,fp32)
++            reference=predict(model,X)
++            actual=deploy.logits(deploy.session(fp32),X)
++            np.testing.assert_allclose(actual,reference,atol=1e-5,rtol=1e-4)
++            deploy.quantize_int8(fp32,int8,X)
++            session=deploy.session(int8)
++            self.assertEqual(session.get_inputs()[0].type,"tensor(float)")
++            quantized=deploy.logits(session,X)
++            self.assertEqual(quantized.shape,reference.shape)
++            self.assertTrue(np.isfinite(quantized).all())
++        cost=cost_summary(model)
++        self.assertEqual(cost["input_bytes"]["int8"],X[:1].nbytes)
++        self.assertEqual(cost["modeled_input_bytes"]["int8"]*4,X[:1].nbytes)
++
++
++if __name__=="__main__":unittest.main()
+--- /dev/null
++++ b/tests/test_supplement.py
+@@ -0,0 +1,57 @@
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from mibci import data
++
++SCRIPT=Path(__file__).resolve().parents[1]/"scripts/run_matched_control.py"
++spec=importlib.util.spec_from_file_location("matched_test_module",SCRIPT)
++matched=importlib.util.module_from_spec(spec)
++spec.loader.exec_module(matched)
++
++
++class SupplementProtocolTests(unittest.TestCase):
++    def fixture(self,root):
++        frozen={"epochs":475,"seeds":[0],"pruning":{"bases":["full-22","relevance-16"]}}
++        (root/"frozen_config.json").write_text(json.dumps(frozen))
++        (root/"final/rankings").mkdir(parents=True)
++        (root/"final/runs").mkdir(parents=True)
++        subsets={"full-22":list(range(22)),"relevance-16":list(range(16))}
++        (root/"final/rankings/sub-01_seed-0.json").write_text(json.dumps({"subsets":subsets}))
++        for condition,indices in subsets.items():
++            (root/f"final/runs/sub-01_seed-0_{condition}.json").write_text(json.dumps(
++                {"channels":[data.EEG_CHANNELS[i] for i in indices]}))
++
++    def test_missing_original_weights_require_explicit_reproduction_mode(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root=Path(temp);self.fixture(root)
++            with patch.object(matched,"RESULTS_DIR",root),patch.object(matched,"OUT",root/"supp"),\
++                 patch.object(matched,"MODELS",root/"models"),patch.object(matched,"MODELS_DIR",root/"original_models"),\
++                 patch.object(data,"SUBJECTS",[1]):
++                with self.assertRaises((RuntimeError,FileNotFoundError)):
++                    matched.create_plan(False)
++                self.assertFalse((root/"supp/protocol.json").exists())
++                matched.create_plan(True)
++                plan=matched.load_plan()
++                self.assertEqual(plan["base_origin"],"independent_reproduction")
++                self.assertTrue(plan["historical_test_results_already_known"])
++                self.assertEqual(plan["fractions"],[0.0,.25,.5])
++                self.assertEqual(plan["finetune_epochs"],100)
++
++    def test_changed_historical_ranking_cannot_be_silently_reused(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root=Path(temp);self.fixture(root)
++            with patch.object(matched,"RESULTS_DIR",root),patch.object(matched,"OUT",root/"supp"),\
++                 patch.object(matched,"MODELS",root/"models"),patch.object(data,"SUBJECTS",[1]):
++                matched.create_plan(True)
++                original=(root/"supp/protocol.json").read_bytes()
++                (root/"final/rankings/sub-01_seed-0.json").write_text("{}")
++                with self.assertRaisesRegex(RuntimeError,"ranking changed"):
++                    matched.load_plan()
++                self.assertEqual((root/"supp/protocol.json").read_bytes(),original)
++
++
++if __name__=="__main__":unittest.main()
+--- /dev/null
++++ b/docs/REPORT.md
+@@ -0,0 +1,213 @@
++# Fewer EEG electrodes preserve average decoding accuracy, while INT8 does not improve M4 CPU latency
++
++Peiye Li · COMP 690-193 · Fall 2026  
++Local report assembled from retained experiment evidence; maintenance date: 2026-11-04.
++
++## Executive summary
++
++The frozen 16-electrode, 50%-pruned INT8 configuration reached **65.01%** held-out-session accuracy, compared with **65.04%** for the full 22-electrode FP32 baseline. The mean paired difference was **-0.03 percentage points**, with a 95% participant bootstrap interval of **[-2.16, +2.40]**. This is close average performance, not proof of equivalence: **4/9 participants lost more than two points**.
++
++Redundancy-aware electrode selection did not show a clear advantage over relevance-only or spatial-weight selection. It outperformed the mean of three fixed random subsets, but most comparisons against the stronger controls had intervals crossing zero. The results support a controlled negative finding about this particular redundancy proxy, rather than a new superior selection algorithm.
++
++Initializer bytes fell by approximately 4.0x, but the complete ONNX file shrank by only 7.1%. INT8 inference of the full model was about 28% slower than FP32 on the measured Apple M4 CPU. The large activation-memory ratio is an analytical tensor estimate; actual ONNX Runtime memory and MCU SRAM were not measured in the historical experiment.
++
++The added **M5 matched-budget reproduction** found that 50% pruning of the relevance-16 INT8 model reduced mean accuracy by **1.56 percentage points** against an unpruned model given the same 100 extra epochs (95% exploratory interval **[-2.86, -0.42]**). Thus, similar performance to the original shorter-trained baseline does not imply pruning is accuracy-free. This supplementary analysis was added after test outcomes were known; it preserves the historical finalist.
++
++## 1. Research question and relation to prior work
++
++The question is whether EEG electrodes selected for both class relevance and low band-power redundancy preserve four-class motor-imagery information across recording days, and whether any advantage survives INT8 quantization. Electrode count describes physical measurements; pruning removes learned internal features. Their costs and information loss should be evaluated separately.
++
++EEGNet uses depthwise and separable convolutions for compact EEG decoding [1]. Q-EEGNet studies an 8-bit, hardware-aware embedded EEGNet implementation [2]. MI-BMInet combines spatial-filter channel selection, quantization and embedded evaluation [3]. The present project is a controlled software comparison within one fixed EEGNet pipeline. The spatial-weight baseline is inspired by MI-BMInet; it is not a reproduction of that architecture or its deployment results.
++
++## 2. Data and experimental protocol
++
++BCI Competition IV 2a / BNCI 2014-001 contains nine participants, two recording sessions on different days, 22 EEG channels at 250 Hz and four classes: left hand, right hand, feet and tongue. Each session has 288 trials in six runs. EOG is excluded. The primary analysis removes expert-flagged artifacts, while the secondary analysis evaluates the same models on all trials. Counts and source-file SHA-256 values are retained in [data_summary.csv](../results/data_summary.csv).
++
++Each run is processed with a causal fourth-order Butterworth 4–38 Hz band-pass, resetting state at run boundaries. Each trial supplies a two-second window from 0.5 to 2.5 seconds after the cue. Normalization uses training-partition channel means and standard deviations only.
++
++Session 1 supplies training and three validation folds, each holding out two complete runs. Channel rankings, normalization and PTQ calibration are fitted only to the applicable training partition. Session 2 is the final test day. The source code requires an explicit final-evaluation flag to load it. The retained [frozen configuration](../results/frozen_config.json) fixes the training budget at 475 epochs and seeds at 0, 1 and 2. The stored validation-table hash can be checked; this consistency check is not independent proof of the original chronology.
++
++The decoder is Braindecode 2.0.0 EEGNet with F1=8, D=2, F2=16, temporal kernel 64, dropout 0.5 and max-norm constraints. Adam uses learning rate 1e-3, batch size 64 and the same fixed epoch budget for the electrode-selection conditions. The 22-channel model has 2,420 trainable parameters.
++
++For selection, Welch log power is calculated in 8–13 Hz and 13–30 Hz bands. Relevance is the average multiclass Fisher score, scaled to 0–1 across electrodes. Redundancy is the mean absolute Spearman correlation across bands. Greedy selection maximizes relevance minus 0.5 times mean redundancy to the already chosen electrodes. Controls use relevance alone, spatial-weight L2 norms and three fixed random subsets. Models are retrained with 16 or 8 electrodes. These feature correlations do not identify shared neural sources.
++
++Static INT8 PTQ uses ONNX QDQ format, signed activations, per-channel weights and training-only min-max calibration. The original bounded pruning comparison drops 25% or 50% of final pointwise filters by L1 norm, slices BatchNorm and classifier tensors, and adds 100 fine-tuning epochs at 1e-4. The original unpruned baseline lacks those extra epochs, so pruning-versus-baseline accuracy differences confound removal and additional optimization.
++
++The finalist was chosen using validation: fewest electrodes within two points of full-channel FP32 accuracy, then fewest parameter bytes, then highest accuracy. Test accuracy never changes this historical choice. Accuracy, macro-F1, per-class recall and confusion matrices are retained. Seeds are averaged within participant; participants, not seeds or trials, are the nine independent resampling units. Paired intervals use 10,000 percentile bootstrap resamples and seed 690. Intervals are exploratory and are not adjusted for all comparisons.
++
++## 3. Held-out-session decoding results
++
++| Condition | Precision | Accuracy (%) | Macro-F1 (%) | Difference vs baseline (pp) | 95% paired interval (pp) |
++| --- | --- | --- | --- | --- | --- |
++| full-22 | fp32 | 65.04 | 64.36 | +0.00 | [+0.00, +0.00] |
++| full-22 | int8 | 65.30 | 64.64 | +0.26 | [+0.07, +0.47] |
++| proposed-16 | fp32 | 66.78 | 66.09 | +1.74 | [-0.46, +4.06] |
++| relevance-16 | fp32 | 66.21 | 65.47 | +1.17 | [-1.27, +3.75] |
++| weightnorm-16 | fp32 | 66.82 | 66.29 | +1.78 | [-0.98, +4.63] |
++| proposed-8 | fp32 | 60.59 | 59.71 | -4.45 | [-7.59, -1.05] |
++| relevance-16-prune50 | int8 | 65.01 | 64.47 | -0.03 | [-2.16, +2.40] |
++
++The full tables include all 17 conditions in both precisions: [primary](../results/analysis/conditions_primary.csv) and [secondary](../results/analysis/conditions_secondary.csv). These are within-participant transfers to another session, not tests on previously unseen people. Differences below are percentage points, not relative percentage changes.
++
++### 3.1 Redundancy-aware selection against its controls
++
++| Electrodes | Precision | Control | Proposed minus control (pp) | 95% paired interval (pp) |
++| --- | --- | --- | --- | --- |
++| 16 | fp32 | relevance | +0.58 | [-0.26, +1.58] |
++| 16 | fp32 | weightnorm | -0.04 | [-1.50, +1.53] |
++| 16 | fp32 | random | +3.28 | [+1.31, +5.41] |
++| 16 | int8 | relevance | +0.47 | [-0.42, +1.50] |
++| 16 | int8 | weightnorm | +0.20 | [-1.38, +1.77] |
++| 16 | int8 | random | +3.18 | [+1.21, +5.26] |
++| 8 | fp32 | relevance | +0.68 | [-0.67, +2.70] |
++| 8 | fp32 | weightnorm | -1.51 | [-4.10, +1.34] |
++| 8 | fp32 | random | +2.32 | [+0.15, +4.17] |
++| 8 | int8 | relevance | +0.85 | [-0.10, +2.66] |
++| 8 | int8 | weightnorm | -1.81 | [-4.27, +0.78] |
++| 8 | int8 | random | +2.37 | [+0.25, +4.01] |
++
++The redundancy term often leaves the selected set unchanged: in the final seed-0 rankings, proposed and relevance-only subsets are identical for 6/9 participants at 16 electrodes and 7/9 at 8. The small observed advantages against relevance-only cannot establish a reliable improvement, while spatial-weight ranking is competitive. Beating three random subsets supports task-aware selection in this setting; it does not establish superiority to stronger channel-selection algorithms or robustness over all possible random layouts.
++
++![Paired selection comparisons with participant bootstrap intervals](../results/analysis/slides/fig_forest.png)
++
++### 3.2 Participant variation changes the interpretation of the mean
++
++| Participant | Full-22 FP32 (%) | Frozen final INT8 (%) | Difference (pp) |
++| --- | --- | --- | --- |
++| 1 | 81.02 | 76.75 | -4.27 |
++| 2 | 38.87 | 46.17 | +7.30 |
++| 3 | 83.64 | 83.03 | -0.61 |
++| 4 | 49.85 | 47.81 | -2.04 |
++| 5 | 43.96 | 45.65 | +1.69 |
++| 6 | 49.92 | 50.70 | +0.78 |
++| 7 | 76.77 | 73.89 | -2.88 |
++| 8 | 77.86 | 81.06 | +3.20 |
++| 9 | 83.46 | 80.05 | -3.41 |
++
++![Final configuration minus baseline by participant](assets/participant_differences.png)
++
++The losses are concentrated in participants P1, P4, P7, P9. A similar group mean can coexist with useful gains for some people and material losses for others. The exploratory interval does not establish a two-point noninferiority margin. Electrode lists are fitted separately per person, so this experiment does not validate a universal headset layout.
++
++The observed path to the final model can also be decomposed arithmetically:
++
++| Participant | 22 to 16 electrodes + retraining (pp) | Pruning + 100 extra epochs (pp) | INT8 conversion (pp) |
++| --- | --- | --- | --- |
++| 1 | -3.44 | -0.47 | -0.36 |
++| 2 | +8.72 | -2.01 | +0.59 |
++| 3 | +2.07 | -2.68 | +0.00 |
++| 4 | -0.43 | -1.32 | -0.29 |
++| 5 | +4.47 | -2.42 | -0.36 |
++| 6 | +1.55 | -0.93 | +0.16 |
++| 7 | -5.05 | +1.81 | +0.36 |
++| 8 | +1.23 | +1.84 | +0.13 |
++| 9 | +1.39 | -4.80 | +0.00 |
++
++These columns sum to each participant's final difference up to displayed rounding. They are an accounting of observed conditions, not a causal decomposition: electrode models were retrained, and the original pruning step also adds optimization. The matched-budget experiment below addresses the latter confounding explicitly.
++
++### 3.3 Class-specific outcomes
++
++| Class | Baseline recall (%) | Final recall (%) | Difference (pp) |
++| --- | --- | --- | --- |
++| left hand | 64.43 | 63.64 | -0.80 |
++| right hand | 68.99 | 72.86 | +3.87 |
++| feet | 61.34 | 60.42 | -0.92 |
++| tongue | 65.84 | 63.60 | -2.24 |
++
++![Mean participant recall by class](assets/class_recall.png)
++
++Class recall is averaged within participant rather than pooled across all trials. These descriptive differences help locate errors; they do not establish a causal neural mechanism or a statistically reliable class-specific effect. The retained [confusion matrices](../results/analysis/fig_confusion.png) show the complementary pooled error pattern.
++
++## 4. Efficiency: storage, modeled tensors and measured time
++
++| Quantity | Full-22 FP32 | Frozen final INT8 | Interpretation |
++| --- | --- | --- | --- |
++| Initializer/parameter bytes | 9576 | 2420 | 3.96x ratio; includes initializers such as scales |
++| Serialized ONNX bytes | 28022 | 26029 | 7.11% file reduction |
++| Modeled peak activation bytes | 396704 | 72144 | 5.50x ratio under uniform-precision tensor assumptions |
++| Actual ONNX float32 input bytes | 44000 | 32000 | Both graph interfaces accept float32; quantization is internal |
++| Median CPU latency (ms) | 0.2799 | 0.2571 | Historical batch-1, one-thread measurement |
++| MACs | 5885088 | 4281312 | Analytical convolution/dense multiply-accumulate count |
++
++The historical measurement used the author's Apple M4 **Mac mini**, ONNX Runtime 1.31.1, batch size one and one inference thread, with 100 warm-up calls and 1,000 timed calls. The original hardware record does not establish the RAM capacity; the machine type is corrected from the author's clarification. Preprocessing is timed separately. These are local CPU measurements, not end-to-end remote-serving latency.
++
++The finalist is about 8% faster than full-22 FP32, but about 25% slower than the unpruned relevance-16 FP32 model (0.257 versus 0.206 ms). Its small speed advantage over the full-channel baseline comes from a smaller input, not evidence that INT8 accelerated this decoder. The validation decision rule prioritizes electrode count and initializer bytes under an accuracy tolerance; it does not select the lowest-latency configuration.
++
++Initializer bytes include weights, biases and quantization metadata. The serialized file also contains the graph and other metadata, explaining why a nearly fourfold initializer reduction produces only a small complete-file reduction.
++
++Activation bytes are estimated under a layer-input-plus-output schedule with uniform four-byte FP32 or one-byte INT8 tensors. The real QDQ graph includes float operations and conversion buffers; both input interfaces receive float32 arrays. The historical `input_bytes` field for INT8 describes the modeled quantized tensor, not the actual interface buffer. New benchmark code records those separately. The estimate excludes live mixed-precision tensors, allocator behavior, runtime overhead and kernel workspaces. It is neither a measured runtime peak nor verified MCU SRAM usage.
++
++The isolated-process tool `scripts/benchmark_memory.py` can measure process RSS separately. Its lifetime peak includes Python, ORT, graph initialization and input arrays; even that measurement must not be labeled tensor memory or MCU SRAM.
++
++The profiler attributes the INT8 slowdown mainly to the grouped spatial convolution: about 185 microseconds versus 12.8 microseconds in FP32. This observation identifies an expensive quantized operator on this runtime; it does not prove an integer kernel is missing. The optimized graph in fact contains QLinearConv operators. Reduced electrode count lowers the expensive early temporal-convolution work, while pruning only the late pointwise filters changes MACs very little. This explains why parameter count alone predicts latency poorly here. ONNX Runtime documents the dependence of quantization performance on hardware, model structure and conversion overhead [4].
++
++![Historical per-layer CPU profile](../results/analysis/slides/fig_int8_layers.png)
++
++The decoder needs a two-second observation window and makes its primary decision 2.5 seconds after the cue plus processing time. Sub-millisecond compute does not imply sub-millisecond intention-to-action latency.
++
++### 4.1 Additional isolated-process measurements on the M5 reproduction
++
++| Model | Precision | Baseline RSS (MiB) | After session (MiB) | After inference (MiB) | Lifetime peak (MiB) |
++| --- | --- | --- | --- | --- | --- |
++| Full-22 | fp32 | 48.25 | 55.27 | 57.38 | 57.38 |
++| Full-22 | int8 | 48.30 | 55.84 | 58.69 | 58.69 |
++| 16 electrodes, 50% pruned | fp32 | 48.31 | 55.31 | 56.97 | 56.97 |
++| 16 electrodes, 50% pruned | int8 | 48.28 | 55.75 | 57.91 | 57.91 |
++
++Each row is one fresh process without PyTorch, using 100 warm-up and 1,000 inference calls. These are M5 measurements of independently reproduced models, not replacements for the historical M4 timing. Process RSS includes interpreter, runtime, graph setup, input arrays and allocator overhead; its lifetime high-water mark is not incremental tensor memory or MCU SRAM. No uncertainty interval or pure activation-memory compression ratio is inferred from these process measurements.
++
++## 5. Supplementary matched-budget pruning comparison
++
++The additional experiment has been executed as **independent reproduction**, after the original test results were known. Both historical pruning bases and all nine participants/three seeds were retained; no finalist was reselected. Every base was branched into 0%, 25% and 50% pruning, all with the same 100-epoch, 1e-4 Adam fine-tuning budget.
++
++| Base | Precision | Branch A | Branch B | A minus B (pp) | 95% paired interval (pp) |
++| --- | --- | --- | --- | --- | --- |
++| full-22 | fp32 | 0 | base | +0.40 | [-0.63, +1.67] |
++| full-22 | fp32 | 25 | 0 | +0.01 | [-0.67, +0.76] |
++| full-22 | fp32 | 50 | 0 | -0.30 | [-2.41, +1.39] |
++| full-22 | fp32 | 25 | base | +0.42 | [-0.87, +1.98] |
++| full-22 | fp32 | 50 | base | +0.10 | [-2.44, +2.48] |
++| full-22 | int8 | 0 | base | +0.29 | [-0.56, +1.26] |
++| full-22 | int8 | 25 | 0 | +0.16 | [-0.62, +1.00] |
++| full-22 | int8 | 50 | 0 | -0.25 | [-2.28, +1.49] |
++| full-22 | int8 | 25 | base | +0.45 | [-0.68, +1.97] |
++| full-22 | int8 | 50 | base | +0.04 | [-2.18, +2.17] |
++| relevance-16 | fp32 | 0 | base | +0.25 | [-0.36, +0.87] |
++| relevance-16 | fp32 | 25 | 0 | -0.23 | [-0.79, +0.33] |
++| relevance-16 | fp32 | 50 | 0 | -1.59 | [-2.86, -0.49] |
++| relevance-16 | fp32 | 25 | base | +0.03 | [-0.80, +0.88] |
++| relevance-16 | fp32 | 50 | base | -1.33 | [-2.65, +0.00] |
++| relevance-16 | int8 | 0 | base | +0.43 | [-0.20, +1.14] |
++| relevance-16 | int8 | 25 | 0 | -0.15 | [-0.77, +0.51] |
++| relevance-16 | int8 | 50 | 0 | -1.56 | [-2.86, -0.42] |
++| relevance-16 | int8 | 25 | base | +0.28 | [-0.52, +1.21] |
++| relevance-16 | int8 | 50 | base | -1.13 | [-2.59, +0.32] |
++
++Here `base` is the 475-epoch model with the recorded origin; `0` is unpruned plus 100 more epochs; `25` and `50` are equally fine-tuned pruned branches. The `0 - base` contrast estimates the extra-training effect. The `25/50 - 0` contrasts compare structural pruning at equal fine-tuning budgets. Intervals are exploratory participant-level bootstrap intervals. See the [supplementary protocol](../results/supplementary/matched_budget/protocol.json) and [all paired comparisons](../results/supplementary/matched_budget/paired_comparisons.csv).
++
++![Matched-budget pruning contrasts with participant intervals](assets/matched_budget_effects.png)
++
++For relevance-16 INT8, the 50%-pruned branch differed from the equally fine-tuned unpruned branch by -1.56 points, with a 95% interval [-2.86, -0.42]. This isolates the structural comparison within the recorded fine-tuning procedure more closely than the original baseline contrast. It remains a post-test, nine-participant reproduction on different hardware and does not replace the original study.
++
++Across 324 model/precision pairs comparable with a historical condition, mean full-trial prediction agreement was 99.40% (range 96.18–100.00%). Agreement is a reproduction diagnostic, not proof of identical weights; mismatching runs remain included.
++
++## 6. Demonstration and claim boundaries
++
++The [recorded replay](../results/demo/replay_participant3.mp4) streams prerecorded EEG at 250 Hz through causal preprocessing and displays predictions, cursor movement and compute time. The recorded participant cannot respond to the feedback. This validates a replay implementation, not online closed-loop control, asynchronous intent detection, power consumption or clinical utility.
++
++Nine participants and one dataset limit uncertainty and generalization. Removing artifacts is an expert-assisted offline primary analysis; the all-trials secondary analysis is retained to expose that dependency. There is no MCU latency, SRAM or energy measurement, and no claim about implants or new users. A negative result for one fixed band-power redundancy penalty does not rule out other redundancy measures. The original pruning accuracy comparison needs the matched-budget control above.
++
++## 7. Reproducibility and delivery
++
++The repository retains fixed splits, channel lists, seeds, source hashes, configuration, predictions and measurement scripts. See [reproduction instructions](REPRODUCIBILITY.md), [work log](WORK_LOG.md), [supplementary protocol](SUPPLEMENTARY_PROTOCOL.md) and the [machine-readable audit](../results/maintenance/audit.json). The local [slide deck](../presentation/index.html) replaces private blob references with packaged project assets.
++
++Original missing weights must be restored or independently reproduced in separate paths. New artifact checks refuse to silently retrain over historical records when model files are missing. Matching predictions from a reproduction do not prove identical original weights. Cross-backend bitwise equality is not promised; preserve the recorded software and per-participant device allocation [5].
++
++## References and evidence
++
++1. Lawhern et al. EEGNet: a compact convolutional neural network for EEG-based brain-computer interfaces. J. Neural Eng. 15, 056013 (2018). [Author paper](https://arxiv.org/abs/1611.08024), DOI 10.1088/1741-2552/aace8c.
++2. Schneider et al. Q-EEGNet: an Energy-Efficient 8-bit Quantized Parallel EEGNet Implementation for Edge Motor-Imagery Brain–Machine Interfaces (2020). [Author paper](https://arxiv.org/abs/2004.11690).
++3. Wang et al. MI-BMInet: An Efficient Convolutional Neural Network for Motor Imagery Brain–Machine Interfaces with EEG Channel Selection. [Author paper](https://arxiv.org/abs/2203.14592).
++4. ONNX Runtime. [Quantize ONNX models](https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html), including mixed graph representation and performance limitations.
++5. PyTorch. [Reproducibility](https://docs.pytorch.org/docs/stable/notes/randomness.html).
++
++Numerical claims are derived from the linked local CSV/JSON evidence and the reproducible generator `scripts/build_report.py`. The audit verifies internal consistency, not independent provenance of the original training run. The full original result tables and figures remain available under `results/analysis/`; no historical result was replaced by this report.
+--- /dev/null
++++ b/docs/REPRODUCIBILITY.md
+@@ -0,0 +1,133 @@
++# 复现、恢复与交付
++
++## 原实验与当前副本
++
++作者确认原实验在 Apple M4 Mac mini 上完成。`results/` 中的历史记录是原实验证据；维护前当前副本未包含 `.venv.nosync` 和 `data.nosync`。本次恢复环境及原始数据，不代表原实验曾经没有完成，也不自动恢复原权重。
++
++原始硬件日志记录 Apple M4、macOS、软件版本及电源状态，但没有记录 RAM 容量。当前机器的 RAM 由新环境日志记录；不能无依据补写成原实验配置。
++
++## 安装锁定环境
++
++```bash
++UV_PROJECT_ENVIRONMENT=.venv.nosync uv sync --locked
++.venv.nosync/bin/python -m unittest discover -s tests -v
++```
++
++这里显式使用 `.venv.nosync`，兼容项目已有的 `.venv` 符号链接。直接运行 `.venv.nosync/bin/python` 可避免 `uv` 在后台重新解析依赖。`uv.lock` 保留原始版本；本次没有升级训练依赖。
++
++## 只检查已有证据
++
++```bash
++python3 scripts/audit_project.py
++python3 -u scripts/audit_project.py --deep
++python3 scripts/audit_project.py --require-artifacts
++```
++
++- 普通检查验证配置覆盖、冻结表哈希、汇总表一致性、模型及预处理文件是否齐全。
++- `--deep` 从全部 459 个测试记录的逐条预测重算主/次分析准确率、macro-F1、类别召回率、混淆矩阵，并与结果表核对。
++- `--require-artifacts` 还要求模型/数据产物齐全。证据一致但模型缺失，不应误报为可以直接推理。
++- 默认写入 `results/maintenance/audit.json`，不覆盖原始结果。文件可能受 iCloud 按需下载影响；日志中的进度与实际完成状态分别记录。
++
++完整性检查不能独立证明原始训练数据、实际训练过程或冻结时间。预测与表格一致，也不等于模型权重已经恢复。
++
++## 恢复原数据
++
++```bash
++MIBCI_RESULTS_DIR="$PWD/results/maintenance/reproduction" \
++  .venv.nosync/bin/python scripts/prepare_data.py \
++  --expected-summary results/data_summary.csv
++```
++
++默认数据目录是 `data.nosync/`。下载后先校验每个原始 `.mat` 文件的 SHA-256，再做与原实验一致的因果预处理。重建的数据汇总写入独立结果目录；原始 `results/data_summary.csv` 保持不变。MOABB 的该数据下载路径关闭了 TLS 证书验证，因此这里只能用保留的原始哈希检查文件内容一致性。
++
++## 恢复原权重
++
++优先从原 Mac mini 找回整个 `data.nosync/`，包括：
++
++```text
++raw/          原始 .mat
++processed/    每个被试/会话的 .npz 和 manifest.json
++models/
++  validation/ .pt、检查点、FP32 ONNX、INT8 ONNX
++  final/      .pt、FP32 ONNX、INT8 ONNX
++```
++
++可以直接指定外部路径，无需移动文件：
++
++```bash
++export MIBCI_DATA_DIR="/absolute/path/to/original/data.nosync"
++python3 scripts/audit_project.py --data-dir "$MIBCI_DATA_DIR" --require-artifacts
++```
++
++`.pt` bundle 内保存了通道索引、归一化均值/标准差、模型维度和权重，仅拷贝 ONNX 不足以重现预处理。恢复模型后还应在锁定环境中验证反序列化、导出一致性与推理，不把文件存在性等同于模型正确性。
++
++训练、剪枝、量化和测试脚本现在会同时检查结果与必需产物。已有 JSON 而模型缺失时会明确报错，拒绝悄悄重训并替换已发表分数所对应的权重。
++
++## 从零独立复现主实验
++
++原实验已冻结，不能在原结果目录再次运行整个选择流程。为新实验设置两个独立目录：
++
++```bash
++export MIBCI_DATA_DIR="$PWD/reproduction.nosync/data"
++export MIBCI_RESULTS_DIR="$PWD/reproduction.nosync/results"
++bash scripts/run_all.sh
++```
++
++这会重新执行数据准备、验证、预算选择、通道选择、量化、剪枝、冻结、最终训练、测试、性能测试及回放。它是新的复现实验；不会替换原证据。允许在冻结之前恢复失败阶段；冻结后恢复最终训练/导出时，应运行相应单步脚本，而非重新运行预算/选择/冻结步骤。
++
++默认保持原分配：1–6 号被试使用可用的 MPS，7–9 号使用 CPU。可为独立实验显式设置 `MIBCI_DEVICE=cpu|mps|cuda`，不可将后端改变后的权重称为原权重。CUDA 需要可用的对应 PyTorch 环境；本次没有在 NVIDIA 服务器验证 CUDA。
++
++相同种子并不保证不同操作系统、硬件、PyTorch 版本或后端的逐位一致。复现时比较指标、预测与记录的设备/依赖；如需权重一致性，应提供原始 bundle 的哈希。
++
++## 补充相同微调预算对照
++
++见 [补充实验协议](SUPPLEMENTARY_PROTOCOL.md)。该实验与原主分析隔离，不改变原最终模型的选择。
++
++## 生成本地报告和演示
++
++```bash
++.venv.nosync/bin/python scripts/build_report.py
++python3 scripts/build_presentation.py
++python3 -m http.server 8765
++```
++
++报告：`docs/REPORT.md`。演示：浏览器打开 `http://localhost:8765/presentation/index.html`，使用方向键翻页、N 查看讲稿、F 全屏。也可直接打开该 HTML；图片及视频均使用本地 assets。原幻灯片设计和顺序保留，私有 blob 引用已替换。尚未导出 PDF/PPTX 时，不将 HTML 源码称作已导出的演示文件。
++
++PDF 导出使用带 ReportLab/Pillow 的文档运行环境，不改动训练锁文件：
++
++```bash
++python scripts/export_report_pdf.py
++```
++
++本次使用 Codex 捆绑文档 Python 运行上述脚本，并逐页渲染检查 `docs/REPORT.pdf`。在其他机器上应为该独立导出脚本安装 ReportLab/Pillow；不要为排版升级训练依赖。PDF 和 Markdown 的内容均来自同一个生成器，补充实验完成后一起重新生成。
++
++## 使用打包后的模型推理
++
++```bash
++.venv.nosync/bin/python scripts/infer_bundle.py \
++  --bundle models/branches/sub-03_seed-0_relevance-16-matched50.pt \
++  --input-npz data.nosync/processed/sub-03_ses-2.npz \
++  --precision int8 --output predictions_unique_name.json
++```
++
++示例用于包含补充模型的交付包。输入必须已经按照项目执行因果过滤/截窗，形状为 trials × 22 × 500；该命令只应用 bundle 内的通道选择和训练归一化，不把原始 EEG 当成已过滤窗口，也不读取标签来拟合参数。模型路径可重定位；原协议中的执行路径保留作来源记录，在另一机器上不能冒充原目录的直接续跑。
++
++## 实测进程内存
++
++模型与两个 ONNX 导出齐全后：
++
++```bash
++.venv.nosync/bin/python scripts/benchmark_memory.py \
++  --bundle /absolute/path/to/model.pt \
++  --output results/maintenance/memory_unique_name.json
++```
++
++每种精度在不导入 PyTorch 的独立进程中测量 RSS，记录加载前、加载后、推理后与进程生命周期峰值。包括解释器、运行时、图初始化、输入和分配器开销，不能解释成纯激活内存或 MCU SRAM。
++
++## 交付包
++
++```bash
++python3 scripts/package_release.py --output release/project_review.zip
++```
++
++交付包默认包含源码、锁文件、文档、演示及结果，不包含虚拟环境、原始数据或缺失的模型，也不声称可以开箱推理。模型存在时可用 `--model-dir` 指定要随包保存的模型目录；清单会逐文件记录 SHA-256 与文件大小。
+--- /dev/null
++++ b/docs/SUPPLEMENTARY_PROTOCOL.md
+@@ -0,0 +1,73 @@
++# 相同微调预算的剪枝补充实验
++
++## 目的和时间边界
++
++原剪枝模型在 475 epoch 基础训练后增加了 100 epoch 微调；原未剪枝基线没有这段额外训练。补充对照用于拆分“继续训练的影响”和“删除结构的影响”。
++
++本补充计划于 2026-11-04 在原 session-2 结果已知之后追加。必须标记 **supplementary / post-test**，不能称为原预注册分析，也不能据此重新选择原最终方案。
++
++## 固定设计
++
++| 项目 | 设置 |
++| --- | --- |
++| 被试与种子 | 全部 9 人，原种子 0、1、2 |
++| 基础模型 | 原冻结方案的两个 pruning bases：full-22、relevance-16 |
++| 输入通道 | 使用各人/种子已保存的 session-1 排名；与原训练记录通道列表校验 |
++| 原权重存在 | 对其 SHA-256 固定后使用 |
++| 原权重缺失 | 明确选择 `--rebuild-bases`，独立训练 475 epoch，不冒充恢复原权重 |
++| 三条分支 | 不剪枝、剪枝 25%、剪枝 50% |
++| 相同微调 | 每条 100 epoch、Adam 1e-4、batch 64、相同 seed/批次抽样；各自重建优化器 |
++| PTQ | 每条 FP32/INT8，校准仅使用该被试 session-1 训练数据 |
++| 主/次评价 | session-2 无 artifact / 全部试次；先种子内平均到被试，再比较 |
++| 区间 | 被试配对差异的 10,000 次 percentile bootstrap，95%，seed 690 |
++| 禁止 | 新的测试集调参、筛选 seed/被试、按补充结果重选原最终模型 |
++
++`protocol.json` 在训练/评价前记录设计、基础来源、冻结配置哈希、通道排名哈希和训练/评价核心源码哈希。执行时检查这些哈希，修改协议须使用新的补充目录。
++
++## 执行
++
++先安装锁定依赖，恢复并校验数据。
++
++有原权重时：
++
++```bash
++.venv.nosync/bin/python scripts/run_matched_control.py --stage plan
++```
++
++缺少原权重而执行独立重建时：
++
++```bash
++.venv.nosync/bin/python scripts/run_matched_control.py --stage plan --rebuild-bases
++```
++
++下面两组训练可同时运行，保持原 MPS/CPU 被试分配：
++
++```bash
++.venv.nosync/bin/python scripts/run_matched_control.py --stage train --subjects 1 2 3 4 5 6 --workers 3
++.venv.nosync/bin/python scripts/run_matched_control.py --stage train --subjects 7 8 9 --workers 6
++```
++
++训练完成后：
++
++```bash
++.venv.nosync/bin/python scripts/run_matched_control.py --stage evaluate --workers 6
++.venv.nosync/bin/python scripts/run_matched_control.py --stage analyze
++.venv.nosync/bin/python scripts/build_report.py
++```
++
++实际执行的是哪些命令、是否并行和是否完成，以 [工作记录](WORK_LOG.md) 及 `docs/evidence/` 日志为准。协议命令不是已运行的证明。
++
++## 结果位置与解释
++
++- 结果：`results/supplementary/matched_budget/`。
++- 权重和导出：`data.nosync/models/supplementary/matched_budget/`。
++- `base`：475 epoch 基础模型。
++- `0`：基础模型不剪枝，继续训练 100 epoch。
++- `25` / `50`：基础模型剪枝后，继续训练相同的 100 epoch。
++- `0 − base`：额外训练影响。
++- `25/50 − 0`：相同微调预算下的剪枝影响。
++- `25/50 − base`：与原比较类似的混合影响，不能作为单独的剪枝效应解释。
++
++独立重建时保留与历史同条件预测的一致率。预测完全相同，也不能证明权重逐位一致。若不一致，仍完整报告新实验，不通过换种子寻找与旧分数更相似的运行。
++
++这组实验改善了预算可比性，但不能消除小样本、跨天漂移、事后分析和训练后端差异等限制。它不增加独立被试数。
+--- /dev/null
++++ b/docs/WORK_LOG.md
+@@ -0,0 +1,143 @@
++# 项目补全工作记录
++
++日期：2026-11-04（America/New_York）。执行者：Codex，经项目作者授权补全。
++
++## 工作边界
++
++- 原实验已在作者的 Apple M4 Mac mini 上完成。当前副本缺少 `data.nosync/` 和虚拟环境，不等同于原实验未完成。
++- 保留原始冻结配置、验证记录、最终测试记录和性能测量。追加分析不能重新选择最终模型，不能伪装成测试前预注册的实验。
++- 补充实验使用独立目录。原始权重缺失时，不通过静默重训替换原模型。
++- 只记录实际执行的检查；代码完成、实验执行、结果确认分开标记。
++
++## 初始状态和实施计划
++
++1. 已检查：训练/量化/测试均有 459 个记录；原始数据、权重及 ONNX 不在当前副本；`.venv` 是指向缺失 `.venv.nosync` 的符号链接。
++2. 已向作者询问原 Mac mini 上 `data.nosync` 的可读取路径；等待回复期间继续独立工作。
++3. 正在使用 `UV_PROJECT_ENVIRONMENT=.venv.nosync uv sync --locked` 恢复锁定环境。
++4. 计划修复产物恢复检查，增加路径隔离和完整性审计。
++5. 计划增加未剪枝模型相同 100 epoch 微调的补充对照，明确依赖原权重及其来源。
++6. 计划从已有证据补充逐被试/类别结果解释，修正参数字节、文件大小和理论激活内存的表述。
++7. 计划补全本地报告、演示入口及复现/交付说明，并记录测试结果。
++
++## 证据保存
++
++- `evidence/before.sha256.json`：修改前源码与关键历史证据的 SHA-256。
++- `evidence/baseline/`：本次维护所涉及源码及演示源文件的原始副本。
++- 后续生成变更清单、差异补丁和验证输出，便于复核本次具体修改。
++
++## 执行记录
++
++### 已完成的环境与数据恢复
++
++- 使用原 `uv.lock` 执行锁定环境安装，恢复 `.venv.nosync`，保留既有 `.venv` 链接；没有升级依赖。
++- 新环境成功导入 PyTorch 2.15.0、Braindecode 2.0.0、ONNX Runtime 1.31.1；检测到可用 MPS，确认 22 通道模型有 2,420 个参数。
++- 重新下载 18 个原始 `.mat`，逐文件 SHA-256 全部匹配原 `results/data_summary.csv`，重建 18 个预处理缓存。
++- 下载/缓存命令使用 `MIBCI_RESULTS_DIR=results/maintenance/reproduction`，没有改写原数据汇总。
++- 当前环境依赖冻结、硬件信息另存 `evidence/environment_freeze.txt` 和 `evidence/current_environment.json`。原硬件为 M4 Mac mini 来自作者说明；不把当前 RAM 观测无依据写入原日志。
++
++### 已完成的代码补全
++
++- 新增 `src/mibci/artifacts.py`：原子 JSON 写入、非有限值拒绝、文件缺失/空文件检查、恢复配置一致性检查和 SHA-256 工具。
++- 训练、剪枝、导出、测试的恢复逻辑同时检查必需产物；已有 JSON 而缺模型时拒绝静默重训。模型存在性检查不冒充反序列化验证。
++- 防止空模型目录被误当作零任务成功；保留验证预算模型和历史通道排名，不在恢复时无条件改写。
++- 增加 `MIBCI_DATA_DIR` / `MIBCI_RESULTS_DIR` 隔离路径。默认设备仍保持原被试分配；显式设备覆盖仅用于有记录的新实验，没有验证 NVIDIA CUDA 运行。
++- 冻结后禁止重新选择训练预算、改写验证汇总/冻结配置；主流程要求新目录独立复现。历史性能测量也不能被直接覆盖。
++- ONNX 导出增加基于训练样本的数值容差检查。
++- 性能代码区分真实 float32 接口输入和理论 INT8 张量；保留理论激活峰值的假设与局限。增加不导入 PyTorch 的独立进程 RSS 测量脚本。
++- 修复电源记录在非 macOS 的报错及“无电池字符串就判 battery”的误判，未知电源明确标 unknown。
++
++### 历史证据核验
++
++- 全量重算 459 个测试 JSON 的 FP32/INT8、主/次分析准确率、macro-F1、类别召回和混淆矩阵；与保留的统计一致。
++- 验证/最终训练及量化记录各 459 个，完整配置网格无缺失；冻结验证表哈希匹配。
++- 结论：历史证据内部一致，但原权重/ONNX 仍未恢复，二者是不同的完成状态。
++- 最终方案有 4/9 人（P1、P4、P7、P9）下降超过 2 个百分点。本次修正此前聊天中误说的 3/9；不能用总体均值替代逐人结论。
++- 首次串行读取因 iCloud 按需下载很慢而中止，随后并发读取遇到 `OSError 89 Operation canceled`；增加仅针对瞬时读取错误的有限重试后通过。保留失败与成功日志，不把中断当成功。
++- 全量结果见 `evidence/deep_audit_final.log` 与 `../results/maintenance/audit.json`。
++
++### 报告和演示补全
++
++- 新增可再生成的本地英文研究报告 `REPORT.md`，连接原始表格、图区、协议和复现说明。
++- 从保留 CSV 生成逐被试差异和逐类别召回图，明确种子先平均到被试、类别结果仅作描述。两图已实际查看，无裁切或标签遮挡。
++- 区分初始化参数字节约缩小 4 倍、完整 ONNX 文件只缩小约 7.1%、激活峰值约 5.5 倍仅为理想化张量估算。
++- 修正“缺少 integer kernel”的过度推断：历史执行图实际包含 QLinearConv；能支持的是量化分组空间卷积耗时占主导。
++- 修正“均值相近就证明未过拟合/完全等价”等表述，保留个体损失和区间。
++- 保留 17 页幻灯片的原设计/顺序，把私有 `/_blob/` 图片和视频链接替换为项目资源，构建 `presentation/index.html` 和本地 assets。
++- 在浏览器实际检查封面、准确率图、最终结果页、讲稿切换及导航；全部 5 张图片已加载。没有把源码检查等同于视频完整播放测试。
++- README 更正 Apple M4 laptop 为作者实际使用的 M4 Mac mini，并加入本地报告、演示、复现与工作记录入口。
++
++### 自动检查和补充实验进度
++
++- 初始 8 项有意义的测试通过，覆盖恢复保护、JSON 写入失败保护、session-2 访问锁、按 run 划分、训练集归一化、真实结构剪枝、FP32 导出一致性和 INT8 float32 输入契约。
++- 新增补充协议测试时，一项断言只接受 RuntimeError，但实际缺失原权重会先抛 FileNotFoundError；放宽到接受这两种明确失败，继续检查不生成误导协议/不静默改成重建。
++- 全量 Python 源码通过语法解析，`run_all.sh` 通过 `bash -n`。
++- 对缺权重恢复、冻结主流程、重复冻结和历史 benchmark 覆盖执行了真实 CLI 反例检查，全部按预期以非零状态拒绝，没有触发训练或改写旧证据；日志保留。
++- 补充计划 v1 尚未执行时，优化了独立文件的读取并发，因此源码哈希变化；旧计划整个目录归档为 `results/supplementary/matched_budget_unexecuted_v1`，在新建的主补充目录重新固定计划。旧计划没有训练或评价结果，不伪装为已执行。
++- 已固定新协议：54 个独立重建基础模型，162 条相同预算微调分支；保持原 1–6 MPS、7–9 CPU 分配，分别以 3 / 6 个 worker 启动。训练日志见 `evidence/matched_train_mps.log`、`evidence/matched_train_cpu.log`。
++- 补充训练/评价尚在进行；本节后续会记录实际完成时间、统计结果及任何失败。不存在分析文件时，本地报告明确标记 pending。
++- 作者回复不知道原 `data.nosync` 路径，因此继续已固定的独立重建路线，不要求作者继续寻找文件。
++- 新环境实测为 Apple M5 / 24 GiB / Mac17,3，与历史 M4 Mac mini 不同。补充运行不得描述成在原 M4 上恢复的原权重。相同 CPU/MPS 分配并不消除硬件差异。
++- 初批 M5 模型约需 7–10 分钟/个，已向作者说明全量补充按小时计；继续执行固定网格，不因训练速度或结果更换种子/筛选被试。
++- 扩展后的 10 项测试全部通过（`evidence/tests_verified.log`）。原始证据快照中的 11 个历史结果文件通过 SHA-256 不变性检查。
++- 18 个恢复缓存的维度、有限值、原始文件哈希、run/class 覆盖、artifact 数量全部通过检查；session-2 标签与 artifact 标记也逐人匹配历史测试记录。见 `evidence/restored_data_checks.json`。
++- 新增便携推理命令；输入契约明确要求项目预处理后的 22×500 窗口，仅使用存储的训练归一化，避免把原始 EEG 误当已过滤窗口。
++- 使用独立文档运行环境导出 9 页初版 PDF，查看了全部页面的渲染拼图；表格、图和脚注未见遮挡。一次渲染早于导出结束导致读取到未完成文件，已改为 PDF 原子替换并在导出完成后顺序重渲染。最终补充结果更新后还会重新检查。
++- 新增即时本地后处理流水线 `complete_supplement.py`：等待本轮训练、全网格评价、统计、全量补充预测校验、独立进程 RSS、便携推理一致性核验、报告/PDF 重建。它不是定时任务，不发送消息，不修改原最终方案。阶段状态写入 `evidence/completion_status.json`，最后停在待人工视觉检查状态。
++
++### 实际命令与日志
++
++```bash
++UV_PROJECT_ENVIRONMENT=.venv.nosync uv sync --locked
++MIBCI_RESULTS_DIR="$PWD/results/maintenance/reproduction" .venv/bin/python -u scripts/prepare_data.py --expected-summary results/data_summary.csv
++python3 -u scripts/audit_project.py --deep
++.venv/bin/python -u -m unittest discover -s tests -v
++.venv/bin/python -u scripts/run_matched_control.py --stage plan --rebuild-bases
++.venv/bin/python -u scripts/run_matched_control.py --stage train --subjects 1 2 3 4 5 6 --workers 3
++.venv/bin/python -u scripts/run_matched_control.py --stage train --subjects 7 8 9 --workers 6
++.venv/bin/python -u scripts/build_report.py
++python3 scripts/build_presentation.py
++python3 -m http.server 8765 --bind 127.0.0.1
++```
++
++命令输出、失败尝试、环境快照及最终验证日志保留在 `docs/evidence/`。浏览器只访问本地预览，没有发布或发送项目材料。
++
++## 本轮完成与保留限制
++
++- 已完成软件修复、锁定环境/原数据恢复、历史证据核验、完整补充实验、内存测量、便携推理验证、本地报告和演示交付。
++- 原 M4 的原始权重/原 ONNX 仍没有找回；交付的是来源明确的 M5 独立重建模型，不能冒充原文件恢复。旧结果完整保留。
++- 补充分析是在旧测试结果已知后追加；没有重新挑选原最终模型，也没有增加独立被试。MCU 和真实在线闭环不在本软件研究的完成声明内。
++- CUDA/Linux 训练没有实机验证；MIBCI_DEVICE 的显式覆盖不是经过验证的远程服务器部署承诺。
++- 最终变更记录见 evidence/change_inventory.json 和 evidence/changes.patch；交付 ZIP 有独立逐文件 SHA-256 清单。
++
++## 补充实验执行完成（自动流水线记录）
++
++完成时间：2026-11-04T20:06:22.457720-05:00。54 个独立重建基础模型及 162 条等预算分支均完成；216 个模型分别导出/量化并评价 FP32/INT8。
++
++全量补充预测指标重算通过。基于原固定被试、种子和通道列表，没有重新选择最终模型。新运行环境为记录中的 M5，历史 M4 性能结果未替换。
++
++最终候选对应的 relevance-16 INT8，50% 剪枝相对不剪枝、同样微调 100 epoch 的配对差异为 -1.558 个百分点，95% 探索性区间 [-2.864, -0.417]。这是事后补充复现实验，不是新增独立被试或原预注册结果。
++
++已执行独立进程 RSS 测量及可重定位推理 CLI 核验，FP32/INT8 预测与评价记录完全一致。报告 Markdown/PDF 已用补充结果重建，仍待最终逐页视觉检查与交付包校验。相关命令与输出保存在 docs/evidence。
++
++
++## 最终收尾与验证
++
++- 54 个基础模型、162 条等预算分支全部完成；216 个模型均有 FP32/INT8 导出与测试结果。每个 bundle 的 SHA-256 与训练记录全部匹配。
++- 所有补充主/次分析准确率、macro-F1、混淆矩阵和召回率已从预测重算；配对均值、协议引用和冻结数值源码哈希再次核对通过。
++- 10 项自动测试在交付前重跑通过；文档本地链接无失效，Python 源码解析通过。
++- M5 补充结果：relevance-16 INT8 50% 剪枝相对相同微调预算的未剪枝模型低 1.558 个百分点，95% 探索性区间 [-2.864, -0.417]。已回填摘要和正文，并新增第 18 页演示中的补充结果页（序列第 15 页）。
++- 324 个可比模型/精度对的历史预测一致率平均 99.40%，范围 96.18–100%；不把预测一致当成权重逐位相同。
++- 独立 ORT 进程峰值约 57–59 MiB，包含解释器/运行时开销，不能确认理论 5.5 倍激活张量缩减，也不代表 MCU SRAM。
++- PDF 已生成 11 页并进行逐页渲染检查；修正了 Precision 表头换行和补充表跨页布局，使用大字版历史图提高可读性。最终视觉记录见 evidence/pdf_visual_review.json。
++- 演示新增等预算对照页并检查实际浏览器显示；所有图片来自本地资源。保留原回放视频；本轮未声称完成真人在线闭环测试或完整视频观看测试。
++- 完成 2,413 个历史结果文件的内容哈希清单；初始证据快照与最终交付的历史结果保持一致。
++- presentation/deck_source/deck.json 是既有文件，但最初没有保存其逐字节快照；变更清单明确记录“修改、无原始字节哈希”，只声明插入 matched 页及格式化，不伪称新增文件或精确 before diff。
++
++交付包命令：
++
++```bash
++python3 scripts/record_maintenance.py
++python3 scripts/package_release.py --output release/COMP690_completed_2026-11-04.zip --model-dir data.nosync/models/supplementary/matched_budget
++```
++
++逐文件清单在 ZIP 内的 RELEASE_MANIFEST.json；ZIP CRC、每个文件的 SHA-256 和 ZIP 本身校验结果单独写到 release/package_verification.json，避免把 ZIP 的自身哈希放入 ZIP 造成循环。原始/缓存 EEG 与虚拟环境不进入交付包，数据可按原始 SHA-256 重建。没有创建远程仓库、发布站点或发送材料。

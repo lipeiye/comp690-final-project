@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/train_final.py", line 77, in <module>
+    main()
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/scripts/train_final.py", line 67, in main
+    if not completed(FINAL_DIR / "runs" / f"{prefix}_{condition}.json",
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/src/mibci/artifacts.py", line 54, in completed
+    require_files(artifacts, f"resuming {record}")
+  File "/Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/src/mibci/artifacts.py", line 27, in require_files
+    raise ArtifactError(f"{context}: missing or empty artifacts:\n  " + "\n  ".join(missing)
+mibci.artifacts.ArtifactError: resuming /Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/results/final/runs/sub-01_seed-0_full-22.json: missing or empty artifacts:
+  /Users/lipeiye/Documents/04-UNC/Fall 2026/comp690/project/data.nosync/models/final/sub-01_seed-0_full-22.pt
+Restore original artifacts, or use fresh MIBCI_RESULTS_DIR and MIBCI_DATA_DIR directories to reproduce independently. Historical results will not be silently replaced.

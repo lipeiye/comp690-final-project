@@ -1,0 +1,21 @@
+<section id="cost" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">Where EEGNet’s cost lives</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#14213D">2,420</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">parameters: about 9.4 KB in FP32</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">5.9 M</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">MACs per decision; 96% in the first temporal convolution</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:44px;border:1px solid #E2DFD6;border-radius:16px">
+<p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:88px;font-weight:600;line-height:1;color:#B5591A">397 KB</p>
+<p style="font-size:30px;line-height:1.35;color:#3D4A5C">peak activations, FP32, run layer by layer</p>
+</div>
+</div>
+<p style="font-size:34px;line-height:1.4;color:#14213D">Compute and activation memory scale with the electrode count; parameters barely do.</p>
+<p style="font-size:30px;line-height:1.4;color:#3D4A5C">At 8 electrodes: 2.2 M MACs (−63%), 160 KB of modeled peak activations (−60%), but still 2,196 parameters (−9%).</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 5 · analytical counts for one 2-s window, batch 1</p>
+<aside>This is the systems lens for the rest of the talk. The weights are tiny, about ten kilobytes. The work is in the first layer, a temporal convolution applied to every electrode separately, and its output is also the largest tensor. So the knob that really moves compute and memory is the number of electrodes, not the number of weights.</aside>
+</section>

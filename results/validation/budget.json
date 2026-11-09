@@ -1,0 +1,8 @@
+{
+ "epochs": 475,
+ "rule": "Rule, fixed before any channel-selection result exists: average validation accuracy over all subjects and folds, smooth it with a centred 25-epoch moving average, and take the first checkpoint epoch (a multiple of 25) at which the smoothed curve is within 0.5 percentage points of its maximum. Writes results/validation/budget.json and a plot of the curves. ",
+ "n_runs": 27,
+ "smoothed_max_val_acc": 0.6353862352577256,
+ "smoothed_max_epoch": 498,
+ "smoothed_val_acc_at_budget": 0.6313380058606466
+}

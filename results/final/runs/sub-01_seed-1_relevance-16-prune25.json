@@ -1,0 +1,17 @@
+{
+ "subject": 1,
+ "split": "final",
+ "condition": "relevance-16-prune25",
+ "seed": 1,
+ "epochs": 475,
+ "device": "mps",
+ "base": "relevance-16",
+ "fraction": 0.25,
+ "kept_filters": 12,
+ "finetune": {
+  "epochs": 100,
+  "lr": 0.0001
+ },
+ "n_train": 273,
+ "train_time_s": 16.048556959009147
+}

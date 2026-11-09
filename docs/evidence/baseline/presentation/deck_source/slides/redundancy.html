@@ -1,0 +1,13 @@
+<section id="redundancy" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">The redundancy term beat random, not simpler rules</h2>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="width:700px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #2F6DB5;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs relevance only</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#14213D">+0.6 / +0.7 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">same subsets for 6 and 7 of 9 people</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #4E8A3E;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs spatial-weight norm</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#14213D">−0.0 / −1.5 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">weights did better for 7 of 9 at 8 electrodes</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;border-left:6px solid #B5591A;padding-left:28px"><p style="font-size:28px;font-weight:600;color:#14213D">vs random subsets</p><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:48px;font-weight:600;line-height:1.1;color:#B5591A">+3.3 / +2.3 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">better for 8 of 9 people</p></div>
+</div>
+<img src="/_blob/6b8a3b42aed135268ad8e5398a26c935" alt="Paired accuracy differences, proposed minus each control, with 95 percent participant bootstrap intervals, at 16 and 8 electrodes in FP32 and INT8" style="width:908px;height:567px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 9 · values are 16 / 8 electrodes, FP32; INT8 within 0.3 points of each</p>
+<aside>This slide answers the research question. Proposed minus relevance-only is under one point, and the intervals cross zero, because for most people the two rules picked exactly the same electrodes. Against the weight-based rule it ties at 16 electrodes and loses 1.5 points at 8. The only reliable gain is over random subsets, about 2 to 3 points, for 8 of the 9 participants. All of this is unchanged after INT8.</aside>
+</section>

@@ -1,0 +1,17 @@
+{
+ "subject": 2,
+ "split": "final",
+ "condition": "full-22-prune25",
+ "seed": 2,
+ "epochs": 475,
+ "device": "mps",
+ "base": "full-22",
+ "fraction": 0.25,
+ "kept_filters": 12,
+ "finetune": {
+  "epochs": 100,
+  "lr": 0.0001
+ },
+ "n_train": 270,
+ "train_time_s": 30.615779957995983
+}

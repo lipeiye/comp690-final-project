@@ -1,0 +1,14 @@
+<section id="int8" data-transition="fade" style="background:#F6F5F1;color:#14213D;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1;color:#14213D">INT8 kept the accuracy but ran slower on this CPU</h2>
+<div style="display:flex;gap:56px;align-items:center">
+<div style="width:540px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#14213D">≤ 0.5 points</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">accuracy change in all 17 conditions</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#14213D">2.9× fewer</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">parameter bytes (9,576 → 3,260)</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-family:'Space Grotesk', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.05;color:#B5591A">28% slower</p><p style="font-size:26px;line-height:1.35;color:#3D4A5C">0.358 vs 0.280 ms, 22 electrodes</p></div>
+</div>
+<img src="/_blob/d03a42d86b5ce61af06eef0131fb9351" alt="CPU kernel time per layer for FP32 and INT8 at 22 and 8 electrodes: INT8 speeds up the temporal convolution but the grouped spatial convolution becomes about 14 times slower" style="width:1068px;height:427px;object-fit:contain;background:#FFFFFF;border-radius:12px">
+</div>
+<p style="font-size:30px;line-height:1.4;color:#14213D">The temporal convolution got 38% faster in INT8, but the grouped spatial convolution ran 14× slower (185 vs 12.8 µs): kernel coverage, not bit width, set the speed.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 12 · ONNX Runtime 1.31.1 on an Apple M4 CPU; per-node times from its profiler</p>
+<aside>Quantization was free in accuracy: every condition moved by half a point or less, and INT8 and FP32 agreed on 97% of trials. The weights shrink about threefold. But on this CPU the INT8 model was slower. The profiler shows why: the big temporal convolution did get faster, but ONNX Runtime has no fast 8-bit kernel for EEGNet’s grouped spatial convolution, which became fourteen times slower and dominated the total. On a microcontroller with dedicated integer kernels this could be very different, which is exactly why it has to be measured.</aside>
+</section>

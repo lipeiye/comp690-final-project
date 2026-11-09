@@ -1,0 +1,24 @@
+[project]
+name = "mibci"
+version = "0.1.0"
+description = "EEG channel selection and model compression for motor-imagery BCI (COMP 690 final project)"
+requires-python = ">=3.12"
+dependencies = [
+    "braindecode>=2.0.0",
+    "imageio-ffmpeg>=0.8.1",
+    "matplotlib>=3.11.2",
+    "mne>=1.13.2",
+    "moabb>=1.7.2",
+    "numpy>=2.5.4",
+    "onnx>=1.23.2",
+    "onnxruntime>=1.31.1",
+    "onnxscript>=0.7.2",
+    "pandas>=3.1.0",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "torch>=2.15.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.24,<0.10.0"]
+build-backend = "uv_build"
