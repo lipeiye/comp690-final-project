@@ -31,9 +31,15 @@ def quant_job(bundle_path: str, record_path: str) -> None:
     if not np.allclose(check_torch, check_onnx, rtol=1e-4, atol=1e-5):
         raise RuntimeError(f"FP32 ONNX export exceeds tolerance: {path}")
     deploy.quantize_int8(fp32, int8, scaler.transform(X[tr]))
-    record = {"name": path.stem, "subject": b["subject"], "split": b["split"], "condition": b["condition"],
-              "seed": b["seed"], "training_export_max_abs_diff": float(np.abs(check_torch-check_onnx).max()),
-              "size": {"fp32": deploy.size_bytes(fp32), "int8": deploy.size_bytes(int8)}}
+    record = {
+        "name": path.stem,
+        "subject": b["subject"],
+        "split": b["split"],
+        "condition": b["condition"],
+        "seed": b["seed"],
+        "training_export_max_abs_diff": float(np.abs(check_torch - check_onnx).max()),
+        "size": {"fp32": deploy.size_bytes(fp32), "int8": deploy.size_bytes(int8)},
+    }
     if va is not None:
         X_va = scaler.transform(X[va])
         ref = predict(model, X_va)
@@ -65,7 +71,7 @@ def main() -> None:
     for bundle in bundles:
         record = out_dir / f"{bundle.stem}.json"
         if not completed(record, model_exports(bundle), {"name": bundle.stem}):
-            jobs.append((bundle.stem, dict(bundle_path=str(bundle), record_path=str(record))))
+            jobs.append((bundle.stem, {"bundle_path": str(bundle), "record_path": str(record)}))
     run_pool(quant_job, jobs, args.workers, threads=1)
 
 

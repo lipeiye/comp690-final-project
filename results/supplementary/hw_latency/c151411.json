@@ -1,0 +1,324 @@
+{
+ "created_at": "2026-11-21T01:12:55.731340-05:00",
+ "status": "supplementary_post_test",
+ "host": "c151411.ll.unc.edu",
+ "slurm_job": "10039437",
+ "cpu": {
+  "model": "AMD EPYC 9654 96-Core Processor",
+  "features": {
+   "avx2": true,
+   "avx512f": true,
+   "avx512_vnni": true,
+   "avx_vnni": false,
+   "amx_int8": false,
+   "amx_tile": false,
+   "asimddp": false,
+   "i8mm": false
+  }
+ },
+ "onnxruntime": "1.31.1",
+ "environment": {
+  "python": "3.12.16",
+  "os": "Linux-5.14.0-611.16.1.el9_7.x86_64-x86_64-with-glibc2.34",
+  "cpu": "",
+  "physical_memory_bytes": null,
+  "torch_threads": 1,
+  "packages": {
+   "torch": "2.15.0",
+   "braindecode": "2.0.0",
+   "numpy": "2.5.4",
+   "scipy": "1.18.1",
+   "scikit-learn": "1.9.1"
+  }
+ },
+ "load_average": [
+  253.46,
+  224.48,
+  214.34
+ ],
+ "threads": 1,
+ "batch": 1,
+ "rows": [
+  {
+   "condition": "full-22",
+   "variant": "fp32",
+   "median_ms": 0.371833,
+   "best_round_ms": 0.36808799999999997,
+   "worst_round_ms": 0.3760675,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8",
+   "median_ms": 0.897992,
+   "best_round_ms": 0.8769115000000001,
+   "worst_round_ms": 0.9034115,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-dense",
+   "median_ms": 0.373503,
+   "best_round_ms": 0.3636425,
+   "worst_round_ms": 0.379402,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.06344549999999999,
+   "best_round_ms": 0.0603205,
+   "worst_round_ms": 0.0645,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.157226,
+   "best_round_ms": 0.151721,
+   "worst_round_ms": 0.159616,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-mixed",
+   "median_ms": 0.378993,
+   "best_round_ms": 0.3615875,
+   "worst_round_ms": 0.382658,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int16",
+   "median_ms": 0.44903400000000004,
+   "best_round_ms": 0.4312235,
+   "worst_round_ms": 0.4525135,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32",
+   "median_ms": 0.284087,
+   "best_round_ms": 0.272882,
+   "worst_round_ms": 0.29279750000000004,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8",
+   "median_ms": 0.667875,
+   "best_round_ms": 0.6402445,
+   "worst_round_ms": 0.67471,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-dense",
+   "median_ms": 0.2918575,
+   "best_round_ms": 0.28149250000000003,
+   "worst_round_ms": 0.301707,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.06252550000000001,
+   "best_round_ms": 0.0605105,
+   "worst_round_ms": 0.0656405,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.13881100000000002,
+   "best_round_ms": 0.13378600000000002,
+   "worst_round_ms": 0.140681,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-mixed",
+   "median_ms": 0.29155200000000003,
+   "best_round_ms": 0.281382,
+   "worst_round_ms": 0.298402,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int16",
+   "median_ms": 0.340957,
+   "best_round_ms": 0.328307,
+   "worst_round_ms": 0.353138,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32",
+   "median_ms": 0.27708699999999997,
+   "best_round_ms": 0.274342,
+   "worst_round_ms": 0.27845200000000003,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8",
+   "median_ms": 0.65604,
+   "best_round_ms": 0.64564,
+   "worst_round_ms": 0.676485,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-dense",
+   "median_ms": 0.2850025,
+   "best_round_ms": 0.282467,
+   "worst_round_ms": 0.289137,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.058425000000000005,
+   "best_round_ms": 0.057866,
+   "worst_round_ms": 0.0590155,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.135021,
+   "best_round_ms": 0.133401,
+   "worst_round_ms": 0.136541,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-mixed",
+   "median_ms": 0.28527199999999997,
+   "best_round_ms": 0.28306200000000004,
+   "worst_round_ms": 0.288012,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int16",
+   "median_ms": 0.33472199999999996,
+   "best_round_ms": 0.332912,
+   "worst_round_ms": 0.337078,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32",
+   "median_ms": 0.159171,
+   "best_round_ms": 0.1552365,
+   "worst_round_ms": 0.162241,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8",
+   "median_ms": 0.37136250000000004,
+   "best_round_ms": 0.3578475,
+   "worst_round_ms": 0.37758800000000003,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-dense",
+   "median_ms": 0.1688265,
+   "best_round_ms": 0.163261,
+   "worst_round_ms": 0.172571,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.057941,
+   "best_round_ms": 0.05574,
+   "worst_round_ms": 0.05919,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.113431,
+   "best_round_ms": 0.1101205,
+   "worst_round_ms": 0.11638599999999999,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-mixed",
+   "median_ms": 0.16864649999999998,
+   "best_round_ms": 0.162061,
+   "worst_round_ms": 0.17199599999999998,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int16",
+   "median_ms": 0.1978715,
+   "best_round_ms": 0.1899315,
+   "worst_round_ms": 0.19984649999999998,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  }
+ ],
+ "method": "variants rebuilt from the archived FP32 graph of participant 1, seed 0; interleaved rounds; median of the per-round medians"
+}

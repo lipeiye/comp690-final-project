@@ -24,10 +24,13 @@ def sha256(path: Path) -> str:
 def require_files(paths, context: str = "operation") -> None:
     missing = [str(p) for p in map(Path, paths) if not p.is_file() or p.stat().st_size == 0]
     if missing:
-        raise ArtifactError(f"{context}: missing or empty artifacts:\n  " + "\n  ".join(missing)
-                            + "\nRestore original artifacts, or use fresh MIBCI_RESULTS_DIR and "
-                            "MIBCI_DATA_DIR directories to reproduce independently. "
-                            "Historical results will not be silently replaced.")
+        raise ArtifactError(
+            f"{context}: missing or empty artifacts:\n  "
+            + "\n  ".join(missing)
+            + "\nRestore original artifacts, or use fresh MIBCI_RESULTS_DIR and "
+            "MIBCI_DATA_DIR directories to reproduce independently. "
+            "Historical results will not be silently replaced."
+        )
 
 
 def completed(record: Path, artifacts=(), expected: dict | None = None) -> bool:
@@ -49,8 +52,10 @@ def completed(record: Path, artifacts=(), expected: dict | None = None) -> bool:
         raise ArtifactError(f"Expected a JSON object in {record}")
     for key, value in (expected or {}).items():
         if result.get(key) != value:
-            raise ArtifactError(f"{record}: expected {key}={value!r}, found {result.get(key)!r}; "
-                                "use a fresh results directory for different settings")
+            raise ArtifactError(
+                f"{record}: expected {key}={value!r}, found {result.get(key)!r}; "
+                "use a fresh results directory for different settings"
+            )
     require_files(artifacts, f"resuming {record}")
     return True
 
@@ -60,16 +65,17 @@ def write_json(path: Path, obj) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(obj, indent=1, allow_nan=False) + "\n"
-    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    fd, name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    temporary = Path(name)
     try:
         with os.fdopen(fd, "w") as stream:
             stream.write(payload)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        temporary.replace(path)
     finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+        if temporary.exists():
+            temporary.unlink()
 
 
 def model_exports(bundle: Path) -> tuple[Path, Path]:

@@ -43,4 +43,4 @@ uv run python scripts/evaluate_test.py
 
 uv run python scripts/benchmark.py   # on an otherwise idle machine, on AC power
 uv run python scripts/analyze.py
-uv run python scripts/replay_demo.py --save results/demo/replay.mp4
+uv run python scripts/replay_demo.py --save "$MIBCI_RESULTS_DIR/demo/replay.mp4"

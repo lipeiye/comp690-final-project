@@ -22,3 +22,86 @@ dependencies = [
 [build-system]
 requires = ["uv_build>=0.9.24,<0.10.0"]
 build-backend = "uv_build"
+
+# ---------------------------------------------------------------------------
+# Code quality. Run everything with `python3 tools/check.py`; see docs/GUARDRAILS.md.
+# Ruff is run through `uvx ruff@<version>` (version pinned in tools/check.py), so the
+# training environment in uv.lock is untouched.
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "scripts", "tests", "tools"]
+force-exclude = true
+extend-exclude = ["docs/evidence", "release", "data.nosync", "reproduction.nosync"]
+
+# These run with a bare `python3` (3.9 on the author's Mac): no 3.10+ syntax or zip(strict=).
+[tool.ruff.per-file-target-version]
+"tools/*.py" = "py39"
+"scripts/audit_project.py" = "py39"
+"scripts/package_release.py" = "py39"
+"scripts/build_presentation.py" = "py39"
+"scripts/manifest_results.py" = "py39"
+"scripts/record_maintenance.py" = "py39"
+"scripts/rebuild_all_tables.py" = "py39"
+
+[tool.ruff.format]
+# Pinned byte for byte by finished studies (tools/guard.py: pinned-source). Never reformat.
+exclude = [
+    "src/mibci/data.py", "src/mibci/model.py", "src/mibci/train.py", "src/mibci/prune.py",
+    "src/mibci/experiment.py", "src/mibci/deploy.py",
+    "scripts/run_matched_control.py", "scripts/run_electrode_study.py", "scripts/run_electrode_curve.py",
+]
+
+[tool.ruff.lint]
+# The same pinned files: `ruff check --fix` must never touch them either.
+exclude = [
+    "src/mibci/data.py", "src/mibci/model.py", "src/mibci/train.py", "src/mibci/prune.py",
+    "src/mibci/experiment.py", "src/mibci/deploy.py",
+    "scripts/run_matched_control.py", "scripts/run_electrode_study.py", "scripts/run_electrode_curve.py",
+]
+select = [
+    "E", "W",         # pycodestyle
+    "F",              # pyflakes: unused or undefined names
+    "I",              # import order
+    "B",              # bugbear: zip without strict=, closures over loop variables, mutable defaults
+    "UP",             # modern syntax for Python 3.12
+    "SIM", "C4", "PIE", "PERF", "RET",
+    "NPY",            # NumPy legacy APIs (np.random.seed and friends)
+    "PTH",            # pathlib instead of os.path
+    "DTZ",            # timezone-aware timestamps
+    "PLE", "PLW",     # pylint errors and warnings
+    "C901", "PLR0912", "PLR0913", "PLR0915",  # complexity
+    "T10", "T20",     # debugger calls, print in library code
+    "S102", "S301", "S307", "S506",  # exec, pickle, eval, unsafe yaml
+    "TID251",         # banned APIs, below
+    "ERA001",         # commented-out code
+    "RUF",
+    "D100",           # every module says what it is for
+]
+ignore = [
+    "RUF001", "RUF002", "RUF003",  # en dashes and minus signs in report text are intended
+    "PLW2901",                     # rebinding a loop variable is idiomatic here
+    "RET504",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.pylint]
+max-args = 8
+max-branches = 14
+max-statements = 60
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"numpy.load".msg = "Read EEG through mibci.data.load_session, which keeps the session-2 lock. Other NPZ reads need an inline 'noqa: TID251' with the reason."
+"torch.load".msg = "Load models with mibci.model.load_bundle (weights_only=True)."
+"json.dump".msg = "Write records with mibci.artifacts.write_json (atomic, rejects NaN and Infinity)."
+"pickle".msg = "No pickle: .pt bundles load with weights_only=True and records are JSON."
+"os.environ".msg = "Read MIBCI_* settings from mibci.paths; set environment variables before Python starts."
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D100", "T20"]
+"scripts/**" = ["T20"]
+"tools/**" = ["T20"]
+"src/mibci/paths.py" = ["TID251"]

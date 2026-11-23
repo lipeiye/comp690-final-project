@@ -1,0 +1,84 @@
+{
+ "n_models": 459,
+ "int8_dense_identical_to_archived_int8": true,
+ "fp32_spatial_first_max_abs_logit_diff_train": 4.291534423828125e-06,
+ "fp32_spatial_first_prediction_agreement_min": 1.0,
+ "all_conditions_mean_accuracy": {
+  "fp32": 63.2380492830491,
+  "fp32-spatial-first": 63.2380492830491,
+  "int16": 63.21927638844621,
+  "int16-w16": 63.22317559681745,
+  "int8": 63.1792576001223,
+  "int8-dense": 63.1792576001223,
+  "int8-mixed": 63.16408933130572,
+  "int8-spatial-first": 63.17990222324254
+ },
+ "all_conditions_diff_vs_fp32_pp": {
+  "fp32": {
+   "mean": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0
+  },
+  "fp32-spatial-first": {
+   "mean": 0.0,
+   "ci_low": 0.0,
+   "ci_high": 0.0
+  },
+  "int16": {
+   "mean": -0.018772894602890146,
+   "ci_low": -0.05778404983013481,
+   "ci_high": 0.027795371843057175
+  },
+  "int16-w16": {
+   "mean": -0.014873686231646014,
+   "ci_low": -0.030860925210690275,
+   "ci_high": -0.0015382046649797193
+  },
+  "int8": {
+   "mean": -0.058791682926798455,
+   "ci_low": -0.1291542406578676,
+   "ci_high": 0.008935600313506384
+  },
+  "int8-dense": {
+   "mean": -0.058791682926798455,
+   "ci_low": -0.1291542406578676,
+   "ci_high": 0.008935600313506384
+  },
+  "int8-mixed": {
+   "mean": -0.07395995174337298,
+   "ci_low": -0.13847079415311744,
+   "ci_high": -0.01546959446281896
+  },
+  "int8-spatial-first": {
+   "mean": -0.05814705980654527,
+   "ci_low": -0.1244027909325445,
+   "ci_high": 0.0030791919569373937
+  }
+ },
+ "latency_full22_ms": {
+  "fp32": 0.275625,
+  "int8": 0.363333,
+  "int8-dense": 0.2125,
+  "fp32-spatial-first": 0.095125,
+  "int8-spatial-first": 0.066959,
+  "int8-mixed": 0.1970205,
+  "int16": 0.310375,
+  "int16-w16": 0.310042,
+  "int8-u8act": 0.363125,
+  "int8-pertensor": 0.361708,
+  "int8-qoperator": 0.3655
+ },
+ "latency_full22_ms_while_training": {
+  "fp32": 0.3062705,
+  "int8": 0.4086455,
+  "int8-dense": 0.2427085,
+  "fp32-spatial-first": 0.104438,
+  "int8-spatial-first": 0.0761665,
+  "int8-mixed": 0.2287495,
+  "int16": 0.352625,
+  "int16-w16": 0.354063,
+  "int8-u8act": 0.409271,
+  "int8-pertensor": 0.408333,
+  "int8-qoperator": 0.408521
+ }
+}

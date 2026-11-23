@@ -1,0 +1,82 @@
+{
+ "subject": 1,
+ "split": "fold-2",
+ "condition": "sub-01_fold-2_regions-1e5",
+ "seed": 0,
+ "epochs": 475,
+ "device": "cpu",
+ "channels": [
+  "Fz",
+  "FC3",
+  "FC1",
+  "FCz",
+  "Cz",
+  "CP3",
+  "CP1",
+  "CPz",
+  "CP2",
+  "CP4",
+  "P1",
+  "Pz",
+  "P2",
+  "POz"
+ ],
+ "config": {
+  "epochs": 475,
+  "batch_size": 64,
+  "lr": 0.001,
+  "seed": 0
+ },
+ "n_train": 182,
+ "train_time_s": 326.04774676822126,
+ "n_val": 91,
+ "val": {
+  "loss": 0.7182754874229431,
+  "acc": 0.6593406593406593,
+  "macro_f1": 0.6535015360109228,
+  "recall": [
+   0.6956521739130435,
+   0.6956521739130435,
+   0.43478260869565216,
+   0.8181818181818182
+  ],
+  "confusion": [
+   [
+    16,
+    6,
+    1,
+    0
+   ],
+   [
+    4,
+    16,
+    3,
+    0
+   ],
+   [
+    1,
+    1,
+    10,
+    11
+   ],
+   [
+    0,
+    1,
+    3,
+    18
+   ]
+  ]
+ },
+ "part": "cv",
+ "mask": 485,
+ "regions": [
+  "L-premotor",
+  "L-somatosensory",
+  "R-somatosensory",
+  "mid-front",
+  "mid-centre",
+  "parietal"
+ ],
+ "model_sha256": "58bc8b72249069e2e86c2ae895eec3dd55269e1d008d2851b9a91aa9c1c45cc9",
+ "protocol_sha256": "7c878fefaa199e487e49d65ad0a17383e98ec534b0f9e59f4a28e08d8454c05e"
+}

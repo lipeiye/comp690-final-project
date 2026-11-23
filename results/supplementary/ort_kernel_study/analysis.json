@@ -1,0 +1,257 @@
+{
+ "equivalence": {
+  "grouped": {
+   "models": 459,
+   "logits_identical": 459,
+   "max_abs_logit_difference": 0.0,
+   "windows": 132192,
+   "predictions_equal_archived": 132192
+  },
+  "swapped": {
+   "models": 459,
+   "logits_identical": 459,
+   "max_abs_logit_difference": 0.0,
+   "windows": 132192,
+   "predictions_equal_archived": 132192
+  }
+ },
+ "environment": {
+  "onnxruntime": "1.31.1",
+  "machine": "arm64",
+  "power": {
+   "source": "AC"
+  },
+  "load_average_before": [
+   4.3369140625,
+   2.79248046875,
+   2.7744140625
+  ],
+  "load_average_after": [
+   3.38818359375,
+   2.71435546875,
+   2.74560546875
+  ]
+ },
+ "latency_us": {
+  "full-22|fp32": 272.8,
+  "full-22|int8": 357.0,
+  "full-22|int8-kernel": 180.4,
+  "full-22|fp32-spatial-first": 93.5,
+  "full-22|int8-spatial-first": 65.9,
+  "full-22|int8-spatial-first-kernel": 47.5,
+  "relevance-16|fp32": 201.5,
+  "relevance-16|int8": 258.9,
+  "relevance-16|int8-kernel": 138.0,
+  "relevance-16|fp32-spatial-first": 92.0,
+  "relevance-16|int8-spatial-first": 57.7,
+  "relevance-16|int8-spatial-first-kernel": 45.3,
+  "relevance-8|fp32": 114.4,
+  "relevance-8|int8": 147.5,
+  "relevance-8|int8-kernel": 80.0,
+  "relevance-8|fp32-spatial-first": 89.7,
+  "relevance-8|int8-spatial-first": 49.0,
+  "relevance-8|int8-spatial-first-kernel": 42.5,
+  "relevance-16-prune50|fp32": 203.1,
+  "relevance-16-prune50|int8": 257.8,
+  "relevance-16-prune50|int8-kernel": 136.9,
+  "relevance-16-prune50|fp32-spatial-first": 90.1,
+  "relevance-16-prune50|int8-spatial-first": 55.9,
+  "relevance-16-prune50|int8-spatial-first-kernel": 43.9
+ },
+ "earlier_latency_us": {
+  "full-22|fp32": 274.5,
+  "full-22|int8": 358.2,
+  "full-22|int8-kernel": 180.8,
+  "full-22|int8-dense": 209.0,
+  "full-22|fp32-spatial-first": 94.3,
+  "full-22|int8-spatial-first": 66.5,
+  "relevance-16|fp32": 202.5,
+  "relevance-16|int8": 258.6,
+  "relevance-16|int8-kernel": 137.7,
+  "relevance-16|int8-dense": 160.1,
+  "relevance-16|fp32-spatial-first": 91.7,
+  "relevance-16|int8-spatial-first": 57.5,
+  "relevance-8|fp32": 113.8,
+  "relevance-8|int8": 147.1,
+  "relevance-8|int8-kernel": 79.7,
+  "relevance-8|int8-dense": 90.5,
+  "relevance-8|fp32-spatial-first": 89.5,
+  "relevance-8|int8-spatial-first": 48.8,
+  "relevance-16-prune50|fp32": 203.3,
+  "relevance-16-prune50|int8": 258.5,
+  "relevance-16-prune50|int8-kernel": 137.0,
+  "relevance-16-prune50|int8-dense": 159.7,
+  "relevance-16-prune50|fp32-spatial-first": 91.2,
+  "relevance-16-prune50|int8-spatial-first": 56.5
+ },
+ "layers_us": [
+  {
+   "condition": "full-22",
+   "variant": "fp32",
+   "temporal": 241.01,
+   "spatial": 13.01,
+   "rest": 24.18
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8",
+   "temporal": 152.84,
+   "spatial": 189.32,
+   "rest": 35.51
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-kernel",
+   "temporal": 153.64,
+   "spatial": 9.9,
+   "rest": 34.93
+  },
+  {
+   "condition": "full-22",
+   "variant": "fp32-spatial-first",
+   "temporal": 66.9,
+   "spatial": 6.99,
+   "rest": 24.65
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-spatial-first",
+   "temporal": 18.96,
+   "spatial": 25.71,
+   "rest": 34.99
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-spatial-first-kernel",
+   "temporal": 18.67,
+   "spatial": 7.09,
+   "rest": 34.29
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32",
+   "temporal": 173.64,
+   "spatial": 9.19,
+   "rest": 24.12
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8",
+   "temporal": 110.84,
+   "spatial": 128.96,
+   "rest": 34.98
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-kernel",
+   "temporal": 110.68,
+   "spatial": 8.02,
+   "rest": 33.81
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32-spatial-first",
+   "temporal": 64.94,
+   "spatial": 4.98,
+   "rest": 23.73
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-spatial-first",
+   "temporal": 18.62,
+   "spatial": 18.02,
+   "rest": 34.47
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-spatial-first-kernel",
+   "temporal": 18.63,
+   "spatial": 6.04,
+   "rest": 34.34
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32",
+   "temporal": 87.18,
+   "spatial": 5.21,
+   "rest": 23.32
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8",
+   "temporal": 56.33,
+   "spatial": 72.36,
+   "rest": 34.03
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-kernel",
+   "temporal": 56.15,
+   "spatial": 5.8,
+   "rest": 32.1
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32-spatial-first",
+   "temporal": 66.31,
+   "spatial": 3.05,
+   "rest": 23.83
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-spatial-first",
+   "temporal": 18.81,
+   "spatial": 11.05,
+   "rest": 34.15
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-spatial-first-kernel",
+   "temporal": 18.79,
+   "spatial": 5.01,
+   "rest": 33.51
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32",
+   "temporal": 175.75,
+   "spatial": 9.69,
+   "rest": 23.11
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8",
+   "temporal": 110.54,
+   "spatial": 128.27,
+   "rest": 34.06
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-kernel",
+   "temporal": 110.61,
+   "spatial": 8.02,
+   "rest": 32.65
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32-spatial-first",
+   "temporal": 65.56,
+   "spatial": 4.91,
+   "rest": 22.67
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-spatial-first",
+   "temporal": 18.91,
+   "spatial": 18.11,
+   "rest": 33.87
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-spatial-first-kernel",
+   "temporal": 18.54,
+   "spatial": 5.98,
+   "rest": 33.38
+  }
+ ]
+}

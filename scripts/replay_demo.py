@@ -44,9 +44,12 @@ def load_run(subject: int, session: int, run: int):
     trial-start samples, labels (0-3) and expert artifact flags."""
     mat = loadmat(data.download(subject)[session], struct_as_record=False, squeeze_me=True)["data"]
     r = [r for r in np.atleast_1d(mat) if np.size(r.trial) > 0][run]
-    return (np.asarray(r.X, dtype=np.float64)[:, : len(data.EEG_CHANNELS)],
-            np.atleast_1d(r.trial).astype(int) - 1, np.atleast_1d(r.y).astype(int) - 1,
-            np.atleast_1d(r.artifacts).astype(bool))
+    return (
+        np.asarray(r.X, dtype=np.float64)[:, : len(data.EEG_CHANNELS)],
+        np.atleast_1d(r.trial).astype(int) - 1,
+        np.atleast_1d(r.y).astype(int) - 1,
+        np.atleast_1d(r.artifacts).astype(bool),
+    )
 
 
 class Replay:
@@ -96,8 +99,12 @@ def main() -> None:
     parser.add_argument("--run", type=int, default=0, help="motor-imagery run, 0-5")
     parser.add_argument("--trials", type=int, default=10, help="number of trials to replay")
     parser.add_argument("--bundle", type=Path, help="model bundle (default: frozen final configuration, seed 0)")
-    parser.add_argument("--int8", action=argparse.BooleanOptionalAction, default=None,
-                        help="use the INT8 model (default: the frozen configuration's precision)")
+    parser.add_argument(
+        "--int8",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="use the INT8 model (default: the frozen configuration's precision)",
+    )
     parser.add_argument("--save", type=Path, help="write an MP4 instead of showing a window")
     args = parser.parse_args()
 
@@ -109,7 +116,7 @@ def main() -> None:
     use_int8 = args.int8 if args.int8 is not None else bool(final and final["precision"] == "int8")
     onnx_path = bundle.with_name(f"{bundle.stem}_int8.onnx") if use_int8 else bundle.with_suffix(".onnx")
 
-    raw, starts, labels, flags = load_run(args.subject, args.session, args.run)
+    raw, starts, labels, _flags = load_run(args.subject, args.session, args.run)
     cached = data.load_session(args.subject, args.session, final_evaluation=args.session == 2)
     offline = cached["X"][args.run * TRIALS_PER_RUN : (args.run + 1) * TRIALS_PER_RUN]
     replay = Replay(raw, starts, bundle, onnx_path, offline)
@@ -127,8 +134,12 @@ def main() -> None:
     grid = fig.add_gridspec(2, 2, width_ratios=[2.6, 1.4], height_ratios=[4, 1.2])
     ax_eeg, ax_cur, ax_hud = fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1]), fig.add_subplot(grid[1, :])
     precision = "INT8" if use_int8 else "FP32"
-    fig.suptitle(f"REAL-TIME REPLAY of recorded EEG: participant {args.subject}, session {args.session}, "
-                 f"run {args.run + 1} (the participant could not see this feedback)", fontsize=11, fontweight="bold")
+    fig.suptitle(
+        f"REAL-TIME REPLAY of recorded EEG: participant {args.subject}, session {args.session}, "
+        f"run {args.run + 1} (the participant could not see this feedback)",
+        fontsize=11,
+        fontweight="bold",
+    )
 
     spacing = 60.0  # microvolts between traces
     lines = [ax_eeg.plot([], [], lw=0.8, color="#1f4e79")[0] for _ in shown]
@@ -150,8 +161,16 @@ def main() -> None:
     cursor = ax_cur.plot([0], [0], "o", ms=14, color="#1f4e79")[0]
     cue_text = ax_cur.text(0, 4.4, "", ha="center", fontsize=12)
     for cls, (dx, dy) in MOVES.items():
-        ax_cur.text(5.6 * dx, 5.6 * dy, f"{ARROWS[cls]} {LABELS[cls]}", ha="center", va="center", fontsize=8,
-                    color="grey", rotation=90 if dx else 0)
+        ax_cur.text(
+            5.6 * dx,
+            5.6 * dy,
+            f"{ARROWS[cls]} {LABELS[cls]}",
+            ha="center",
+            va="center",
+            fontsize=8,
+            color="grey",
+            rotation=90 if dx else 0,
+        )
     ax_hud.axis("off")
     hud = ax_hud.text(0.0, 1.0, "", va="top", family="monospace", fontsize=9.5, transform=ax_hud.transAxes)
     path = [(0, 0)]
@@ -160,7 +179,7 @@ def main() -> None:
         t = replay.t
         lo = max(0, t - int(SHOW_S * data.SFREQ))
         x = (np.arange(lo, t) - t) / data.SFREQ
-        for line, i, offset in zip(lines, shown, range(len(shown))):
+        for line, i, offset in zip(lines, shown, range(len(shown)), strict=True):
             line.set_data(x, replay.filtered[lo:t, i] + spacing * offset)
         for artist in overlays:
             artist.remove()
@@ -171,21 +190,40 @@ def main() -> None:
             if s <= t and (t - s) / data.SFREQ < 8.5:
                 current = k
             if w0 < t and w0 + data.N_TIMES > lo:
-                overlays.append(ax_eeg.axvspan((w0 - t) / data.SFREQ, (min(w0 + data.N_TIMES, t) - t) / data.SFREQ,
-                                               color="#f4b183", alpha=0.35, lw=0))
+                overlays.append(
+                    ax_eeg.axvspan(
+                        (w0 - t) / data.SFREQ,
+                        (min(w0 + data.N_TIMES, t) - t) / data.SFREQ,
+                        color="#f4b183",
+                        alpha=0.35,
+                        lw=0,
+                    )
+                )
             if lo < cue <= t:
                 overlays.append(ax_eeg.axvline((cue - t) / data.SFREQ, color="#c00000", lw=1, ls="--"))
-                overlays.append(ax_eeg.text((cue - t) / data.SFREQ, spacing * (len(shown) - 0.35), " cue",
-                                            color="#c00000", fontsize=8))
+                overlays.append(
+                    ax_eeg.text(
+                        (cue - t) / data.SFREQ, spacing * (len(shown) - 0.35), " cue", color="#c00000", fontsize=8
+                    )
+                )
             decide = replay.decide_at[k]
             if lo < decide <= t and k in replay.decisions:
                 ok = replay.decisions[k][0] == labels[k]
                 overlays.append(ax_eeg.axvline((decide - t) / data.SFREQ, color="#2e7d32" if ok else "#c62828", lw=2))
-                overlays.append(ax_eeg.text((decide - t) / data.SFREQ, spacing * (len(shown) - 0.35),
-                                            f" decision: {LABELS[replay.decisions[k][0]]}", fontsize=8,
-                                            color="#2e7d32" if ok else "#c62828"))
-        cue_text.set_text("" if current is None or t < starts[current] + 2 * data.SFREQ
-                          else f"cue: {ARROWS[labels[current]]} {LABELS[labels[current]]}")
+                overlays.append(
+                    ax_eeg.text(
+                        (decide - t) / data.SFREQ,
+                        spacing * (len(shown) - 0.35),
+                        f" decision: {LABELS[replay.decisions[k][0]]}",
+                        fontsize=8,
+                        color="#2e7d32" if ok else "#c62828",
+                    )
+                )
+        cue_text.set_text(
+            ""
+            if current is None or t < starts[current] + 2 * data.SFREQ
+            else f"cue: {ARROWS[labels[current]]} {LABELS[labels[current]]}"
+        )
 
         done = [k for k in replay.decisions if k < n_trials]
         correct = sum(replay.decisions[k][0] == labels[k] for k in done)
@@ -196,8 +234,10 @@ def main() -> None:
         if done:
             k = max(done)
             pred, ms = replay.decisions[k]
-            lines_hud.append(f"trial {k + 1}: cue {LABELS[labels[k]]:<10} decoded {LABELS[pred]:<10} "
-                             f"{'correct' if pred == labels[k] else 'wrong':<8} compute {ms:.2f} ms")
+            lines_hud.append(
+                f"trial {k + 1}: cue {LABELS[labels[k]]:<10} decoded {LABELS[pred]:<10} "
+                f"{'correct' if pred == labels[k] else 'wrong':<8} compute {ms:.2f} ms"
+            )
             lines_hud.append(f"running accuracy: {correct}/{len(done)} = {correct / len(done):.0%} (chance 25%)")
         hud.set_text("\n".join(lines_hud))
 
@@ -209,7 +249,7 @@ def main() -> None:
             path.append((float(np.clip(x0 + dx, -5, 5)), float(np.clip(y0 + dy, -5, 5))))
             cursor.set_data([path[-1][0]], [path[-1][1]])
             cursor.set_color("#2e7d32" if pred == labels[k] else "#c62828")
-            trail.set_data(*zip(*path))
+            trail.set_data(*zip(*path, strict=True))
 
     if args.save:
         replay.step(max(0, starts[0] - data.SFREQ))  # stream (without drawing) up to 1 s before the first trial
@@ -221,6 +261,7 @@ def main() -> None:
 
         matplotlib.rcParams["animation.ffmpeg_path"] = imageio_ffmpeg.get_ffmpeg_exe()
         anim = animation.FuncAnimation(fig, frame, frames=n_frames, interval=1000 / FPS, repeat=False)
+        args.save.parent.mkdir(parents=True, exist_ok=True)
         anim.save(args.save, writer=animation.FFMpegWriter(fps=FPS, bitrate=1500), dpi=110)
     else:
         clock = time.perf_counter()
@@ -236,8 +277,10 @@ def main() -> None:
     decided = [k for k in sorted(replay.decisions) if k < n_trials]
     acc = np.mean([replay.decisions[k][0] == labels[k] for k in decided]) if decided else float("nan")
     ms = [replay.decisions[k][1] for k in decided]
-    print(f"{len(decided)} trials decoded, accuracy {acc:.2f}, compute median {np.median(ms):.3f} ms; "
-          f"streamed windows match the offline windows to {replay.max_mismatch:.1e} uV")
+    print(
+        f"{len(decided)} trials decoded, accuracy {acc:.2f}, compute median {np.median(ms):.3f} ms; "
+        f"streamed windows match the offline windows to {replay.max_mismatch:.1e} uV"
+    )
 
 
 if __name__ == "__main__":

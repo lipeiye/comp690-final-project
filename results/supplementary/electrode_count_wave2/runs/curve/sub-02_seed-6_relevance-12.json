@@ -1,0 +1,33 @@
+{
+ "subject": 2,
+ "split": "final",
+ "condition": "relevance-12",
+ "seed": 6,
+ "epochs": 475,
+ "device": "mps",
+ "channels": [
+  "FC3",
+  "FC1",
+  "C3",
+  "C1",
+  "Cz",
+  "CP3",
+  "CP1",
+  "CPz",
+  "P1",
+  "Pz",
+  "P2",
+  "POz"
+ ],
+ "config": {
+  "epochs": 475,
+  "batch_size": 64,
+  "lr": 0.001,
+  "seed": 6
+ },
+ "n_train": 270,
+ "train_time_s": 34.40762399999949,
+ "wave": "curve",
+ "model_sha256": "3478bd9e32a52c622c5c3264f22b5f2105f9b6959ee2f0ff25900a86f0b84333",
+ "protocol_sha256": "fbf05919239ce3df1b962512c0b1c19a11b7420c16acafa33c2dbb7910b7f89f"
+}

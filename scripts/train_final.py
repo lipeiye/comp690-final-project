@@ -13,25 +13,17 @@ import json
 
 from mibci import selection
 from mibci.artifacts import completed, require_files
-from mibci.experiment import MODELS_DIR, RESULTS_DIR, run_pool, session1, train_run, write_json
+from mibci.experiment import run_pool, session1, train_run, write_json
+from mibci.layout import FINAL_DIR, FINAL_MODELS, frozen_config
 from mibci.model import load_bundle
 from mibci.train import TrainConfig
-
-FINAL_DIR = RESULTS_DIR / "final"
-FINAL_MODELS = MODELS_DIR / "final"
-
-
-def frozen_config() -> dict:
-    path = RESULTS_DIR / "frozen_config.json"
-    if not path.exists():
-        raise SystemExit("Freeze the analysis plan first: scripts/summarize_validation.py --freeze")
-    return json.loads(path.read_text())
 
 
 def final_job(subject: int, seed: int, condition: str, channels: list[int], epochs: int) -> None:
     name = f"sub-{subject:02d}_seed-{seed}_{condition}"
-    record = train_run(subject, "final", condition, channels, TrainConfig(epochs=epochs, seed=seed),
-                       FINAL_MODELS / f"{name}.pt")
+    record = train_run(
+        subject, "final", condition, channels, TrainConfig(epochs=epochs, seed=seed), FINAL_MODELS / f"{name}.pt"
+    )
     write_json(FINAL_DIR / "runs" / f"{name}.json", record)
 
 
@@ -64,12 +56,23 @@ def main() -> None:
                     write_json(ranking_path, {**ranking, "subsets": subsets})
                 subsets.pop(selection.FULL)
             for condition, channels in subsets.items():
-                if not completed(FINAL_DIR / "runs" / f"{prefix}_{condition}.json",
-                                 [FINAL_MODELS / f"{prefix}_{condition}.pt"],
-                                 {"subject": subject, "seed": seed, "condition": condition,
-                                  "epochs": config["epochs"]}):
-                    jobs.append((f"{prefix}_{condition}", dict(subject=subject, seed=seed, condition=condition,
-                                                               channels=channels, epochs=config["epochs"])))
+                if not completed(
+                    FINAL_DIR / "runs" / f"{prefix}_{condition}.json",
+                    [FINAL_MODELS / f"{prefix}_{condition}.pt"],
+                    {"subject": subject, "seed": seed, "condition": condition, "epochs": config["epochs"]},
+                ):
+                    jobs.append(
+                        (
+                            f"{prefix}_{condition}",
+                            {
+                                "subject": subject,
+                                "seed": seed,
+                                "condition": condition,
+                                "channels": channels,
+                                "epochs": config["epochs"],
+                            },
+                        )
+                    )
     run_pool(final_job, jobs, args.workers, threads=1)
 
 

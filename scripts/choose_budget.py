@@ -7,6 +7,7 @@ within 0.5 percentage points of its maximum. Writes results/validation/budget.js
 and a plot of the curves.
 """
 
+import argparse
 import json
 
 import matplotlib
@@ -17,14 +18,15 @@ import numpy as np
 import pandas as pd
 
 from mibci.experiment import write_json
-from run_validation import CHECKPOINT_EVERY, VAL_DIR
+from mibci.layout import CHECKPOINT_EVERY, FROZEN_CONFIG, VAL_DIR
 
 SMOOTH_EPOCHS = 25
 TOLERANCE = 0.005
 
 
 def main() -> None:
-    if (VAL_DIR.parent / "frozen_config.json").exists():
+    argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args()
+    if FROZEN_CONFIG.exists():
         raise SystemExit("Analysis already frozen; use a fresh MIBCI_RESULTS_DIR to choose a new budget")
     records = [json.loads(p.read_text()) for p in sorted((VAL_DIR / "full").glob("sub-*.json"))]
     curves = np.array([r["history"]["val_acc"] for r in records])
@@ -34,18 +36,21 @@ def main() -> None:
     candidates = epochs[(epochs % CHECKPOINT_EVERY == 0) & (smooth >= smooth.max() - TOLERANCE)]
     budget = int(candidates[0])
 
-    write_json(VAL_DIR / "budget.json", {
-        "epochs": budget,
-        "rule": __doc__.split("\n\n")[1].replace("\n", " "),
-        "n_runs": len(records),
-        "smoothed_max_val_acc": float(smooth.max()),
-        "smoothed_max_epoch": int(epochs[smooth.argmax()]),
-        "smoothed_val_acc_at_budget": float(smooth[budget - 1]),
-    })
+    write_json(
+        VAL_DIR / "budget.json",
+        {
+            "epochs": budget,
+            "rule": __doc__.split("\n\n")[1].replace("\n", " "),
+            "n_runs": len(records),
+            "smoothed_max_val_acc": float(smooth.max()),
+            "smoothed_max_epoch": int(epochs[smooth.argmax()]),
+            "smoothed_val_acc_at_budget": float(smooth[budget - 1]),
+        },
+    )
 
     fig, ax = plt.subplots(figsize=(7, 4), constrained_layout=True)
     by_subject = {}
-    for r, curve in zip(records, curves):
+    for r, curve in zip(records, curves, strict=True):
         by_subject.setdefault(r["subject"], []).append(curve)
     for subject, cs in by_subject.items():
         ax.plot(epochs, np.mean(cs, 0), lw=0.7, alpha=0.5, label=f"S{subject}")
@@ -53,8 +58,12 @@ def main() -> None:
     ax.axvline(budget, color="black", ls="--", lw=1)
     ax.text(budget, 0.27, f" budget = {budget} epochs", fontsize=9)
     ax.axhline(0.25, color="grey", lw=0.8, ls=":")
-    ax.set(xlabel="epoch", ylabel="validation accuracy (session 1)", ylim=(0.2, 1),
-           title="22-channel EEGNet, 3-fold run-grouped validation")
+    ax.set(
+        xlabel="epoch",
+        ylabel="validation accuracy (session 1)",
+        ylim=(0.2, 1),
+        title="22-channel EEGNet, 3-fold run-grouped validation",
+    )
     ax.legend(fontsize=7, ncol=2)
     fig.savefig(VAL_DIR / "budget.png", dpi=130)
     print(f"budget: {budget} epochs (smoothed mean val acc {smooth[budget - 1]:.3f}, max {smooth.max():.3f})")

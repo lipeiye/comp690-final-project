@@ -1,0 +1,123 @@
+{
+ "created_at": "2026-11-22T18:32:29.911605-05:00",
+ "status": "supplementary_post_test",
+ "historical_test_results_already_known": true,
+ "purpose": "Find the layer where the archived INT8 graphs compute differently on x86 CPUs without VNNI, reading the integer tensors of the graph each machine actually runs, test the explanation (adjacent u8 x s8 products summed in a saturating 16-bit register) and find the smallest 7-bit change that makes the machines agree.",
+ "claim_boundary": "Exploratory, planned after the portability results and after int8_layers_study, whose capture changed the computation on x86 (both machines agreed exactly while a normal session on the Gold 6140 changed 144 of P1's 273 training-day predictions). Training-day windows only; the archived graphs are not changed (the 7-bit variants are new copies). Every capture is checked against a normal session's logits.",
+ "variants": [
+  "int8",
+  "7bit-conv_temporal",
+  "7bit-conv_spatial",
+  "7bit-conv_separable_depth",
+  "7bit-conv_separable_point",
+  "7bit-final_layer",
+  "7bit-all"
+ ],
+ "windows": "tensors: the first 32 artifact-free session-1 windows of each participant; predictions: all artifact-free session-1 windows",
+ "pairing": "activations as the optimized graph stores them (uint8 on x86), int8 weights, adjacent products along the reduction axis in the order (kh, kw, input channel) summed into int16 (x86 VPMADDUBSW without VNNI)",
+ "replaces": "int8_layers_study (kept as it is; its capture did not run the deployed x86 path)",
+ "historical_frozen_config_sha256": "98ddc1c2d2fe025e203459131bce4a204c7dfd18f0897e4aef67958f8b2af271",
+ "source_code_sha256": {
+  "scripts/int8_capture_study.py": "29f316e3147bce8ba169ce5a51308dff2d439a658d3cd06e07631b845cc7669c",
+  "src/mibci/data.py": "f904e58875eb733d0a10078c09c9711ad30266be81a7c810617b41b06337ac95",
+  "src/mibci/deploy.py": "1ab5f0c7a5244bc7407d2ec63ad7c6620860ff6412ee98396aee09c5cec9df5f",
+  "src/mibci/experiment.py": "251e188102ac12a5a5f7e346e76d763343f1cfed42473115fa6f79a861cc207b",
+  "src/mibci/int8_capture.py": "55ada0805323326a24bf8d82fdd8477c7cfa46107132834fc5a974aff19f5d41",
+  "src/mibci/int8_layers.py": "088e8a4ea0399c81d7e408796627e00db46cc24809bbfb684a8ae0efbbb357f8",
+  "src/mibci/model.py": "05315425b4feaaed821206dcbb2cdf68b4c771a5cf7400e0cac1c28be97b2175",
+  "src/mibci/study.py": "53a20b0f5dab5271b2782c3b87d5d2a3d768e268d6dc37a43d32c7a8f0e24858",
+  "src/mibci/train.py": "ba247c9a147570f01dc549a19ebf8f13f045ed807cd48e8eead70596d8b29fb7"
+ },
+ "jobs": [
+  {
+   "name": "sub-01_seed-0_full-22",
+   "subject": 1,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50",
+   "subject": 1,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-02_seed-0_full-22",
+   "subject": 2,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50",
+   "subject": 2,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-03_seed-0_full-22",
+   "subject": 3,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50",
+   "subject": 3,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-04_seed-0_full-22",
+   "subject": 4,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50",
+   "subject": 4,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-05_seed-0_full-22",
+   "subject": 5,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50",
+   "subject": 5,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-06_seed-0_full-22",
+   "subject": 6,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50",
+   "subject": 6,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-07_seed-0_full-22",
+   "subject": 7,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50",
+   "subject": 7,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-08_seed-0_full-22",
+   "subject": 8,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50",
+   "subject": 8,
+   "condition": "relevance-16-prune50"
+  },
+  {
+   "name": "sub-09_seed-0_full-22",
+   "subject": 9,
+   "condition": "full-22"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50",
+   "subject": 9,
+   "condition": "relevance-16-prune50"
+  }
+ ]
+}

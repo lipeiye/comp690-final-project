@@ -1,0 +1,2795 @@
+{
+ "status": "supplementary_post_test",
+ "boundary": "CV values use session 1 only and are test-free. Session-2 values are exploratory: the study was planned after the main study's test results were known. The oracle chooses with session 2 and is an upper bound, not a method.",
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 690,
+  "level": 0.95
+ },
+ "participants": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "records": {
+  "cv": 13797,
+  "test": 4599
+ },
+ "regions": {
+  "fine": {
+   "L-premotor": [
+    "FC3",
+    "FC1"
+   ],
+   "L-motor": [
+    "C5",
+    "C3",
+    "C1"
+   ],
+   "L-somatosensory": [
+    "CP3",
+    "CP1"
+   ],
+   "R-premotor": [
+    "FC2",
+    "FC4"
+   ],
+   "R-motor": [
+    "C2",
+    "C4",
+    "C6"
+   ],
+   "R-somatosensory": [
+    "CP2",
+    "CP4"
+   ],
+   "mid-front": [
+    "Fz",
+    "FCz"
+   ],
+   "mid-centre": [
+    "Cz",
+    "CPz"
+   ],
+   "parietal": [
+    "P1",
+    "Pz",
+    "P2",
+    "POz"
+   ]
+  },
+  "coarse": {
+   "left-sensorimotor": [
+    "FC3",
+    "FC1",
+    "C5",
+    "C3",
+    "C1",
+    "CP3",
+    "CP1"
+   ],
+   "right-sensorimotor": [
+    "FC2",
+    "FC4",
+    "C2",
+    "C4",
+    "C6",
+    "CP2",
+    "CP4"
+   ],
+   "midline": [
+    "Fz",
+    "FCz",
+    "Cz",
+    "CPz"
+   ],
+   "parietal": [
+    "P1",
+    "Pz",
+    "P2",
+    "POz"
+   ]
+  },
+  "mask_bit_order": [
+   "L-premotor",
+   "L-motor",
+   "L-somatosensory",
+   "R-premotor",
+   "R-motor",
+   "R-somatosensory",
+   "mid-front",
+   "mid-centre",
+   "parietal"
+  ]
+ },
+ "chance": 0.25,
+ "all22_acc_pct": {
+  "cv": 63.49308583085021,
+  "test": 67.36933848234314
+ },
+ "shapley_efficiency_max_error_pp": {
+  "fine/cv": 4.263256414560601e-14,
+  "coarse/cv": 1.4210854715202004e-14,
+  "fine/test": 5.684341886080802e-14,
+  "coarse/test": 1.4210854715202004e-14
+ },
+ "shapley_pp": {
+  "cv": {
+   "L-premotor": {
+    "accuracy": {
+     "mean": 2.3469710658386567,
+     "ci_low": 1.3122517893448025,
+     "ci_high": 3.4203599796679014
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 0.44177562470374876,
+      "ci_low": -0.9082865485350543,
+      "ci_high": 1.8801395634517188
+     },
+     "right_hand": {
+      "mean": 4.8933003348142,
+      "ci_low": 2.4222905364110496,
+      "ci_high": 7.577140632029711
+     },
+     "feet": {
+      "mean": 1.3134503003482678,
+      "ci_low": 0.0263715024484767,
+      "ci_high": 2.6161940841222346
+     },
+     "tongue": {
+      "mean": 2.7186795378960125,
+      "ci_low": 1.3946796229830356,
+      "ci_high": 3.9756228782616447
+     }
+    }
+   },
+   "L-motor": {
+    "accuracy": {
+     "mean": 6.080819450495034,
+     "ci_low": 3.718175558053479,
+     "ci_high": 8.191968475389624
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 2.3254856102044323,
+      "ci_low": 0.9084853186395496,
+      "ci_high": 3.712342292604645
+     },
+     "right_hand": {
+      "mean": 12.141663664226675,
+      "ci_low": 7.92661978118855,
+      "ci_high": 16.361017788269862
+     },
+     "feet": {
+      "mean": 3.633944965214044,
+      "ci_low": 0.30096020040631655,
+      "ci_high": 7.182583253500446
+     },
+     "tongue": {
+      "mean": 5.993341003355712,
+      "ci_low": 3.7266390219145316,
+      "ci_high": 8.169637065502089
+     }
+    }
+   },
+   "L-somatosensory": {
+    "accuracy": {
+     "mean": 5.163844881966721,
+     "ci_low": 3.603998238769033,
+     "ci_high": 6.715251149808887
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 2.5222524330079663,
+      "ci_low": 1.4194173421748475,
+      "ci_high": 3.6073505235720966
+     },
+     "right_hand": {
+      "mean": 8.270342758489834,
+      "ci_low": 5.4703182197434534,
+      "ci_high": 11.278741320672326
+     },
+     "feet": {
+      "mean": 3.0325394300041597,
+      "ci_low": 0.9376607824743026,
+      "ci_high": 5.148767979283076
+     },
+     "tongue": {
+      "mean": 6.590010777223588,
+      "ci_low": 4.598073582329595,
+      "ci_high": 8.747558984730974
+     }
+    }
+   },
+   "R-premotor": {
+    "accuracy": {
+     "mean": 1.3875380768064287,
+     "ci_low": 0.5006404949673556,
+     "ci_high": 2.242413091241033
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 2.390976518656451,
+      "ci_low": 0.8957001548931381,
+      "ci_high": 4.173189508954419
+     },
+     "right_hand": {
+      "mean": 1.321669541844997,
+      "ci_low": 0.174398037389446,
+      "ci_high": 2.2671412088586798
+     },
+     "feet": {
+      "mean": 0.10120301577319243,
+      "ci_low": -0.7882294455707285,
+      "ci_high": 1.007657314553186
+     },
+     "tongue": {
+      "mean": 1.7455805861890343,
+      "ci_low": 0.1525438889508644,
+      "ci_high": 3.0297305675405646
+     }
+    }
+   },
+   "R-motor": {
+    "accuracy": {
+     "mean": 5.6957521356089655,
+     "ci_low": 3.8290113855010466,
+     "ci_high": 7.501120657477426
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 10.906387168280084,
+      "ci_low": 6.476836737667562,
+      "ci_high": 15.52505197341421
+     },
+     "right_hand": {
+      "mean": 2.5739736185986186,
+      "ci_low": 1.3672851853542118,
+      "ci_high": 3.9915615299995766
+     },
+     "feet": {
+      "mean": 3.8510063283446976,
+      "ci_low": 1.3478097409047383,
+      "ci_high": 6.375644030455619
+     },
+     "tongue": {
+      "mean": 5.532622983742136,
+      "ci_low": 3.8180283479272377,
+      "ci_high": 7.167998956968329
+     }
+    }
+   },
+   "R-somatosensory": {
+    "accuracy": {
+     "mean": 5.047515972054989,
+     "ci_low": 3.3849610962986127,
+     "ci_high": 6.852016405318279
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 11.335710836741857,
+      "ci_low": 7.514010982375063,
+      "ci_high": 15.294155810867284
+     },
+     "right_hand": {
+      "mean": 1.41227052999253,
+      "ci_low": 0.00608295956842312,
+      "ci_high": 2.915112856248731
+     },
+     "feet": {
+      "mean": 3.159041369519889,
+      "ci_low": 1.3521897641071097,
+      "ci_high": 4.769514996889253
+     },
+     "tongue": {
+      "mean": 4.494375299466374,
+      "ci_low": 2.920023467394672,
+      "ci_high": 6.109569706266409
+     }
+    }
+   },
+   "mid-front": {
+    "accuracy": {
+     "mean": 1.3865939394945572,
+     "ci_low": 0.8950990158957903,
+     "ci_high": 1.8905133357114794
+    },
+    "recall": {
+     "left_hand": {
+      "mean": -0.35255244159049876,
+      "ci_low": -1.80621749130223,
+      "ci_high": 1.0787309475617437
+     },
+     "right_hand": {
+      "mean": 2.775907656375089,
+      "ci_low": 1.690381117153689,
+      "ci_high": 3.8094032369858004
+     },
+     "feet": {
+      "mean": 0.21974248944972288,
+      "ci_low": -1.151123188844738,
+      "ci_high": 1.284383638462546
+     },
+     "tongue": {
+      "mean": 2.8476620119294114,
+      "ci_low": 1.4621411017126298,
+      "ci_high": 4.065338282908519
+     }
+    }
+   },
+   "mid-centre": {
+    "accuracy": {
+     "mean": 4.993531543798785,
+     "ci_low": 3.4450315409065673,
+     "ci_high": 6.742497486968305
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 1.862633978548872,
+      "ci_low": 0.8408097389123261,
+      "ci_high": 3.0237427612121004
+     },
+     "right_hand": {
+      "mean": 2.99007264226175,
+      "ci_low": 1.7208863913893186,
+      "ci_high": 4.17035626126521
+     },
+     "feet": {
+      "mean": 8.973864239864438,
+      "ci_low": 4.237174542024848,
+      "ci_high": 15.53625055076514
+     },
+     "tongue": {
+      "mean": 6.226618497435657,
+      "ci_low": 4.370999990801074,
+      "ci_high": 7.675700508244877
+     }
+    }
+   },
+   "parietal": {
+    "accuracy": {
+     "mean": 6.390518764786072,
+     "ci_low": 3.819473437440488,
+     "ci_high": 9.131280243360019
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 6.8138286355775435,
+      "ci_low": 4.138248747085998,
+      "ci_high": 9.497871591244907
+     },
+     "right_hand": {
+      "mean": 4.931120669247414,
+      "ci_low": 1.6294966364076788,
+      "ci_high": 8.438584344088165
+     },
+     "feet": {
+      "mean": 7.437483203591693,
+      "ci_low": 3.938227219754359,
+      "ci_high": 10.932693416106794
+     },
+     "tongue": {
+      "mean": 6.353508552141988,
+      "ci_low": 3.4843261336659186,
+      "ci_high": 8.77620858677471
+     }
+    }
+   }
+  },
+  "test": {
+   "L-premotor": {
+    "accuracy": {
+     "mean": 2.432146325043483,
+     "ci_low": 1.3300573934756685,
+     "ci_high": 3.6246576140710856
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 1.6169763046506347,
+      "ci_low": 0.11599983422371833,
+      "ci_high": 3.098749310127062
+     },
+     "right_hand": {
+      "mean": 3.6394135931376304,
+      "ci_low": 0.7480014806888574,
+      "ci_high": 6.684906217637963
+     },
+     "feet": {
+      "mean": 2.336465867257,
+      "ci_low": 0.9676152111557332,
+      "ci_high": 3.8129618767958413
+     },
+     "tongue": {
+      "mean": 2.13915676682666,
+      "ci_low": 0.3036426054856565,
+      "ci_high": 3.809455069625335
+     }
+    }
+   },
+   "L-motor": {
+    "accuracy": {
+     "mean": 5.825080662933005,
+     "ci_low": 3.388385250440126,
+     "ci_high": 8.534277634103319
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 1.9895522872984905,
+      "ci_low": -0.018598071834515145,
+      "ci_high": 4.26593981691886
+     },
+     "right_hand": {
+      "mean": 13.421773232317944,
+      "ci_low": 7.657692490352873,
+      "ci_high": 19.92113107149561
+     },
+     "feet": {
+      "mean": 2.342614909350644,
+      "ci_low": 0.6726679966655222,
+      "ci_high": 4.17752797355178
+     },
+     "tongue": {
+      "mean": 5.627777140586372,
+      "ci_low": 2.6929446640751338,
+      "ci_high": 8.63637306498221
+     }
+    }
+   },
+   "L-somatosensory": {
+    "accuracy": {
+     "mean": 5.757971063705223,
+     "ci_low": 4.133551868707956,
+     "ci_high": 7.316012899127674
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 0.9527314754787817,
+      "ci_low": -1.171991250013564,
+      "ci_high": 2.921775743815996
+     },
+     "right_hand": {
+      "mean": 10.03947087781474,
+      "ci_low": 6.025503125450607,
+      "ci_high": 14.517491077605758
+     },
+     "feet": {
+      "mean": 5.28713597200176,
+      "ci_low": 2.117182985490847,
+      "ci_high": 8.36635883695445
+     },
+     "tongue": {
+      "mean": 6.742011119578783,
+      "ci_low": 3.945400579769196,
+      "ci_high": 9.30620006942164
+     }
+    }
+   },
+   "R-premotor": {
+    "accuracy": {
+     "mean": 2.283933512787124,
+     "ci_low": 1.1617969117010183,
+     "ci_high": 3.366187691020337
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 4.549633089902707,
+      "ci_low": 2.4982082644311583,
+      "ci_high": 6.5790847964033965
+     },
+     "right_hand": {
+      "mean": 1.6495953631999596,
+      "ci_low": 0.23983640387616267,
+      "ci_high": 2.697357155028267
+     },
+     "feet": {
+      "mean": 0.6421695394474519,
+      "ci_low": -1.1168103551289863,
+      "ci_high": 2.3291195428746265
+     },
+     "tongue": {
+      "mean": 2.346904580773869,
+      "ci_low": 1.2748724857340976,
+      "ci_high": 3.524697093702713
+     }
+    }
+   },
+   "R-motor": {
+    "accuracy": {
+     "mean": 5.986860759504603,
+     "ci_low": 4.1923637442546156,
+     "ci_high": 7.837619128611763
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 12.009608837454383,
+      "ci_low": 5.481591352294942,
+      "ci_high": 18.35108245276412
+     },
+     "right_hand": {
+      "mean": 2.3984947676024673,
+      "ci_low": 0.9432232904722001,
+      "ci_high": 3.8292830412278516
+     },
+     "feet": {
+      "mean": 4.739584017734945,
+      "ci_low": 1.297465093277881,
+      "ci_high": 8.34281996685607
+     },
+     "tongue": {
+      "mean": 5.0269845418780905,
+      "ci_low": 3.44378744491632,
+      "ci_high": 6.395873364443675
+     }
+    }
+   },
+   "R-somatosensory": {
+    "accuracy": {
+     "mean": 5.543430404333794,
+     "ci_low": 3.8186967123937774,
+     "ci_high": 7.161786963936483
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 10.199162711556,
+      "ci_low": 5.2763332623618995,
+      "ci_high": 14.958330593153091
+     },
+     "right_hand": {
+      "mean": 3.0106761761980914,
+      "ci_low": 1.1014181756652661,
+      "ci_high": 4.920596947546019
+     },
+     "feet": {
+      "mean": 3.587499155025261,
+      "ci_low": 0.5911317647494316,
+      "ci_high": 6.395102348588741
+     },
+     "tongue": {
+      "mean": 5.590188656383712,
+      "ci_low": 3.4472732500701784,
+      "ci_high": 7.706765186104132
+     }
+    }
+   },
+   "mid-front": {
+    "accuracy": {
+     "mean": 1.531970056211048,
+     "ci_low": 0.7758577436414996,
+     "ci_high": 2.1941612624239526
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 0.7361536571128061,
+      "ci_low": -0.4622856421766046,
+      "ci_high": 2.074407289106183
+     },
+     "right_hand": {
+      "mean": 1.3333678975953345,
+      "ci_low": 0.0856996890209467,
+      "ci_high": 2.4607110926464557
+     },
+     "feet": {
+      "mean": 0.4508059999314027,
+      "ci_low": -0.8327353592872115,
+      "ci_high": 1.6264640958071062
+     },
+     "tongue": {
+      "mean": 3.6459602034158576,
+      "ci_low": 2.056517042025721,
+      "ci_high": 5.1725678827934125
+     }
+    }
+   },
+   "mid-centre": {
+    "accuracy": {
+     "mean": 5.228056618252314,
+     "ci_low": 3.9359973136495094,
+     "ci_high": 6.614634988934596
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 1.5855402064337083,
+      "ci_low": -0.20172155768613734,
+      "ci_high": 3.2740439840394675
+     },
+     "right_hand": {
+      "mean": 4.260414803588052,
+      "ci_low": 2.7616230496502205,
+      "ci_high": 5.912227143210263
+     },
+     "feet": {
+      "mean": 8.933208364921532,
+      "ci_low": 3.4008304114264254,
+      "ci_high": 16.671416867081792
+     },
+     "tongue": {
+      "mean": 6.312651387113083,
+      "ci_low": 4.447480370115041,
+      "ci_high": 8.34981825452558
+     }
+    }
+   },
+   "parietal": {
+    "accuracy": {
+     "mean": 7.779889079572546,
+     "ci_low": 5.986829631106339,
+     "ci_high": 9.602008958200866
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 7.14737695508911,
+      "ci_low": 5.120451273331686,
+      "ci_high": 9.966372777427779
+     },
+     "right_hand": {
+      "mean": 8.194022766851601,
+      "ci_low": 5.121327621089963,
+      "ci_high": 11.110753434256413
+     },
+     "feet": {
+      "mean": 6.159577183174321,
+      "ci_low": 2.6980391791833807,
+      "ci_high": 9.254105704171236
+     },
+     "tongue": {
+      "mean": 9.563336197178574,
+      "ci_low": 6.51042797829073,
+      "ci_high": 12.892874473205305
+     }
+    }
+   }
+  }
+ },
+ "shapley_coarse_pp": {
+  "cv": {
+   "left-sensorimotor": {
+    "accuracy": {
+     "mean": 11.284898407574765,
+     "ci_low": 7.0849175313575135,
+     "ci_high": 14.829782070513396
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 5.227571277806159,
+      "ci_low": 2.687130649661747,
+      "ci_high": 8.053943980443558
+     },
+     "right_hand": {
+      "mean": 21.125721813031273,
+      "ci_low": 14.001546422611153,
+      "ci_high": 28.444787403952684
+     },
+     "feet": {
+      "mean": 7.168493586971664,
+      "ci_low": 0.7250382644718919,
+      "ci_high": 12.673874418488012
+     },
+     "tongue": {
+      "mean": 11.216459617310095,
+      "ci_low": 7.28460685958414,
+      "ci_high": 14.874683552364047
+     }
+    }
+   },
+   "right-sensorimotor": {
+    "accuracy": {
+     "mean": 11.881339829336554,
+     "ci_low": 8.327074172705922,
+     "ci_high": 15.365055961134113
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 21.876418887495813,
+      "ci_low": 13.662310784300765,
+      "ci_high": 30.9816068047382
+     },
+     "right_hand": {
+      "mean": 6.637387073136545,
+      "ci_low": 3.175376146522484,
+      "ci_high": 10.21602939228685
+     },
+     "feet": {
+      "mean": 8.534473487051388,
+      "ci_low": 4.007228058564398,
+      "ci_high": 12.783498861390068
+     },
+     "tongue": {
+      "mean": 10.815462480064946,
+      "ci_low": 7.591009999942289,
+      "ci_high": 13.737638261274498
+     }
+    }
+   },
+   "midline": {
+    "accuracy": {
+     "mean": 6.681757567317836,
+     "ci_low": 4.563850383827118,
+     "ci_high": 8.813908608866939
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 1.0440923515571183,
+      "ci_low": -1.1853877140691755,
+      "ci_high": 3.4911272443427404
+     },
+     "right_hand": {
+      "mean": 6.016845034611509,
+      "ci_low": 3.595751121456112,
+      "ci_high": 8.185476506797977
+     },
+     "feet": {
+      "mean": 9.077048307530879,
+      "ci_low": 3.61518130231149,
+      "ci_high": 16.24163177194617
+     },
+     "tongue": {
+      "mean": 10.541636549477253,
+      "ci_low": 6.172624833396705,
+      "ci_high": 13.918122625045626
+     }
+    }
+   },
+   "parietal": {
+    "accuracy": {
+     "mean": 8.645090026621055,
+     "ci_low": 5.133998886000217,
+     "ci_high": 12.315329505085268
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 10.098415847271365,
+      "ci_low": 6.470961970101832,
+      "ci_high": 13.51280160206038
+     },
+     "right_hand": {
+      "mean": 7.530367495071782,
+      "ci_low": 2.9436294527210767,
+      "ci_high": 12.387695756925849
+     },
+     "feet": {
+      "mean": 6.9422599605561786,
+      "ci_low": 2.0849569073197207,
+      "ci_high": 11.49863679298729
+     },
+     "tongue": {
+      "mean": 9.928840602527613,
+      "ci_low": 5.60763631453212,
+      "ci_high": 14.030167523517232
+     }
+    }
+   }
+  },
+  "test": {
+   "left-sensorimotor": {
+    "accuracy": {
+     "mean": 11.930934175201337,
+     "ci_low": 8.249058240846171,
+     "ci_high": 15.414175614324458
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 2.8557429568447845,
+      "ci_low": -1.4723154032868886,
+      "ci_high": 6.857165097031073
+     },
+     "right_hand": {
+      "mean": 26.524138223363504,
+      "ci_low": 18.300429935808907,
+      "ci_high": 34.279359892105
+     },
+     "feet": {
+      "mean": 6.76079573028839,
+      "ci_low": 3.3038229313669323,
+      "ci_high": 10.460914897227555
+     },
+     "tongue": {
+      "mean": 11.77074309505529,
+      "ci_low": 6.463995322488202,
+      "ci_high": 16.70975827454935
+     }
+    }
+   },
+   "right-sensorimotor": {
+    "accuracy": {
+     "mean": 13.044497047640315,
+     "ci_low": 8.47765624925297,
+     "ci_high": 17.262211304592277
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 24.100113153122706,
+      "ci_low": 11.152300456285527,
+      "ci_high": 36.81030641569185
+     },
+     "right_hand": {
+      "mean": 3.9416591601674558,
+      "ci_low": 1.462037320073957,
+      "ci_high": 6.55469240371734
+     },
+     "feet": {
+      "mean": 11.277545216511442,
+      "ci_low": 4.926150703666992,
+      "ci_high": 17.158088485445205
+     },
+     "tongue": {
+      "mean": 13.197765901609541,
+      "ci_low": 9.210744526591334,
+      "ci_high": 16.58611524359936
+     }
+    }
+   },
+   "midline": {
+    "accuracy": {
+     "mean": 6.309083601973178,
+     "ci_low": 4.276497973657804,
+     "ci_high": 8.14029656136408
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 3.062579715315,
+      "ci_low": -0.7768681249023986,
+      "ci_high": 6.944423147777646
+     },
+     "right_hand": {
+      "mean": 4.380660631677298,
+      "ci_low": 2.053916403378835,
+      "ci_high": 6.45714137836367
+     },
+     "feet": {
+      "mean": 9.321820157571448,
+      "ci_low": 3.212468356494145,
+      "ci_high": 17.24708220495667
+     },
+     "tongue": {
+      "mean": 8.703035237993156,
+      "ci_low": 4.873003028280515,
+      "ci_high": 12.516110255399646
+     }
+    }
+   },
+   "parietal": {
+    "accuracy": {
+     "mean": 11.084823657528311,
+     "ci_low": 8.752355825050879,
+     "ci_high": 13.474163502297408
+    },
+    "recall": {
+     "left_hand": {
+      "mean": 10.768299699694138,
+      "ci_low": 8.201685650710512,
+      "ci_high": 13.613566321179928
+     },
+     "right_hand": {
+      "mean": 13.100771463097571,
+      "ci_low": 8.725258659469185,
+      "ci_high": 17.775345377723237
+     },
+     "feet": {
+      "mean": 7.118899904473039,
+      "ci_low": 1.8279063820398127,
+      "ci_high": 11.876321092980964
+     },
+     "tongue": {
+      "mean": 13.323426359077013,
+      "ci_low": 9.23653252849729,
+      "ci_high": 17.21872237878391
+     }
+    }
+   }
+  }
+ },
+ "interactions_cv_pp": [
+  {
+   "a": "L-premotor",
+   "b": "L-motor",
+   "mean": -1.9456832048552397,
+   "ci_low": -4.2525117081798465,
+   "ci_high": 0.01654048277816185
+  },
+  {
+   "a": "L-premotor",
+   "b": "L-somatosensory",
+   "mean": -1.6880051088755248,
+   "ci_low": -3.1153655591691827,
+   "ci_high": -0.33549397301214323
+  },
+  {
+   "a": "L-premotor",
+   "b": "R-premotor",
+   "mean": -0.9671519585955585,
+   "ci_low": -1.7349337202875679,
+   "ci_high": -0.010568804469960764
+  },
+  {
+   "a": "L-premotor",
+   "b": "R-motor",
+   "mean": -1.5291357732365363,
+   "ci_low": -2.5415847894098946,
+   "ci_high": -0.5785952987674843
+  },
+  {
+   "a": "L-premotor",
+   "b": "R-somatosensory",
+   "mean": -1.0812113177484182,
+   "ci_low": -2.209523350998836,
+   "ci_high": 0.21858288830943193
+  },
+  {
+   "a": "L-premotor",
+   "b": "mid-front",
+   "mean": -1.4596515179100653,
+   "ci_low": -2.6416286984218127,
+   "ci_high": -0.22300107701946445
+  },
+  {
+   "a": "L-premotor",
+   "b": "mid-centre",
+   "mean": -1.525412411947529,
+   "ci_low": -2.6179962855037497,
+   "ci_high": -0.34542660616545523
+  },
+  {
+   "a": "L-premotor",
+   "b": "parietal",
+   "mean": -1.7890345882419147,
+   "ci_low": -2.751007490546547,
+   "ci_high": -0.8472830526357467
+  },
+  {
+   "a": "L-motor",
+   "b": "L-somatosensory",
+   "mean": -3.609200960588138,
+   "ci_low": -5.557423113740624,
+   "ci_high": -1.680393832544086
+  },
+  {
+   "a": "L-motor",
+   "b": "R-premotor",
+   "mean": -1.073620212739246,
+   "ci_low": -2.2986037627172404,
+   "ci_high": 0.050563822245185706
+  },
+  {
+   "a": "L-motor",
+   "b": "R-motor",
+   "mean": -3.0765314665730106,
+   "ci_low": -5.444748713962285,
+   "ci_high": -1.3948513201188557
+  },
+  {
+   "a": "L-motor",
+   "b": "R-somatosensory",
+   "mean": -1.6506743480544641,
+   "ci_low": -2.480871213154813,
+   "ci_high": -0.7928145735223234
+  },
+  {
+   "a": "L-motor",
+   "b": "mid-front",
+   "mean": -0.9351448825934303,
+   "ci_low": -2.5846053336601322,
+   "ci_high": 0.5974941635769746
+  },
+  {
+   "a": "L-motor",
+   "b": "mid-centre",
+   "mean": -1.211337325091475,
+   "ci_low": -2.286651291273828,
+   "ci_high": -0.0461921437409391
+  },
+  {
+   "a": "L-motor",
+   "b": "parietal",
+   "mean": -4.175616316231018,
+   "ci_low": -5.44268135065459,
+   "ci_high": -2.8724133861098182
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "R-premotor",
+   "mean": -1.0119797834146107,
+   "ci_low": -1.7865389448848874,
+   "ci_high": -0.19631833862205533
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "R-motor",
+   "mean": -2.253040354124612,
+   "ci_low": -3.2521612322993048,
+   "ci_high": -1.4123312680225109
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "R-somatosensory",
+   "mean": -2.128802655125879,
+   "ci_low": -2.998995843627474,
+   "ci_high": -1.0744577857704223
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "mid-front",
+   "mean": -1.1098608288530756,
+   "ci_low": -2.152463769097587,
+   "ci_high": -0.007709955567399802
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "mid-centre",
+   "mean": -1.797725010713374,
+   "ci_low": -3.2585372142498445,
+   "ci_high": -0.09179283489031677
+  },
+  {
+   "a": "L-somatosensory",
+   "b": "parietal",
+   "mean": -4.48631603596639,
+   "ci_low": -6.7768194109976525,
+   "ci_high": -2.2743132092534046
+  },
+  {
+   "a": "R-premotor",
+   "b": "R-motor",
+   "mean": -1.060973418223372,
+   "ci_low": -2.242156859089008,
+   "ci_high": -0.04301557990439503
+  },
+  {
+   "a": "R-premotor",
+   "b": "R-somatosensory",
+   "mean": -0.5272567868762,
+   "ci_low": -1.8942790068656328,
+   "ci_high": 0.7700638210033651
+  },
+  {
+   "a": "R-premotor",
+   "b": "mid-front",
+   "mean": -1.1741041253107385,
+   "ci_low": -1.8926532644874707,
+   "ci_high": -0.46314044092253515
+  },
+  {
+   "a": "R-premotor",
+   "b": "mid-centre",
+   "mean": -0.7472353679726107,
+   "ci_low": -2.177616342431949,
+   "ci_high": 0.7148553209015416
+  },
+  {
+   "a": "R-premotor",
+   "b": "parietal",
+   "mean": -1.209981706378123,
+   "ci_low": -2.1946856214025114,
+   "ci_high": -0.18953022638199601
+  },
+  {
+   "a": "R-motor",
+   "b": "R-somatosensory",
+   "mean": -4.374877337590339,
+   "ci_low": -8.008296181371714,
+   "ci_high": -1.2479229813640815
+  },
+  {
+   "a": "R-motor",
+   "b": "mid-front",
+   "mean": -1.2118828287574015,
+   "ci_low": -2.2593321823553234,
+   "ci_high": -0.18695260614102863
+  },
+  {
+   "a": "R-motor",
+   "b": "mid-centre",
+   "mean": -1.4632407418853886,
+   "ci_low": -2.3552047335240953,
+   "ci_high": -0.5371607792175599
+  },
+  {
+   "a": "R-motor",
+   "b": "parietal",
+   "mean": -4.412264307565507,
+   "ci_low": -5.772574764261609,
+   "ci_high": -3.0785204741287364
+  },
+  {
+   "a": "R-somatosensory",
+   "b": "mid-front",
+   "mean": -1.1159540690474155,
+   "ci_low": -1.9279020762197367,
+   "ci_high": -0.36319746580185897
+  },
+  {
+   "a": "R-somatosensory",
+   "b": "mid-centre",
+   "mean": -1.5725777255798752,
+   "ci_low": -2.757705382872122,
+   "ci_high": -0.2681454821624631
+  },
+  {
+   "a": "R-somatosensory",
+   "b": "parietal",
+   "mean": -3.8170869347596486,
+   "ci_low": -5.1589689852124305,
+   "ci_high": -2.537726296524882
+  },
+  {
+   "a": "mid-front",
+   "b": "mid-centre",
+   "mean": -2.026770858330986,
+   "ci_low": -3.5891778834278556,
+   "ci_high": -0.49428871063480995
+  },
+  {
+   "a": "mid-front",
+   "b": "parietal",
+   "mean": -1.831840758363235,
+   "ci_low": -2.571839317444536,
+   "ci_high": -0.8564960722679624
+  },
+  {
+   "a": "mid-centre",
+   "b": "parietal",
+   "mean": -2.6768558282181383,
+   "ci_low": -4.002363008915039,
+   "ci_high": -1.2358927147179237
+  }
+ ],
+ "top_region_cv": {
+  "P1": "parietal",
+  "P2": "mid-centre",
+  "P3": "R-motor",
+  "P4": "parietal",
+  "P5": "L-motor",
+  "P6": "R-motor",
+  "P7": "L-motor",
+  "P8": "parietal",
+  "P9": "parietal"
+ },
+ "frontier": [
+  {
+   "budget": 2,
+   "method": "own_cv",
+   "test_acc_pct": 45.423531486520695,
+   "cv_acc_pct": 48.52964246606468,
+   "minus_all22_pp": -21.94580699582245,
+   "ci_low_pp": -29.164957933301988,
+   "ci_high_pp": -15.30953526418858,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.0,
+   "distinct_sets": 4,
+   "most_common_set": "L-somatosensory",
+   "most_common_count": 3
+  },
+  {
+   "budget": 2,
+   "method": "population",
+   "test_acc_pct": 47.95814509318441,
+   "cv_acc_pct": 45.656110544466664,
+   "minus_all22_pp": -19.41119338915874,
+   "ci_low_pp": -23.56331164290927,
+   "ci_high_pp": -14.903910614037324,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-somatosensory",
+   "most_common_count": 9
+  },
+  {
+   "budget": 2,
+   "method": "oracle",
+   "test_acc_pct": 49.49392534976185,
+   "cv_acc_pct": 46.15100023373288,
+   "minus_all22_pp": -17.875413132581293,
+   "ci_low_pp": -22.826319265376775,
+   "ci_high_pp": -12.656896021112548,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.0,
+   "distinct_sets": 3,
+   "most_common_set": "L-somatosensory",
+   "most_common_count": 5
+  },
+  {
+   "budget": 2,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 3,
+   "method": "own_cv",
+   "test_acc_pct": 47.94270961055623,
+   "cv_acc_pct": 50.1550206390685,
+   "minus_all22_pp": -19.42662887178692,
+   "ci_low_pp": -23.63726672142667,
+   "ci_high_pp": -15.058213877394824,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.5555555555555554,
+   "distinct_sets": 5,
+   "most_common_set": "L-motor",
+   "most_common_count": 3
+  },
+  {
+   "budget": 3,
+   "method": "population",
+   "test_acc_pct": 44.37466531814688,
+   "cv_acc_pct": 43.05781269124642,
+   "minus_all22_pp": -22.99467316419627,
+   "ci_low_pp": -28.174311902912457,
+   "ci_high_pp": -18.088253087061318,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.7777777777777777,
+   "distinct_sets": 3,
+   "most_common_set": "R-motor",
+   "most_common_count": 6
+  },
+  {
+   "budget": 3,
+   "method": "oracle",
+   "test_acc_pct": 50.91918578713813,
+   "cv_acc_pct": 46.613300694865615,
+   "minus_all22_pp": -16.45015269520501,
+   "ci_low_pp": -20.5303748387294,
+   "ci_high_pp": -11.963609717489902,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 2.3333333333333335,
+   "distinct_sets": 5,
+   "most_common_set": "L-somatosensory",
+   "most_common_count": 3
+  },
+  {
+   "budget": 3,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 4,
+   "method": "own_cv",
+   "test_acc_pct": 56.32253498229739,
+   "cv_acc_pct": 57.57091202531418,
+   "minus_all22_pp": -11.046803500045753,
+   "ci_low_pp": -16.599581885910883,
+   "ci_high_pp": -5.4586522977459015,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 4.0,
+   "distinct_sets": 5,
+   "most_common_set": "L-somatosensory+mid-centre",
+   "most_common_count": 3
+  },
+  {
+   "budget": 4,
+   "method": "population",
+   "test_acc_pct": 53.71411867893002,
+   "cv_acc_pct": 52.5051229907208,
+   "minus_all22_pp": -13.65521980341313,
+   "ci_low_pp": -19.027329028705392,
+   "ci_high_pp": -8.050388831208377,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 4.0,
+   "distinct_sets": 2,
+   "most_common_set": "L-somatosensory+R-somatosensory",
+   "most_common_count": 8
+  },
+  {
+   "budget": 4,
+   "method": "oracle",
+   "test_acc_pct": 58.051128591533015,
+   "cv_acc_pct": 53.06667630667505,
+   "minus_all22_pp": -9.31820989081013,
+   "ci_low_pp": -14.04022999582062,
+   "ci_high_pp": -4.521778846786022,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 3.888888888888889,
+   "distinct_sets": 6,
+   "most_common_set": "L-premotor+R-somatosensory",
+   "most_common_count": 3
+  },
+  {
+   "budget": 4,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 5,
+   "method": "own_cv",
+   "test_acc_pct": 58.27258320065474,
+   "cv_acc_pct": 60.25123147943581,
+   "minus_all22_pp": -9.096755281688395,
+   "ci_low_pp": -13.502998481780915,
+   "ci_high_pp": -4.527411399032594,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 4.555555555555555,
+   "distinct_sets": 7,
+   "most_common_set": "L-somatosensory+mid-centre",
+   "most_common_count": 2
+  },
+  {
+   "budget": 5,
+   "method": "population",
+   "test_acc_pct": 52.090920454881285,
+   "cv_acc_pct": 54.648481080016865,
+   "minus_all22_pp": -15.278418027461859,
+   "ci_low_pp": -18.222002318963032,
+   "ci_high_pp": -12.364661543137421,
+   "n_better": 0,
+   "n_worse": 9,
+   "mean_electrodes": 5.0,
+   "distinct_sets": 2,
+   "most_common_set": "L-motor+R-somatosensory",
+   "most_common_count": 8
+  },
+  {
+   "budget": 5,
+   "method": "oracle",
+   "test_acc_pct": 61.78596548917964,
+   "cv_acc_pct": 56.46307742567473,
+   "minus_all22_pp": -5.583372993163502,
+   "ci_low_pp": -8.726126999129336,
+   "ci_high_pp": -2.2163467643814716,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 4.666666666666667,
+   "distinct_sets": 8,
+   "most_common_set": "L-somatosensory+R-motor",
+   "most_common_count": 2
+  },
+  {
+   "budget": 5,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 6,
+   "method": "own_cv",
+   "test_acc_pct": 58.96840035741487,
+   "cv_acc_pct": 61.65920198095583,
+   "minus_all22_pp": -8.40093812492828,
+   "ci_low_pp": -12.738566694586234,
+   "ci_high_pp": -3.887148645379062,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 5.333333333333333,
+   "distinct_sets": 7,
+   "most_common_set": "L-motor+R-motor",
+   "most_common_count": 2
+  },
+  {
+   "budget": 6,
+   "method": "population",
+   "test_acc_pct": 58.16389180411212,
+   "cv_acc_pct": 58.063595726969396,
+   "minus_all22_pp": -9.205446678231024,
+   "ci_low_pp": -14.538620854298568,
+   "ci_high_pp": -3.9836727459498897,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 6.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-somatosensory+R-somatosensory+mid-centre",
+   "most_common_count": 9
+  },
+  {
+   "budget": 6,
+   "method": "oracle",
+   "test_acc_pct": 64.19331817342467,
+   "cv_acc_pct": 57.10893810688284,
+   "minus_all22_pp": -3.1760203089184658,
+   "ci_low_pp": -6.35264224336272,
+   "ci_high_pp": 0.011092856460429472,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 5.666666666666667,
+   "distinct_sets": 7,
+   "most_common_set": "L-premotor+L-somatosensory+R-somatosensory",
+   "most_common_count": 3
+  },
+  {
+   "budget": 6,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 7,
+   "method": "own_cv",
+   "test_acc_pct": 60.2976542556802,
+   "cv_acc_pct": 63.36561572702018,
+   "minus_all22_pp": -7.0716842266629465,
+   "ci_low_pp": -11.128261605811643,
+   "ci_high_pp": -2.9267116657731247,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 6.333333333333333,
+   "distinct_sets": 8,
+   "most_common_set": "L-motor+R-somatosensory+mid-centre",
+   "most_common_count": 2
+  },
+  {
+   "budget": 7,
+   "method": "population",
+   "test_acc_pct": 60.487429510518396,
+   "cv_acc_pct": 59.29790111147136,
+   "minus_all22_pp": -6.881908971824743,
+   "ci_low_pp": -10.288383189064394,
+   "ci_high_pp": -3.483412845763911,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 7.0,
+   "distinct_sets": 2,
+   "most_common_set": "L-motor+R-somatosensory+mid-centre",
+   "most_common_count": 8
+  },
+  {
+   "budget": 7,
+   "method": "oracle",
+   "test_acc_pct": 65.1676301321042,
+   "cv_acc_pct": 57.76506517311639,
+   "minus_all22_pp": -2.2017083502389503,
+   "ci_low_pp": -5.242437095396659,
+   "ci_high_pp": 0.7763064397075892,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 6.333333333333333,
+   "distinct_sets": 9,
+   "most_common_set": "L-somatosensory+R-motor+mid-front",
+   "most_common_count": 1
+  },
+  {
+   "budget": 7,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 8,
+   "method": "own_cv",
+   "test_acc_pct": 60.645928347206095,
+   "cv_acc_pct": 64.40663200380803,
+   "minus_all22_pp": -6.723410135137048,
+   "ci_low_pp": -10.638389302322597,
+   "ci_high_pp": -2.970283958299966,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 7.222222222222222,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-motor+R-somatosensory",
+   "most_common_count": 1
+  },
+  {
+   "budget": 8,
+   "method": "population",
+   "test_acc_pct": 60.67370323677815,
+   "cv_acc_pct": 58.799900945479976,
+   "minus_all22_pp": -6.695635245564993,
+   "ci_low_pp": -10.74548260774328,
+   "ci_high_pp": -2.99135917042694,
+   "n_better": 1,
+   "n_worse": 8,
+   "mean_electrodes": 7.666666666666667,
+   "distinct_sets": 2,
+   "most_common_set": "L-motor+R-motor+mid-centre",
+   "most_common_count": 6
+  },
+  {
+   "budget": 8,
+   "method": "oracle",
+   "test_acc_pct": 66.83912173975607,
+   "cv_acc_pct": 59.3335444067411,
+   "minus_all22_pp": -0.5302167425870985,
+   "ci_low_pp": -3.597901326201681,
+   "ci_high_pp": 2.2302721734949595,
+   "n_better": 4,
+   "n_worse": 5,
+   "mean_electrodes": 7.444444444444445,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-motor",
+   "most_common_count": 1
+  },
+  {
+   "budget": 8,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 9,
+   "method": "own_cv",
+   "test_acc_pct": 61.722624208604074,
+   "cv_acc_pct": 66.54346783647902,
+   "minus_all22_pp": -5.646714273739071,
+   "ci_low_pp": -9.247346611586948,
+   "ci_high_pp": -2.039927279488652,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 8.555555555555555,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-motor+R-somatosensory",
+   "most_common_count": 1
+  },
+  {
+   "budget": 9,
+   "method": "population",
+   "test_acc_pct": 63.14327218156533,
+   "cv_acc_pct": 62.55544130718689,
+   "minus_all22_pp": -4.22606630077782,
+   "ci_low_pp": -8.424804931716944,
+   "ci_high_pp": -0.5001188888046032,
+   "n_better": 2,
+   "n_worse": 6,
+   "mean_electrodes": 9.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-motor+L-somatosensory+R-somatosensory+mid-centre",
+   "most_common_count": 9
+  },
+  {
+   "budget": 9,
+   "method": "oracle",
+   "test_acc_pct": 68.31177597466302,
+   "cv_acc_pct": 60.36142905329218,
+   "minus_all22_pp": 0.9424374923198834,
+   "ci_low_pp": -1.2762302979192943,
+   "ci_high_pp": 3.096623051962747,
+   "n_better": 4,
+   "n_worse": 4,
+   "mean_electrodes": 8.88888888888889,
+   "distinct_sets": 7,
+   "most_common_set": "L-somatosensory+R-motor+R-somatosensory+mid-centre",
+   "most_common_count": 3
+  },
+  {
+   "budget": 9,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 10,
+   "method": "own_cv",
+   "test_acc_pct": 62.28893380516278,
+   "cv_acc_pct": 66.75315032464253,
+   "minus_all22_pp": -5.080404677180364,
+   "ci_low_pp": -8.867979542186472,
+   "ci_high_pp": -1.4939394594776232,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 9.0,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-motor+R-somatosensory",
+   "most_common_count": 1
+  },
+  {
+   "budget": 10,
+   "method": "population",
+   "test_acc_pct": 63.14327218156533,
+   "cv_acc_pct": 62.55544130718689,
+   "minus_all22_pp": -4.22606630077782,
+   "ci_low_pp": -8.424804931716944,
+   "ci_high_pp": -0.5001188888046032,
+   "n_better": 2,
+   "n_worse": 6,
+   "mean_electrodes": 9.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-motor+L-somatosensory+R-somatosensory+mid-centre",
+   "most_common_count": 9
+  },
+  {
+   "budget": 10,
+   "method": "oracle",
+   "test_acc_pct": 69.65090158686355,
+   "cv_acc_pct": 61.04905043325253,
+   "minus_all22_pp": 2.2815631045204023,
+   "ci_low_pp": 0.29635862771668936,
+   "ci_high_pp": 4.443565359927773,
+   "n_better": 8,
+   "n_worse": 1,
+   "mean_electrodes": 9.666666666666666,
+   "distinct_sets": 8,
+   "most_common_set": "L-somatosensory+R-somatosensory+mid-centre+parietal",
+   "most_common_count": 2
+  },
+  {
+   "budget": 10,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 11,
+   "method": "own_cv",
+   "test_acc_pct": 62.1702920813716,
+   "cv_acc_pct": 67.58001322703441,
+   "minus_all22_pp": -5.199046400971548,
+   "ci_low_pp": -9.437110436451555,
+   "ci_high_pp": -1.0064796242521665,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 9.777777777777779,
+   "distinct_sets": 9,
+   "most_common_set": "L-somatosensory+R-motor+R-somatosensory+mid-front+mid-centre",
+   "most_common_count": 1
+  },
+  {
+   "budget": 11,
+   "method": "population",
+   "test_acc_pct": 61.25116268076017,
+   "cv_acc_pct": 60.18054732923947,
+   "minus_all22_pp": -6.118175801582972,
+   "ci_low_pp": -10.849325335582453,
+   "ci_high_pp": -1.6882197266797239,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 9.222222222222221,
+   "distinct_sets": 2,
+   "most_common_set": "L-motor+L-somatosensory+R-somatosensory+mid-centre",
+   "most_common_count": 8
+  },
+  {
+   "budget": 11,
+   "method": "oracle",
+   "test_acc_pct": 69.81816462313027,
+   "cv_acc_pct": 61.85457402358624,
+   "minus_all22_pp": 2.4488261407871286,
+   "ci_low_pp": 0.43634587015797344,
+   "ci_high_pp": 4.580495703645145,
+   "n_better": 8,
+   "n_worse": 1,
+   "mean_electrodes": 9.88888888888889,
+   "distinct_sets": 8,
+   "most_common_set": "L-somatosensory+R-somatosensory+mid-centre+parietal",
+   "most_common_count": 2
+  },
+  {
+   "budget": 11,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 12,
+   "method": "own_cv",
+   "test_acc_pct": 62.45287492623202,
+   "cv_acc_pct": 68.16036908516804,
+   "minus_all22_pp": -4.916463556111122,
+   "ci_low_pp": -9.13178441652517,
+   "ci_high_pp": -0.8098057656926757,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 10.333333333333334,
+   "distinct_sets": 8,
+   "most_common_set": "L-motor+L-somatosensory+R-motor+mid-front+mid-centre",
+   "most_common_count": 2
+  },
+  {
+   "budget": 12,
+   "method": "population",
+   "test_acc_pct": 63.33007180921469,
+   "cv_acc_pct": 64.52764482401797,
+   "minus_all22_pp": -4.039266673128461,
+   "ci_low_pp": -7.01615856696898,
+   "ci_high_pp": -1.145171640309423,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 12.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-motor+L-somatosensory+R-motor+mid-front+mid-centre",
+   "most_common_count": 9
+  },
+  {
+   "budget": 12,
+   "method": "oracle",
+   "test_acc_pct": 70.14677680358093,
+   "cv_acc_pct": 61.987539496926075,
+   "minus_all22_pp": 2.777438321237777,
+   "ci_low_pp": 0.5468060331234482,
+   "ci_high_pp": 5.287744414864752,
+   "n_better": 8,
+   "n_worse": 1,
+   "mean_electrodes": 10.444444444444445,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor",
+   "most_common_count": 1
+  },
+  {
+   "budget": 12,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 13,
+   "method": "own_cv",
+   "test_acc_pct": 62.950569919207055,
+   "cv_acc_pct": 68.72399527263522,
+   "minus_all22_pp": -4.418768563136087,
+   "ci_low_pp": -8.559670654527414,
+   "ci_high_pp": -0.5033149628020237,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 11.777777777777779,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 13,
+   "method": "population",
+   "test_acc_pct": 63.047686928650556,
+   "cv_acc_pct": 62.2205110656575,
+   "minus_all22_pp": -4.3216515536925915,
+   "ci_low_pp": -7.1538228077969785,
+   "ci_high_pp": -1.3960517560239503,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 12.222222222222221,
+   "distinct_sets": 2,
+   "most_common_set": "L-motor+L-somatosensory+R-motor+mid-front+mid-centre",
+   "most_common_count": 7
+  },
+  {
+   "budget": 13,
+   "method": "oracle",
+   "test_acc_pct": 71.12476336415449,
+   "cv_acc_pct": 62.374360624632814,
+   "minus_all22_pp": 3.7554248818113245,
+   "ci_low_pp": 2.066041237686607,
+   "ci_high_pp": 5.915814871694434,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 12.444444444444445,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor",
+   "most_common_count": 1
+  },
+  {
+   "budget": 13,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 14,
+   "method": "own_cv",
+   "test_acc_pct": 62.164220267975274,
+   "cv_acc_pct": 69.09657322547042,
+   "minus_all22_pp": -5.2051182143678645,
+   "ci_low_pp": -9.759416027294428,
+   "ci_high_pp": -0.3866667669232036,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 12.555555555555555,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 14,
+   "method": "population",
+   "test_acc_pct": 63.59735320269845,
+   "cv_acc_pct": 61.10939995454638,
+   "minus_all22_pp": -3.7719852796446918,
+   "ci_low_pp": -6.540857071071864,
+   "ci_high_pp": -1.0670723295918791,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 12.444444444444445,
+   "distinct_sets": 3,
+   "most_common_set": "L-motor+L-somatosensory+R-motor+mid-front+mid-centre",
+   "most_common_count": 6
+  },
+  {
+   "budget": 14,
+   "method": "oracle",
+   "test_acc_pct": 71.82186592103847,
+   "cv_acc_pct": 64.43100631205452,
+   "minus_all22_pp": 4.452527438695322,
+   "ci_low_pp": 2.9402631449239087,
+   "ci_high_pp": 6.3860731914273625,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 13.333333333333334,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 14,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 15,
+   "method": "own_cv",
+   "test_acc_pct": 62.79091973901305,
+   "cv_acc_pct": 69.41525983791655,
+   "minus_all22_pp": -4.578418743330093,
+   "ci_low_pp": -8.389965121824837,
+   "ci_high_pp": -0.5365606772629418,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 13.666666666666666,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 15,
+   "method": "population",
+   "test_acc_pct": 62.88340041587165,
+   "cv_acc_pct": 60.991363161642845,
+   "minus_all22_pp": -4.485938066471503,
+   "ci_low_pp": -8.107242823162034,
+   "ci_high_pp": -1.3017315702177827,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 13.777777777777779,
+   "distinct_sets": 3,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-somatosensory+mid-centre+parietal",
+   "most_common_count": 5
+  },
+  {
+   "budget": 15,
+   "method": "oracle",
+   "test_acc_pct": 72.8322576888062,
+   "cv_acc_pct": 65.33656315272587,
+   "minus_all22_pp": 5.462919206463054,
+   "ci_low_pp": 3.3622340891150633,
+   "ci_high_pp": 7.747867806764248,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 14.0,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 15,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 16,
+   "method": "own_cv",
+   "test_acc_pct": 64.79468698266281,
+   "cv_acc_pct": 69.9486771712688,
+   "minus_all22_pp": -2.5746514996803245,
+   "ci_low_pp": -6.038010893263497,
+   "ci_high_pp": 0.700010666059291,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 14.444444444444445,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 16,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 16,
+   "method": "oracle",
+   "test_acc_pct": 73.15564605567283,
+   "cv_acc_pct": 66.18222645810079,
+   "minus_all22_pp": 5.786307573329681,
+   "ci_low_pp": 3.5810171089051557,
+   "ci_high_pp": 8.223208904352779,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 14.333333333333334,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 16,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 17,
+   "method": "own_cv",
+   "test_acc_pct": 64.69722109572325,
+   "cv_acc_pct": 70.03349481333835,
+   "minus_all22_pp": -2.6721173866198944,
+   "ci_low_pp": -6.072089381094757,
+   "ci_high_pp": 0.45870941871755533,
+   "n_better": 2,
+   "n_worse": 7,
+   "mean_electrodes": 14.777777777777779,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 17,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 17,
+   "method": "oracle",
+   "test_acc_pct": 73.15564605567283,
+   "cv_acc_pct": 66.18222645810079,
+   "minus_all22_pp": 5.786307573329681,
+   "ci_low_pp": 3.5810171089051557,
+   "ci_high_pp": 8.223208904352779,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 14.333333333333334,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 17,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 18,
+   "method": "own_cv",
+   "test_acc_pct": 64.9525213510235,
+   "cv_acc_pct": 70.20383392882515,
+   "minus_all22_pp": -2.416817131319638,
+   "ci_low_pp": -5.902739999820241,
+   "ci_high_pp": 0.6758366473301847,
+   "n_better": 2,
+   "n_worse": 6,
+   "mean_electrodes": 15.777777777777779,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 18,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 18,
+   "method": "oracle",
+   "test_acc_pct": 73.15564605567283,
+   "cv_acc_pct": 66.18222645810079,
+   "minus_all22_pp": 5.786307573329681,
+   "ci_low_pp": 3.5810171089051557,
+   "ci_high_pp": 8.223208904352779,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 14.333333333333334,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 18,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 19,
+   "method": "own_cv",
+   "test_acc_pct": 64.9525213510235,
+   "cv_acc_pct": 70.20383392882515,
+   "minus_all22_pp": -2.416817131319638,
+   "ci_low_pp": -5.902739999820241,
+   "ci_high_pp": 0.6758366473301847,
+   "n_better": 2,
+   "n_worse": 6,
+   "mean_electrodes": 15.777777777777779,
+   "distinct_sets": 9,
+   "most_common_set": "L-premotor+L-somatosensory+R-motor+mid-front+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 19,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 19,
+   "method": "oracle",
+   "test_acc_pct": 73.15564605567283,
+   "cv_acc_pct": 66.18222645810079,
+   "minus_all22_pp": 5.786307573329681,
+   "ci_low_pp": 3.5810171089051557,
+   "ci_high_pp": 8.223208904352779,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 14.333333333333334,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 19,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 20,
+   "method": "own_cv",
+   "test_acc_pct": 65.58518248190529,
+   "cv_acc_pct": 70.24453396952521,
+   "minus_all22_pp": -1.7841560004378663,
+   "ci_low_pp": -5.363291807316167,
+   "ci_high_pp": 1.2414736173442533,
+   "n_better": 3,
+   "n_worse": 5,
+   "mean_electrodes": 16.555555555555557,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 20,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 20,
+   "method": "oracle",
+   "test_acc_pct": 73.20437899914262,
+   "cv_acc_pct": 66.13981763706602,
+   "minus_all22_pp": 5.8350405167994674,
+   "ci_low_pp": 3.584391500786143,
+   "ci_high_pp": 8.32056120978342,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 15.11111111111111,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 20,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 21,
+   "method": "own_cv",
+   "test_acc_pct": 65.58518248190529,
+   "cv_acc_pct": 70.24453396952521,
+   "minus_all22_pp": -1.7841560004378663,
+   "ci_low_pp": -5.363291807316167,
+   "ci_high_pp": 1.2414736173442533,
+   "n_better": 3,
+   "n_worse": 5,
+   "mean_electrodes": 16.555555555555557,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 21,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 21,
+   "method": "oracle",
+   "test_acc_pct": 73.20437899914262,
+   "cv_acc_pct": 66.13981763706602,
+   "minus_all22_pp": 5.8350405167994674,
+   "ci_low_pp": 3.584391500786143,
+   "ci_high_pp": 8.32056120978342,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 15.11111111111111,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 21,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  },
+  {
+   "budget": 22,
+   "method": "own_cv",
+   "test_acc_pct": 65.58518248190529,
+   "cv_acc_pct": 70.24453396952521,
+   "minus_all22_pp": -1.7841560004378663,
+   "ci_low_pp": -5.363291807316167,
+   "ci_high_pp": 1.2414736173442533,
+   "n_better": 3,
+   "n_worse": 5,
+   "mean_electrodes": 16.555555555555557,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 22,
+   "method": "population",
+   "test_acc_pct": 63.57837202916255,
+   "cv_acc_pct": 60.986401517784174,
+   "minus_all22_pp": -3.7909664531805864,
+   "ci_low_pp": -8.60894274586975,
+   "ci_high_pp": 0.5692686128679235,
+   "n_better": 3,
+   "n_worse": 6,
+   "mean_electrodes": 15.222222222222221,
+   "distinct_sets": 4,
+   "most_common_set": "L-motor+L-somatosensory+R-premotor+R-motor+mid-centre+parietal",
+   "most_common_count": 4
+  },
+  {
+   "budget": 22,
+   "method": "oracle",
+   "test_acc_pct": 73.20437899914262,
+   "cv_acc_pct": 66.13981763706602,
+   "minus_all22_pp": 5.8350405167994674,
+   "ci_low_pp": 3.584391500786143,
+   "ci_high_pp": 8.32056120978342,
+   "n_better": 9,
+   "n_worse": 0,
+   "mean_electrodes": 15.11111111111111,
+   "distinct_sets": 9,
+   "most_common_set": "L-motor+R-premotor+R-motor+R-somatosensory+parietal",
+   "most_common_count": 1
+  },
+  {
+   "budget": 22,
+   "method": "all_22",
+   "test_acc_pct": 67.36933848234315,
+   "cv_acc_pct": 63.49308583085022,
+   "minus_all22_pp": 0.0,
+   "ci_low_pp": 0.0,
+   "ci_high_pp": 0.0,
+   "n_better": 0,
+   "n_worse": 0,
+   "mean_electrodes": 22.0,
+   "distinct_sets": 1,
+   "most_common_set": "L-premotor+L-motor+L-somatosensory+R-premotor+R-motor+R-somatosensory+mid-front+mid-centre+parietal",
+   "most_common_count": 9
+  }
+ ],
+ "relevance_comparison": [
+  {
+   "electrodes": 20,
+   "method": "own_cv",
+   "region_acc_pct": 65.58518248190529,
+   "region_mean_electrodes": 16.555555555555557,
+   "relevance_acc_pct": 66.41861166174262,
+   "minus_relevance_pp": -0.8334291798373346,
+   "ci_low_pp": -3.496795255130883,
+   "ci_high_pp": 1.6835041460006606,
+   "n_region_better": 3,
+   "n_relevance_better": 5,
+   "per_participant_pp": [
+    5.34,
+    -1.41,
+    -2.56,
+    2.63,
+    2.9,
+    -0.93,
+    -8.66,
+    -4.8,
+    0.0
+   ]
+  },
+  {
+   "electrodes": 20,
+   "method": "population",
+   "region_acc_pct": 63.57837202916255,
+   "region_mean_electrodes": 15.222222222222221,
+   "relevance_acc_pct": 66.41861166174262,
+   "minus_relevance_pp": -2.840239632580053,
+   "ci_low_pp": -7.013418454031477,
+   "ci_high_pp": 1.3412761099679744,
+   "n_region_better": 4,
+   "n_relevance_better": 5,
+   "per_participant_pp": [
+    2.49,
+    -11.66,
+    -3.3,
+    0.44,
+    8.7,
+    -8.84,
+    -8.66,
+    -7.38,
+    2.65
+   ]
+  },
+  {
+   "electrodes": 18,
+   "method": "own_cv",
+   "region_acc_pct": 64.9525213510235,
+   "region_mean_electrodes": 15.777777777777779,
+   "relevance_acc_pct": 63.90443976287314,
+   "minus_relevance_pp": 1.0480815881503642,
+   "ci_low_pp": -1.9959960452919383,
+   "ci_high_pp": 4.072167476029449,
+   "n_region_better": 5,
+   "n_relevance_better": 4,
+   "per_participant_pp": [
+    -0.36,
+    -2.12,
+    3.3,
+    7.46,
+    6.88,
+    0.47,
+    -7.58,
+    4.8,
+    -3.41
+   ]
+  },
+  {
+   "electrodes": 18,
+   "method": "population",
+   "region_acc_pct": 63.57837202916255,
+   "region_mean_electrodes": 15.222222222222221,
+   "relevance_acc_pct": 63.90443976287314,
+   "minus_relevance_pp": -0.3260677337105828,
+   "ci_low_pp": -5.063551153303821,
+   "ci_high_pp": 4.385079222789675,
+   "n_region_better": 5,
+   "n_relevance_better": 4,
+   "per_participant_pp": [
+    2.49,
+    -12.37,
+    2.56,
+    5.26,
+    12.68,
+    -7.44,
+    -7.58,
+    2.21,
+    -0.76
+   ]
+  },
+  {
+   "electrodes": 16,
+   "method": "own_cv",
+   "region_acc_pct": 64.79468698266281,
+   "region_mean_electrodes": 14.444444444444445,
+   "relevance_acc_pct": 68.38186483601535,
+   "minus_relevance_pp": -3.587177853352534,
+   "ci_low_pp": -6.222449613216566,
+   "ci_high_pp": -0.7071781432774559,
+   "n_region_better": 1,
+   "n_relevance_better": 8,
+   "per_participant_pp": [
+    -1.07,
+    -3.18,
+    -1.47,
+    5.26,
+    -10.51,
+    -3.26,
+    -7.94,
+    -3.69,
+    -6.44
+   ]
+  },
+  {
+   "electrodes": 16,
+   "method": "population",
+   "region_acc_pct": 63.57837202916255,
+   "region_mean_electrodes": 15.222222222222221,
+   "relevance_acc_pct": 68.38186483601535,
+   "minus_relevance_pp": -4.803492806852796,
+   "ci_low_pp": -8.240308010965053,
+   "ci_high_pp": -1.5238896687202699,
+   "n_region_better": 2,
+   "n_relevance_better": 7,
+   "per_participant_pp": [
+    1.78,
+    -13.43,
+    -2.93,
+    2.19,
+    -4.71,
+    -11.16,
+    -7.94,
+    -6.27,
+    -0.76
+   ]
+  },
+  {
+   "electrodes": 14,
+   "method": "own_cv",
+   "region_acc_pct": 62.164220267975274,
+   "region_mean_electrodes": 12.555555555555555,
+   "relevance_acc_pct": 65.30262332301548,
+   "minus_relevance_pp": -3.1384030550401985,
+   "ci_low_pp": -6.361721679975548,
+   "ci_high_pp": -0.01487835296231784,
+   "n_region_better": 3,
+   "n_relevance_better": 6,
+   "per_participant_pp": [
+    -1.78,
+    -7.42,
+    3.3,
+    0.88,
+    -1.09,
+    -11.16,
+    -9.39,
+    2.58,
+    -4.17
+   ]
+  },
+  {
+   "electrodes": 14,
+   "method": "population",
+   "region_acc_pct": 63.59735320269845,
+   "region_mean_electrodes": 12.444444444444445,
+   "relevance_acc_pct": 65.30262332301548,
+   "minus_relevance_pp": -1.7052701203170235,
+   "ci_low_pp": -3.6795945485000616,
+   "ci_high_pp": 0.28074352714633555,
+   "n_region_better": 2,
+   "n_relevance_better": 7,
+   "per_participant_pp": [
+    0.71,
+    3.89,
+    -2.56,
+    -2.19,
+    -0.72,
+    -0.47,
+    -7.22,
+    -1.48,
+    -5.3
+   ]
+  },
+  {
+   "electrodes": 12,
+   "method": "own_cv",
+   "region_acc_pct": 62.45287492623202,
+   "region_mean_electrodes": 10.333333333333334,
+   "relevance_acc_pct": 64.33316815000099,
+   "minus_relevance_pp": -1.8802932237689614,
+   "ci_low_pp": -5.575297721657674,
+   "ci_high_pp": 2.4094516765164506,
+   "n_region_better": 2,
+   "n_relevance_better": 7,
+   "per_participant_pp": [
+    -1.42,
+    -10.95,
+    -2.56,
+    -7.02,
+    12.32,
+    -4.65,
+    -1.81,
+    2.58,
+    -3.41
+   ]
+  },
+  {
+   "electrodes": 12,
+   "method": "population",
+   "region_acc_pct": 63.33007180921469,
+   "region_mean_electrodes": 12.0,
+   "relevance_acc_pct": 64.33316815000099,
+   "minus_relevance_pp": -1.003096340786299,
+   "ci_low_pp": -3.273097170562936,
+   "ci_high_pp": 1.6659131797964888,
+   "n_region_better": 2,
+   "n_relevance_better": 6,
+   "per_participant_pp": [
+    -1.42,
+    -4.59,
+    -2.56,
+    -4.82,
+    7.61,
+    2.79,
+    0.0,
+    -1.48,
+    -4.55
+   ]
+  },
+  {
+   "electrodes": 10,
+   "method": "own_cv",
+   "region_acc_pct": 62.28893380516278,
+   "region_mean_electrodes": 9.0,
+   "relevance_acc_pct": 62.61912760748578,
+   "minus_relevance_pp": -0.33019380232300144,
+   "ci_low_pp": -3.2330242601514896,
+   "ci_high_pp": 3.3870555066552424,
+   "n_region_better": 3,
+   "n_relevance_better": 6,
+   "per_participant_pp": [
+    2.14,
+    -1.77,
+    -2.2,
+    -3.95,
+    12.68,
+    -5.58,
+    -4.69,
+    -0.74,
+    1.14
+   ]
+  },
+  {
+   "electrodes": 10,
+   "method": "population",
+   "region_acc_pct": 63.14327218156533,
+   "region_mean_electrodes": 9.0,
+   "relevance_acc_pct": 62.61912760748578,
+   "minus_relevance_pp": 0.5241445740795427,
+   "ci_low_pp": -4.97307501103185,
+   "ci_high_pp": 6.215103684948056,
+   "n_region_better": 6,
+   "n_relevance_better": 3,
+   "per_participant_pp": [
+    2.49,
+    14.49,
+    2.2,
+    -11.4,
+    11.96,
+    -6.05,
+    -10.83,
+    1.11,
+    0.76
+   ]
+  },
+  {
+   "electrodes": 8,
+   "method": "own_cv",
+   "region_acc_pct": 60.645928347206095,
+   "region_mean_electrodes": 7.222222222222222,
+   "relevance_acc_pct": 58.681036431801914,
+   "minus_relevance_pp": 1.9648919154041886,
+   "ci_low_pp": -0.8130752511134309,
+   "ci_high_pp": 4.3786206031724335,
+   "n_region_better": 6,
+   "n_relevance_better": 3,
+   "per_participant_pp": [
+    4.63,
+    2.83,
+    5.49,
+    -2.63,
+    5.43,
+    -4.19,
+    -3.97,
+    5.17,
+    4.92
+   ]
+  },
+  {
+   "electrodes": 8,
+   "method": "population",
+   "region_acc_pct": 60.67370323677815,
+   "region_mean_electrodes": 7.666666666666667,
+   "relevance_acc_pct": 58.681036431801914,
+   "minus_relevance_pp": 1.9926668049762446,
+   "ci_low_pp": -2.077097771011554,
+   "ci_high_pp": 5.780461711115542,
+   "n_region_better": 5,
+   "n_relevance_better": 4,
+   "per_participant_pp": [
+    7.83,
+    -1.06,
+    7.69,
+    -2.63,
+    9.78,
+    -9.77,
+    -2.17,
+    2.95,
+    5.3
+   ]
+  }
+ ],
+ "pipeline_check_full22": [
+  {
+   "subject": 1,
+   "region_study_acc_pct": 80.42704626334519,
+   "archived_acc_pct": 83.27402135231317,
+   "prediction_agreement": 0.9027777777777778
+  },
+  {
+   "subject": 2,
+   "region_study_acc_pct": 51.23674911660777,
+   "archived_acc_pct": 43.46289752650176,
+   "prediction_agreement": 0.6805555555555556
+  },
+  {
+   "subject": 3,
+   "region_study_acc_pct": 85.71428571428571,
+   "archived_acc_pct": 84.24908424908425,
+   "prediction_agreement": 0.9375
+  },
+  {
+   "subject": 4,
+   "region_study_acc_pct": 49.56140350877193,
+   "archived_acc_pct": 49.122807017543856,
+   "prediction_agreement": 0.6770833333333334
+  },
+  {
+   "subject": 5,
+   "region_study_acc_pct": 47.82608695652174,
+   "archived_acc_pct": 42.028985507246375,
+   "prediction_agreement": 0.5034722222222222
+  },
+  {
+   "subject": 6,
+   "region_study_acc_pct": 55.348837209302324,
+   "archived_acc_pct": 53.48837209302325,
+   "prediction_agreement": 0.71875
+  },
+  {
+   "subject": 7,
+   "region_study_acc_pct": 77.9783393501805,
+   "archived_acc_pct": 76.53429602888086,
+   "prediction_agreement": 0.9722222222222222
+  },
+  {
+   "subject": 8,
+   "region_study_acc_pct": 75.27675276752768,
+   "archived_acc_pct": 74.90774907749078,
+   "prediction_agreement": 0.9861111111111112
+  },
+  {
+   "subject": 9,
+   "region_study_acc_pct": 82.95454545454545,
+   "archived_acc_pct": 82.95454545454545,
+   "prediction_agreement": 1.0
+  }
+ ]
+}

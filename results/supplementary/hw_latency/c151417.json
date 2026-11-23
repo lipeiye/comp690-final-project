@@ -1,0 +1,324 @@
+{
+ "created_at": "2026-11-21T01:12:44.540455-05:00",
+ "status": "supplementary_post_test",
+ "host": "c151417.ll.unc.edu",
+ "slurm_job": "10039435",
+ "cpu": {
+  "model": "AMD EPYC 9654 96-Core Processor",
+  "features": {
+   "avx2": true,
+   "avx512f": true,
+   "avx512_vnni": true,
+   "avx_vnni": false,
+   "amx_int8": false,
+   "amx_tile": false,
+   "asimddp": false,
+   "i8mm": false
+  }
+ },
+ "onnxruntime": "1.31.1",
+ "environment": {
+  "python": "3.12.16",
+  "os": "Linux-5.14.0-611.16.1.el9_7.x86_64-x86_64-with-glibc2.34",
+  "cpu": "",
+  "physical_memory_bytes": null,
+  "torch_threads": 1,
+  "packages": {
+   "torch": "2.15.0",
+   "braindecode": "2.0.0",
+   "numpy": "2.5.4",
+   "scipy": "1.18.1",
+   "scikit-learn": "1.9.1"
+  }
+ },
+ "load_average": [
+  267.71,
+  220.55,
+  216.23
+ ],
+ "threads": 1,
+ "batch": 1,
+ "rows": [
+  {
+   "condition": "full-22",
+   "variant": "fp32",
+   "median_ms": 0.3060835,
+   "best_round_ms": 0.2993785,
+   "worst_round_ms": 0.308734,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8",
+   "median_ms": 0.7383029999999999,
+   "best_round_ms": 0.7294039999999999,
+   "worst_round_ms": 0.7465839999999999,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-dense",
+   "median_ms": 0.3091335,
+   "best_round_ms": 0.302119,
+   "worst_round_ms": 0.315099,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.050726,
+   "best_round_ms": 0.049561,
+   "worst_round_ms": 0.0513305,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.1288315,
+   "best_round_ms": 0.1263415,
+   "worst_round_ms": 0.1303965,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int8-mixed",
+   "median_ms": 0.3107485,
+   "best_round_ms": 0.30358850000000004,
+   "worst_round_ms": 0.31520899999999996,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "full-22",
+   "variant": "int16",
+   "median_ms": 0.370899,
+   "best_round_ms": 0.3605345,
+   "worst_round_ms": 0.37435949999999996,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32",
+   "median_ms": 0.23643750000000002,
+   "best_round_ms": 0.228463,
+   "worst_round_ms": 0.2397725,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8",
+   "median_ms": 0.557186,
+   "best_round_ms": 0.5430809999999999,
+   "worst_round_ms": 0.5633215,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-dense",
+   "median_ms": 0.243293,
+   "best_round_ms": 0.239128,
+   "worst_round_ms": 0.24582700000000002,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.05204,
+   "best_round_ms": 0.050511,
+   "worst_round_ms": 0.053051,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.1158815,
+   "best_round_ms": 0.1125015,
+   "worst_round_ms": 0.1181015,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int8-mixed",
+   "median_ms": 0.244228,
+   "best_round_ms": 0.235278,
+   "worst_round_ms": 0.247158,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16",
+   "variant": "int16",
+   "median_ms": 0.2878185,
+   "best_round_ms": 0.273993,
+   "worst_round_ms": 0.28979350000000004,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32",
+   "median_ms": 0.233658,
+   "best_round_ms": 0.223303,
+   "worst_round_ms": 0.238063,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8",
+   "median_ms": 0.580347,
+   "best_round_ms": 0.5628215,
+   "worst_round_ms": 0.600232,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-dense",
+   "median_ms": 0.236348,
+   "best_round_ms": 0.22733199999999998,
+   "worst_round_ms": 0.2425925,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.047871,
+   "best_round_ms": 0.04573,
+   "worst_round_ms": 0.0491855,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.1134665,
+   "best_round_ms": 0.108131,
+   "worst_round_ms": 0.115791,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int8-mixed",
+   "median_ms": 0.238553,
+   "best_round_ms": 0.229223,
+   "worst_round_ms": 0.245283,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-16-prune50",
+   "variant": "int16",
+   "median_ms": 0.280528,
+   "best_round_ms": 0.273013,
+   "worst_round_ms": 0.2874085,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32",
+   "median_ms": 0.13069150000000002,
+   "best_round_ms": 0.128161,
+   "worst_round_ms": 0.136881,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8",
+   "median_ms": 0.3049635,
+   "best_round_ms": 0.29968799999999995,
+   "worst_round_ms": 0.3146835,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-dense",
+   "median_ms": 0.1383315,
+   "best_round_ms": 0.134412,
+   "worst_round_ms": 0.1450415,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "fp32-spatial-first",
+   "median_ms": 0.0474055,
+   "best_round_ms": 0.0462255,
+   "worst_round_ms": 0.048261,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-spatial-first",
+   "median_ms": 0.094181,
+   "best_round_ms": 0.091881,
+   "worst_round_ms": 0.095866,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int8-mixed",
+   "median_ms": 0.1375965,
+   "best_round_ms": 0.13404149999999998,
+   "worst_round_ms": 0.1409065,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  },
+  {
+   "condition": "relevance-8",
+   "variant": "int16",
+   "median_ms": 0.163312,
+   "best_round_ms": 0.1597665,
+   "worst_round_ms": 0.167407,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "warmup": 200
+  }
+ ],
+ "method": "variants rebuilt from the archived FP32 graph of participant 1, seed 0; interleaved rounds; median of the per-round medians"
+}

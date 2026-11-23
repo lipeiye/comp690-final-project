@@ -1,0 +1,484 @@
+{
+ "tests_lee2019": {
+  "P1": {
+   "claim": "Less training data widens the full montage's deficit",
+   "contrast": "P1: gap with 1 of 2 runs minus gap with all",
+   "mean": 0.7685185185185189,
+   "ci": [
+    -0.6203703703703692,
+    2.112692901234568
+   ],
+   "rule": "low>0",
+   "holds": false
+  },
+  "P2": {
+   "claim": "The deficit also appears on held-out trials of the training day, not only on the next day",
+   "contrast": "P2: reduced minus full, held-out runs of the training day, 1 of 2 runs",
+   "mean": 0.3549382716049385,
+   "ci": [
+    -0.959876543209876,
+    1.7407407407407418
+   ],
+   "rule": "low>0",
+   "holds": false
+  },
+  "P3": {
+   "claim": "Inputs that carry nothing hurt: noise in place of the dropped electrodes lowers accuracy",
+   "contrast": "P3: reduced plus noise minus reduced",
+   "mean": -4.76851851851852,
+   "ci": [
+    -6.605015432098766,
+    -3.021450617283953
+   ],
+   "rule": "high<0",
+   "holds": true
+  },
+  "P4": {
+   "claim": "Channel dropout helps the full montage more than the reduced one",
+   "contrast": "P4: dropout gain of full minus dropout gain of reduced",
+   "mean": -0.12654320987654272,
+   "ci": [
+    -1.1604938271604937,
+    0.92908950617284
+   ],
+   "rule": "low>0",
+   "holds": false
+  }
+ },
+ "contrasts": [
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced minus full, next day, all of the training day",
+   "mean": 0.3249535368680117,
+   "ci_low": -0.42368283539959467,
+   "ci_high": 1.0432275099934119,
+   "seed_error": 0.4495931505143158,
+   "better": 6,
+   "worse": 3,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced minus full, next day, 4 of 6 runs",
+   "mean": 0.3351795012246544,
+   "ci_low": -1.0787997710776795,
+   "ci_high": 1.685740648813402,
+   "seed_error": 0.423749321376662,
+   "better": 5,
+   "worse": 4,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P1: gap with 4 of 6 runs minus gap with all",
+   "mean": 0.010225964356642692,
+   "ci_low": -1.5043805780868713,
+   "ci_high": 1.6114093749943368,
+   "seed_error": 0.4706338446394942,
+   "better": 4,
+   "worse": 5,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P2: reduced minus full, held-out runs of the training day, 4 of 6 runs",
+   "mean": 0.2028032811056251,
+   "ci_low": -0.645155270826383,
+   "ci_high": 1.0824609481512686,
+   "seed_error": 0.49768759183634204,
+   "better": 5,
+   "worse": 4,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "next-day gap minus within-day gap, 4 of 6 runs",
+   "mean": 0.1323762201190293,
+   "ci_low": -1.0476558133070573,
+   "ci_high": 1.268983691057562,
+   "seed_error": 0.4919042655311983,
+   "better": 6,
+   "worse": 3,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced minus full, next day, 2 of 6 runs",
+   "mean": 0.22278368790360836,
+   "ci_low": -0.729578995619687,
+   "ci_high": 1.2007404778731656,
+   "seed_error": 0.3675688844908438,
+   "better": 4,
+   "worse": 5,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P1: gap with 2 of 6 runs minus gap with all",
+   "mean": -0.10216984896440333,
+   "ci_low": -1.2531343285478849,
+   "ci_high": 1.1265353872006563,
+   "seed_error": 0.5348313991761746,
+   "better": 5,
+   "worse": 4,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P2: reduced minus full, held-out runs of the training day, 2 of 6 runs",
+   "mean": 0.5602171491587475,
+   "ci_low": -0.18912126617319322,
+   "ci_high": 1.3126709904278628,
+   "seed_error": 0.5257973173711036,
+   "better": 7,
+   "worse": 2,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "next-day gap minus within-day gap, 2 of 6 runs",
+   "mean": -0.3374334612551391,
+   "ci_low": -1.1681150255832087,
+   "ci_high": 0.4733229179864298,
+   "seed_error": 0.34456248967348285,
+   "better": 4,
+   "worse": 5,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P3: reduced plus noise minus reduced",
+   "mean": -4.963853790572798,
+   "ci_low": -6.545243665684523,
+   "ci_high": -3.5743553516305107,
+   "seed_error": 0.5876307630116414,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "information in the dropped electrodes: full minus reduced plus noise",
+   "mean": 4.6389002537047865,
+   "ci_low": 3.2110064138979175,
+   "ci_high": 6.0187511993003575,
+   "seed_error": 0.4935952761623126,
+   "better": 9,
+   "worse": 0,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced plus noise minus full",
+   "mean": -4.6389002537047865,
+   "ci_low": -6.0187511993003575,
+   "ci_high": -3.2110064138979175,
+   "seed_error": 0.4935952761623126,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced plus shuffled minus reduced",
+   "mean": -4.737120462459023,
+   "ci_low": -5.868346288578655,
+   "ci_high": -3.6289629009623448,
+   "seed_error": 0.5714907781328007,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced plus shuffled minus full",
+   "mean": -4.412166925591012,
+   "ci_low": -5.83028843033357,
+   "ci_high": -3.0067117486490065,
+   "seed_error": 0.5563350124587823,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "full with channel dropout minus full",
+   "mean": -11.069528577608938,
+   "ci_low": -13.789618406097013,
+   "ci_high": -8.821512033401573,
+   "seed_error": 0.37877133765382315,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "reduced with channel dropout minus reduced",
+   "mean": -11.819938272295538,
+   "ci_low": -14.149285860620921,
+   "ci_high": -9.720493278164753,
+   "seed_error": 0.4086558049091754,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "P4: dropout gain of full minus dropout gain of reduced",
+   "mean": 0.7504096946866,
+   "ci_low": -0.36879314314060785,
+   "ci_high": 1.7971066379706844,
+   "seed_error": 0.44525129157587146,
+   "better": 6,
+   "worse": 3,
+   "n": 9
+  },
+  {
+   "dataset": "bnci2a",
+   "contrast": "full with channel dropout minus reduced",
+   "mean": -11.39448211447695,
+   "ci_low": -13.737145428153447,
+   "ci_high": -9.328380136113575,
+   "seed_error": 0.3915818725430276,
+   "better": 0,
+   "worse": 9,
+   "n": 9
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced minus full, next day, all of the training day",
+   "mean": 0.27160493827160503,
+   "ci_low": -0.8673611111111106,
+   "ci_high": 1.466049382716049,
+   "seed_error": 0.22808203440546052,
+   "better": 20,
+   "worse": 33,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced minus full, next day, 1 of 2 runs",
+   "mean": 1.0401234567901239,
+   "ci_low": -0.06018518518518402,
+   "ci_high": 2.2006558641975307,
+   "seed_error": 0.36888526842224884,
+   "better": 27,
+   "worse": 26,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "P1: gap with 1 of 2 runs minus gap with all",
+   "mean": 0.7685185185185189,
+   "ci_low": -0.6203703703703692,
+   "ci_high": 2.112692901234568,
+   "seed_error": 0.4811474981250438,
+   "better": 32,
+   "worse": 22,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "P2: reduced minus full, held-out runs of the training day, 1 of 2 runs",
+   "mean": 0.3549382716049385,
+   "ci_low": -0.959876543209876,
+   "ci_high": 1.7407407407407418,
+   "seed_error": 0.29813920186971454,
+   "better": 21,
+   "worse": 32,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "next-day gap minus within-day gap, 1 of 2 runs",
+   "mean": 0.6851851851851855,
+   "ci_low": -0.30555555555555475,
+   "ci_high": 1.6359182098765426,
+   "seed_error": 0.3895772127113228,
+   "better": 35,
+   "worse": 19,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "P3: reduced plus noise minus reduced",
+   "mean": -4.76851851851852,
+   "ci_low": -6.605015432098766,
+   "ci_high": -3.021450617283953,
+   "seed_error": 0.047514828143026905,
+   "better": 14,
+   "worse": 39,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "information in the dropped electrodes: full minus reduced plus noise",
+   "mean": 4.496913580246915,
+   "ci_low": 2.7530864197530867,
+   "ci_high": 6.336496913580246,
+   "seed_error": 0.2505899151874624,
+   "better": 41,
+   "worse": 11,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced plus noise minus full",
+   "mean": -4.496913580246915,
+   "ci_low": -6.336496913580246,
+   "ci_high": -2.7530864197530867,
+   "seed_error": 0.2505899151874624,
+   "better": 11,
+   "worse": 41,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced plus shuffled minus reduced",
+   "mean": -3.3456790123456788,
+   "ci_low": -4.8086419753086425,
+   "ci_high": -2.0030864197530867,
+   "seed_error": 0.28289188019758593,
+   "better": 12,
+   "worse": 39,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced plus shuffled minus full",
+   "mean": -3.0740740740740735,
+   "ci_low": -4.777854938271605,
+   "ci_high": -1.5091820987654332,
+   "seed_error": 0.3906851519758514,
+   "better": 12,
+   "worse": 41,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "full with channel dropout minus full",
+   "mean": -2.737654320987654,
+   "ci_low": -4.163580246913579,
+   "ci_high": -1.410493827160494,
+   "seed_error": 0.4139601166834095,
+   "better": 17,
+   "worse": 37,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "reduced with channel dropout minus reduced",
+   "mean": -2.611111111111112,
+   "ci_low": -3.8796296296296306,
+   "ci_high": -1.354938271604939,
+   "seed_error": 0.4739739959952908,
+   "better": 17,
+   "worse": 37,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "P4: dropout gain of full minus dropout gain of reduced",
+   "mean": -0.12654320987654272,
+   "ci_low": -1.1604938271604937,
+   "ci_high": 0.92908950617284,
+   "seed_error": 0.1428782345568238,
+   "better": 22,
+   "worse": 31,
+   "n": 54
+  },
+  {
+   "dataset": "lee2019",
+   "contrast": "full with channel dropout minus reduced",
+   "mean": -3.009259259259259,
+   "ci_low": -4.367283950617284,
+   "ci_high": -1.7376543209876547,
+   "seed_error": 0.6385756970760826,
+   "better": 17,
+   "worse": 37,
+   "n": 54
+  }
+ ],
+ "levels": [
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "condition": "full-22",
+   "train": 93.05125729641456,
+   "within": null,
+   "next_day": 64.82105173119935
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "condition": "relevance-16",
+   "train": 92.46015702219746,
+   "within": null,
+   "next_day": 65.14600526806736
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "condition": "full-22",
+   "train": 96.97534304727121,
+   "within": 62.147417149650124,
+   "next_day": 59.90903846174201
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "condition": "relevance-16",
+   "train": 95.74093061597709,
+   "within": 62.35022043075574,
+   "next_day": 60.24421796296666
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "condition": "full-22",
+   "train": 98.2486736947827,
+   "within": 51.087270225862184,
+   "next_day": 49.37464000062559
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "condition": "relevance-16",
+   "train": 97.4994852439368,
+   "within": 51.64748737502094,
+   "next_day": 49.597423688529204
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "condition": "full-62",
+   "train": 99.0216049382716,
+   "within": null,
+   "next_day": 66.89506172839508
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "condition": "relevance-45",
+   "train": 98.8364197530864,
+   "within": null,
+   "next_day": 67.16666666666666
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "condition": "full-62",
+   "train": 99.94444444444444,
+   "within": 60.33641975308642,
+   "next_day": 60.98456790123458
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "condition": "relevance-45",
+   "train": 99.96913580246913,
+   "within": 60.691358024691354,
+   "next_day": 62.02469135802468
+  }
+ ]
+}

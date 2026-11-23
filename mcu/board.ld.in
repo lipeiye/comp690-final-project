@@ -1,0 +1,26 @@
+/* Linker script template; mibci.mcu fills in each emulated board's memory map.
+ * FLASH holds the program and its constants, TRIALS the harness's input windows, RAM the data,
+ * zero-initialized buffers and a stack of fixed size, so a program that does not fit fails to link. */
+MEMORY
+{
+  FLASH  (rx)  : ORIGIN = @FLASH_ORIGIN@,  LENGTH = @FLASH_LENGTH@
+  TRIALS (r)   : ORIGIN = @TRIALS_ORIGIN@, LENGTH = @TRIALS_LENGTH@
+  RAM    (rwx) : ORIGIN = @RAM_ORIGIN@,    LENGTH = @RAM_LENGTH@
+}
+ENTRY(Reset_Handler)
+SECTIONS
+{
+  .text : { KEEP(*(.vectors)) *(.text .text.*) *(.rodata .rodata.*) KEEP(*(.init)) KEEP(*(.fini)) . = ALIGN(4); } > FLASH
+  .ARM.extab : { *(.ARM.extab* .gnu.linkonce.armextab.*) } > FLASH
+  .ARM.exidx : { __exidx_start = .; *(.ARM.exidx* .gnu.linkonce.armexidx.*) __exidx_end = .; } > FLASH
+  .init_array : { PROVIDE_HIDDEN(__init_array_start = .); KEEP(*(.init_array*)) PROVIDE_HIDDEN(__init_array_end = .); } > FLASH
+  .fini_array : { PROVIDE_HIDDEN(__fini_array_start = .); KEEP(*(.fini_array*)) PROVIDE_HIDDEN(__fini_array_end = .); } > FLASH
+  .harness : { *(.harness .harness.*) . = ALIGN(4); } > FLASH
+  .trials : { *(.trials .trials.*) . = ALIGN(4); } > TRIALS
+  .data : { __data_start__ = .; *(.data .data.*) . = ALIGN(4); __data_end__ = .; } > RAM AT > FLASH
+  __data_load__ = LOADADDR(.data);
+  .bss (NOLOAD) : { __bss_start__ = .; *(.bss .bss.*) *(COMMON) . = ALIGN(4); __bss_end__ = .; } > RAM
+  .stack (NOLOAD) : { . = ALIGN(8); __stack_limit = .; . = . + @STACK_BYTES@; . = ALIGN(8); __stack_top = .; } > RAM
+  end = __bss_end__;
+  PROVIDE(__end__ = end);
+}

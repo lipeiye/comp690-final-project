@@ -1,0 +1,98 @@
+{
+ "machines": {
+  "novnni-intel-6140": {
+   "cpu": "Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz",
+   "host": "c0316.ll.unc.edu",
+   "captures": 126,
+   "capture_equals_plain": 126
+  },
+  "vnni-amd-9654": {
+   "cpu": "AMD EPYC 9654 96-Core Processor",
+   "host": "c151409.ll.unc.edu",
+   "captures": 126,
+   "capture_equals_plain": 126
+  }
+ },
+ "summaries": [
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "reference": "vnni-amd-9654",
+   "other": "novnni-intel-6140",
+   "models": 18,
+   "first_differing": {
+    "temporal conv": 18
+   },
+   "saturation_checked": 18,
+   "saturation_totals": {
+    "outputs": 43863552,
+    "differ": 1876973,
+    "predicted": 2098302,
+    "differ_and_predicted": 1876973,
+    "differ_not_predicted": 0,
+    "predicted_not_differ": 221329
+   },
+   "share_of_differing_predicted": 1.0,
+   "share_of_predicted_differing": 0.8945199499404757,
+   "only_reference": [],
+   "only_other": []
+  }
+ ],
+ "variants": [
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-all",
+   "models": 18,
+   "identical": 18,
+   "same_predictions_all": 4656,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-conv_separable_depth",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 3952,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-conv_separable_point",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 4173,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-conv_spatial",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 4326,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-conv_temporal",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 3958,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "7bit-final_layer",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 3944,
+   "windows_all": 4656
+  },
+  {
+   "comparison": "novnni-intel-6140 vs vnni-amd-9654",
+   "variant": "int8",
+   "models": 18,
+   "identical": 0,
+   "same_predictions_all": 3949,
+   "windows_all": 4656
+  }
+ ]
+}

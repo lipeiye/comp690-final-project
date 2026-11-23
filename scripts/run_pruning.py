@@ -33,12 +33,24 @@ def prune_job(base_path: str, out_path: str, record_path: str, fraction: float) 
     res = fit(pruned, X_tr, y[tr], cfg, device=device)
 
     condition = f"{b['condition']}-prune{round(100 * fraction)}"
-    meta = dict(subject=b["subject"], split=b["split"], condition=condition, seed=b["seed"],
-                epochs=b["epochs"], device=device)
+    meta = {
+        "subject": b["subject"],
+        "split": b["split"],
+        "condition": condition,
+        "seed": b["seed"],
+        "epochs": b["epochs"],
+        "device": device,
+    }
     save_bundle(Path(out_path), pruned, b["channels"], scaler, **meta)
-    record = {**meta, "base": b["condition"], "fraction": fraction, "kept_filters": pruned.F2,
-              "finetune": {"epochs": cfg.epochs, "lr": cfg.lr}, "n_train": int(tr.sum()),
-              "train_time_s": res["train_time_s"]}
+    record = {
+        **meta,
+        "base": b["condition"],
+        "fraction": fraction,
+        "kept_filters": pruned.F2,
+        "finetune": {"epochs": cfg.epochs, "lr": cfg.lr},
+        "n_train": int(tr.sum()),
+        "train_time_s": res["train_time_s"],
+    }
     if va is not None:
         record.update(n_val=int(va.sum()), val_before_finetune=before, val=scores(predict(pruned, X_va), y[va]))
     write_json(Path(record_path), record)
@@ -55,18 +67,31 @@ def main() -> None:
     jobs = []
     for subject in args.subjects:
         for base in (FULL, reduced):
-            labels = [f"fold-{f}" for f in range(3)] if args.phase == "validation" else [
-                f"seed-{s}" for s in json.loads((RESULTS_DIR / "frozen_config.json").read_text())["seeds"]]
+            labels = (
+                [f"fold-{f}" for f in range(3)]
+                if args.phase == "validation"
+                else [f"seed-{s}" for s in json.loads((RESULTS_DIR / "frozen_config.json").read_text())["seeds"]]
+            )
             base_paths = [MODELS_DIR / args.phase / f"sub-{subject:02d}_{label}_{base}.pt" for label in labels]
             require_files(base_paths, f"{args.phase} pruning inputs")
             for base_path in base_paths:
                 for fraction in FRACTIONS:
                     name = f"{base_path.stem}-prune{round(100 * fraction)}"
                     record = RESULTS_DIR / args.phase / "runs" / f"{name}.json"
-                    if not completed(record, [base_path.with_name(f"{name}.pt")],
-                                     {"subject": subject, "fraction": fraction}):
-                        jobs.append((name, dict(base_path=str(base_path), fraction=fraction, record_path=str(record),
-                                                out_path=str(base_path.with_name(f"{name}.pt")))))
+                    if not completed(
+                        record, [base_path.with_name(f"{name}.pt")], {"subject": subject, "fraction": fraction}
+                    ):
+                        jobs.append(
+                            (
+                                name,
+                                {
+                                    "base_path": str(base_path),
+                                    "fraction": fraction,
+                                    "record_path": str(record),
+                                    "out_path": str(base_path.with_name(f"{name}.pt")),
+                                },
+                            )
+                        )
     run_pool(prune_job, jobs, args.workers, threads=1)
 
 

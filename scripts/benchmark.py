@@ -9,6 +9,7 @@ Preprocessing (causal band-pass of one 2-s window plus normalization) is timed
 separately. Run on an otherwise idle machine connected to AC power.
 """
 
+import argparse
 import json
 import platform
 import subprocess
@@ -32,8 +33,8 @@ N_INPUTS = 100
 def power_state() -> dict:
     if platform.system() != "Darwin":
         return {"source": "unknown", "low_power_mode": "unknown", "note": "pmset unavailable on this OS"}
-    batt = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True).stdout
-    settings = subprocess.run(["pmset", "-g"], capture_output=True, text=True).stdout
+    batt = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True, check=False).stdout
+    settings = subprocess.run(["pmset", "-g"], capture_output=True, text=True, check=False).stdout
     low_power = [ln.split()[-1] for ln in settings.splitlines() if "lowpowermode" in ln]
     source = "AC" if "AC Power" in batt else ("battery" if "Battery Power" in batt else "unknown")
     return {"source": source, "low_power_mode": low_power[0] if low_power else "n/a", "raw_pmset": batt.strip()}
@@ -56,13 +57,18 @@ def preprocessing_ms(n_chans: int, runs: int = 1000) -> dict:
 
 
 def main() -> None:
+    argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args()
     if (OUT / "benchmark.json").exists():
-        raise SystemExit("Benchmark exists. Preserve historical measurements; use a fresh MIBCI_RESULTS_DIR with a copied frozen_config.json")
+        raise SystemExit(
+            "Benchmark exists. Preserve historical measurements; "
+            "use a fresh MIBCI_RESULTS_DIR with a copied frozen_config.json"
+        )
     frozen = json.loads((RESULTS_DIR / "frozen_config.json").read_text())
     base = frozen["pruning"]["bases"][1]
     # One model per architecture: 22, 16 and 8 electrodes, plus the pruned variants.
     conditions = ["full-22", "proposed-16", "proposed-8", base] + [
-        f"{b}-prune{p}" for b in ("full-22", base) for p in (25, 50)]
+        f"{b}-prune{p}" for b in ("full-22", base) for p in (25, 50)
+    ]
     X, _, train_mask, _ = session1(SUBJECT, "final")
 
     rows, profiles, layers = [], {}, {}
@@ -72,35 +78,56 @@ def main() -> None:
         inputs = scaler.transform(X[train_mask][:N_INPUTS][:, b["channels"]])
         costs = cost_summary(model)
         layers[condition] = layer_costs(model)
-        for precision, onnx_path in (("fp32", path.with_suffix(".onnx")),
-                                     ("int8", path.with_name(f"{path.stem}_int8.onnx"))):
+        for precision, onnx_path in (
+            ("fp32", path.with_suffix(".onnx")),
+            ("int8", path.with_name(f"{path.stem}_int8.onnx")),
+        ):
             name = f"{condition} {precision}"
-            rows.append({
-                "condition": condition, "precision": precision, "electrodes": len(b["channels"]),
-                "F2": b["F2"], "params": costs["params"], "macs": costs["macs"],
-                "input_bytes": costs["input_bytes"][precision],
-                "modeled_input_bytes": costs["modeled_input_bytes"][precision],
-                "peak_activation_bytes": costs["peak_activation_bytes"][precision],
-                "activation_memory_kind": costs["activation_memory_kind"],
-                **deploy.size_bytes(onnx_path),
-                **{f"latency_{k}": v for k, v in deploy.latency(onnx_path, inputs).items()},
-                "executed_ops": deploy.executed_ops(onnx_path),
-            })
+            rows.append(
+                {
+                    "condition": condition,
+                    "precision": precision,
+                    "electrodes": len(b["channels"]),
+                    "F2": b["F2"],
+                    "params": costs["params"],
+                    "macs": costs["macs"],
+                    "input_bytes": costs["input_bytes"][precision],
+                    "modeled_input_bytes": costs["modeled_input_bytes"][precision],
+                    "peak_activation_bytes": costs["peak_activation_bytes"][precision],
+                    "activation_memory_kind": costs["activation_memory_kind"],
+                    **deploy.size_bytes(onnx_path),
+                    **{f"latency_{k}": v for k, v in deploy.latency(onnx_path, inputs).items()},
+                    "executed_ops": deploy.executed_ops(onnx_path),
+                }
+            )
             profiles[name] = deploy.op_profile(onnx_path, inputs)
-            print(f"{name:>24}: median {rows[-1]['latency_median_ms']:.3f} ms, p95 {rows[-1]['latency_p95_ms']:.3f} ms",
-                  flush=True)
+            print(
+                f"{name:>24}: median {rows[-1]['latency_median_ms']:.3f} ms, p95 {rows[-1]['latency_p95_ms']:.3f} ms",
+                flush=True,
+            )
 
-    write_json(OUT / "benchmark.json", {
-        "environment": {**environment(), "onnxruntime": ort.__version__, "machine": platform.machine(),
-                        "power": power_state(), "ort_threads": {"intra_op": 1, "inter_op": 1}},
-        "models": f"final models of subject {SUBJECT}, seed {SEED}",
-        "input_memory_note": "Both ONNX interfaces receive float32 arrays; modeled_input_bytes assumes uniform target precision internally.",
-        "activation_memory_note": "Analytical tensor accounting, excluding QDQ conversions, mixed-precision live tensors, workspaces, runtime and allocator overhead; not measured SRAM or process RSS.",
-        "rows": rows,
-        "preprocessing": {str(n): preprocessing_ms(n) for n in sorted({r["electrodes"] for r in rows})},
-        "op_profile_us": profiles,
-        "layer_costs": layers,
-    })
+    write_json(
+        OUT / "benchmark.json",
+        {
+            "environment": {
+                **environment(),
+                "onnxruntime": ort.__version__,
+                "machine": platform.machine(),
+                "power": power_state(),
+                "ort_threads": {"intra_op": 1, "inter_op": 1},
+            },
+            "models": f"final models of subject {SUBJECT}, seed {SEED}",
+            "input_memory_note": "Both ONNX interfaces receive float32 arrays; "
+            "modeled_input_bytes assumes uniform target precision internally.",
+            "activation_memory_note": "Analytical tensor accounting, excluding QDQ conversions, "
+            "mixed-precision live tensors, workspaces, runtime and allocator overhead; "
+            "not measured SRAM or process RSS.",
+            "rows": rows,
+            "preprocessing": {str(n): preprocessing_ms(n) for n in sorted({r["electrodes"] for r in rows})},
+            "op_profile_us": profiles,
+            "layer_costs": layers,
+        },
+    )
 
 
 if __name__ == "__main__":

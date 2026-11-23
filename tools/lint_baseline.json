@@ -1,0 +1,16 @@
+{
+ "about": "Lint violations that existed when the ratchet was introduced. tools/check.py fails if any count rises or a new file/rule pair appears; --tighten lowers counts after a cleanup. Files pinned by a finished study (tools/guard.py) cannot change, so their entries are frozen.",
+ "ruff": "0.17.6",
+ "allowed": {
+  "scripts/complete_supplement.py": {
+   "C901": 1
+  },
+  "scripts/package_release.py": {
+   "C901": 1
+  },
+  "scripts/replay_demo.py": {
+   "C901": 1,
+   "PLR0915": 1
+  }
+ }
+}

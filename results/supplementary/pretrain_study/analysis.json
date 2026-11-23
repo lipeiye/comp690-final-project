@@ -1,0 +1,491 @@
+{
+ "tests_lee2019": {
+  "T1": {
+   "mean": 7.651234567901233,
+   "ci": [
+    5.385802469135801,
+    9.94452160493827
+   ],
+   "better": 40,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": true
+  },
+  "T2": {
+   "mean": 9.913580246913579,
+   "ci": [
+    6.716049382716051,
+    13.361188271604934
+   ],
+   "better": 44,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": true
+  },
+  "T3": {
+   "mean": 4.527777777777777,
+   "ci": [
+    2.836342592592591,
+    6.444444444444442
+   ],
+   "better": 44,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": true
+  }
+ },
+ "lee2019": {
+  "scratch: all electrodes minus group-16": {
+   "mean": 1.1851851851851851,
+   "ci": [
+    -0.7716049382716049,
+    3.1759259259259265
+   ],
+   "better": 30,
+   "people": 54
+  },
+  "scratch: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -12.080246913580247,
+   "ci": [
+    -15.53395061728395,
+    -8.854861111111113
+   ],
+   "better": 6,
+   "people": 54
+  },
+  "pretrain: all electrodes minus group-16": {
+   "mean": 4.546296296296296,
+   "ci": [
+    2.660493827160493,
+    6.546296296296297
+   ],
+   "better": 40,
+   "people": 54
+  },
+  "pretrain: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -1.2808641975308648,
+   "ci": [
+    -2.108024691358026,
+    -0.4228395061728416
+   ],
+   "better": 18,
+   "people": 54
+  },
+  "finetune: all electrodes minus group-16": {
+   "mean": 4.527777777777777,
+   "ci": [
+    2.836342592592591,
+    6.444444444444442
+   ],
+   "better": 44,
+   "people": 54
+  },
+  "finetune: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -2.1666666666666665,
+   "ci": [
+    -2.96604938271605,
+    -1.395061728395062
+   ],
+   "better": 10,
+   "people": 54
+  },
+  "full: finetune minus scratch": {
+   "mean": 7.651234567901233,
+   "ci": [
+    5.385802469135801,
+    9.94452160493827
+   ],
+   "better": 40,
+   "people": 54
+  },
+  "full: pretrain only minus scratch": {
+   "mean": 4.993827160493828,
+   "ci": [
+    2.2869598765432104,
+    7.66358024691358
+   ],
+   "better": 38,
+   "people": 54
+  },
+  "full: finetune minus pretrain only": {
+   "mean": 2.6574074074074066,
+   "ci": [
+    1.3827160493827142,
+    4.009259259259257
+   ],
+   "better": 42,
+   "people": 54
+  },
+  "group-16: finetune minus scratch": {
+   "mean": 4.308641975308642,
+   "ci": [
+    2.0709876543209873,
+    6.60493827160494
+   ],
+   "better": 39,
+   "people": 54
+  },
+  "group-16: pretrain only minus scratch": {
+   "mean": 1.6327160493827169,
+   "ci": [
+    -1.0617283950617273,
+    4.228472222222223
+   ],
+   "better": 32,
+   "people": 54
+  },
+  "group-16: finetune minus pretrain only": {
+   "mean": 2.675925925925927,
+   "ci": [
+    1.3271604938271608,
+    4.185185185185184
+   ],
+   "better": 35,
+   "people": 54
+  },
+  "noise: finetune minus scratch": {
+   "mean": 14.222222222222221,
+   "ci": [
+    10.675848765432098,
+    17.836496913580252
+   ],
+   "better": 48,
+   "people": 54
+  },
+  "noise: pretrain only minus scratch": {
+   "mean": 12.432098765432098,
+   "ci": [
+    9.058641975308642,
+    15.898225308641974
+   ],
+   "better": 47,
+   "people": 54
+  },
+  "noise: finetune minus pretrain only": {
+   "mean": 1.7901234567901243,
+   "ci": [
+    0.7344907407407419,
+    2.8642746913580237
+   ],
+   "better": 35,
+   "people": 54
+  },
+  "noise cost after finetune minus from scratch": {
+   "mean": 9.913580246913579,
+   "ci": [
+    6.716049382716051,
+    13.361188271604934
+   ],
+   "better": 44,
+   "people": 54
+  },
+  "(all minus group-16) after finetune minus from scratch": {
+   "mean": 3.3425925925925903,
+   "ci": [
+    1.2870370370370365,
+    5.531018518518514
+   ],
+   "better": 27,
+   "people": 54
+  }
+ },
+ "bnci2a": {
+  "scratch: all electrodes minus group-16": {
+   "mean": 1.412225634304345,
+   "ci": [
+    -0.3300183770741722,
+    3.396069488464834
+   ],
+   "better": 5,
+   "people": 9
+  },
+  "scratch: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -6.125470375903714,
+   "ci": [
+    -7.977337930182513,
+    -4.415712436032089
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "pretrain: all electrodes minus group-16": {
+   "mean": 0.5240524931431175,
+   "ci": [
+    -1.1951442317894252,
+    2.18130119039238
+   ],
+   "better": 5,
+   "people": 9
+  },
+  "pretrain: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -0.39722915828808664,
+   "ci": [
+    -1.438861686413385,
+    0.7738758656091408
+   ],
+   "better": 3,
+   "people": 9
+  },
+  "finetune: all electrodes minus group-16": {
+   "mean": -0.42756185734607083,
+   "ci": [
+    -1.589557324766349,
+    0.6789952175880316
+   ],
+   "better": 4,
+   "people": 9
+  },
+  "finetune: noise cost (group-16 plus noise minus group-16)": {
+   "mean": -2.4620259870503505,
+   "ci": [
+    -3.849859169192875,
+    -1.2206210490034328
+   ],
+   "better": 1,
+   "people": 9
+  },
+  "full: finetune minus scratch": {
+   "mean": -9.152335241674605,
+   "ci": [
+    -13.972281473159233,
+    -5.294740515674584
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "full: pretrain only minus scratch": {
+   "mean": -19.92848034759045,
+   "ci": [
+    -25.020442560331233,
+    -15.58780049779858
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "full: finetune minus pretrain only": {
+   "mean": 10.776145105915845,
+   "ci": [
+    7.230168608964005,
+    14.629790048097062
+   ],
+   "better": 9,
+   "people": 9
+  },
+  "group-16: finetune minus scratch": {
+   "mean": -7.31254775002419,
+   "ci": [
+    -10.140599118047518,
+    -4.567206751169977
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "group-16: pretrain only minus scratch": {
+   "mean": -19.040307206429222,
+   "ci": [
+    -23.663000812132754,
+    -14.589269994208607
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "group-16: finetune minus pretrain only": {
+   "mean": 11.727759456405032,
+   "ci": [
+    8.578524601619081,
+    14.984674202918491
+   ],
+   "better": 9,
+   "people": 9
+  },
+  "noise: finetune minus scratch": {
+   "mean": -3.649103361170824,
+   "ci": [
+    -8.416871587489481,
+    1.321762908337095
+   ],
+   "better": 2,
+   "people": 9
+  },
+  "noise: pretrain only minus scratch": {
+   "mean": -13.312065988813593,
+   "ci": [
+    -19.173828412269827,
+    -7.91371532645879
+   ],
+   "better": 0,
+   "people": 9
+  },
+  "noise: finetune minus pretrain only": {
+   "mean": 9.662962627642768,
+   "ci": [
+    6.957884311123324,
+    12.514878063038866
+   ],
+   "better": 9,
+   "people": 9
+  },
+  "noise cost after finetune minus from scratch": {
+   "mean": 3.663444388853364,
+   "ci": [
+    1.022136537142024,
+    6.5799476075398236
+   ],
+   "better": 7,
+   "people": 9
+  },
+  "(all minus group-16) after finetune minus from scratch": {
+   "mean": -1.8397874916504158,
+   "ci": [
+    -4.818061284933382,
+    0.7417079178676542
+   ],
+   "better": 3,
+   "people": 9
+  }
+ },
+ "budget": {
+  "bnci2a": {
+   "runs": 45,
+   "epochs": 125,
+   "smoothed_max": 0.48595035555555555,
+   "smoothed_max_epoch": 168,
+   "smoothed_at_budget": 0.4821565333333333
+  },
+  "lee2019": {
+   "runs": 18,
+   "epochs": 33,
+   "smoothed_max": 0.715823148148148,
+   "smoothed_max_epoch": 62,
+   "smoothed_at_budget": 0.7112857407407406
+  }
+ },
+ "accuracy": [
+  {
+   "dataset": "bnci2a",
+   "config": "full-22",
+   "role": "full",
+   "training": "finetune",
+   "next_day": 56.14301618131533
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "full-22",
+   "role": "full",
+   "training": "pretrain",
+   "next_day": 45.366871075399494
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "full-22",
+   "role": "full",
+   "training": "scratch",
+   "next_day": 65.29535142298994
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "finetune",
+   "next_day": 56.5705780386614
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "pretrain",
+   "next_day": 44.84281858225638
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "scratch",
+   "next_day": 63.8831257886856
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16-plus-6",
+   "role": "noise",
+   "training": "finetune",
+   "next_day": 54.10855205161105
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16-plus-6",
+   "role": "noise",
+   "training": "pretrain",
+   "next_day": 44.44558942396829
+  },
+  {
+   "dataset": "bnci2a",
+   "config": "group-16-plus-6",
+   "role": "noise",
+   "training": "scratch",
+   "next_day": 57.75765541278187
+  },
+  {
+   "dataset": "lee2019",
+   "config": "full-62",
+   "role": "full",
+   "training": "finetune",
+   "next_day": 74.54629629629629
+  },
+  {
+   "dataset": "lee2019",
+   "config": "full-62",
+   "role": "full",
+   "training": "pretrain",
+   "next_day": 71.88888888888889
+  },
+  {
+   "dataset": "lee2019",
+   "config": "full-62",
+   "role": "full",
+   "training": "scratch",
+   "next_day": 66.89506172839508
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "finetune",
+   "next_day": 70.01851851851852
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "pretrain",
+   "next_day": 67.34259259259258
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16",
+   "role": "group-16",
+   "training": "scratch",
+   "next_day": 65.70987654320989
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16-plus-46",
+   "role": "noise",
+   "training": "finetune",
+   "next_day": 67.85185185185185
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16-plus-46",
+   "role": "noise",
+   "training": "pretrain",
+   "next_day": 66.06172839506173
+  },
+  {
+   "dataset": "lee2019",
+   "config": "group-16-plus-46",
+   "role": "noise",
+   "training": "scratch",
+   "next_day": 53.62962962962962
+  }
+ ]
+}

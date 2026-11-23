@@ -1,0 +1,1340 @@
+{
+ "created_at": "2026-11-22T16:47:12.449180-05:00",
+ "status": "supplementary_post_test",
+ "historical_test_results_already_known": true,
+ "purpose": "Supply the int8 kernel CMSIS-NN lacks for EEGNet's temporal convolution (an FIR filter bank) and count what it saves on Cortex-M0, M4 and M55, layer by layer, with the logits unchanged bit for bit.",
+ "claim_boundary": "Exploratory, planned after the test results were known. Instruction counts from QEMU, not cycles, time or energy; memory wait states are not modelled. Same quantization, inputs and other kernels as scripts/mcu_study.py. The frozen configuration does not change.",
+ "emulation": {
+  "windows": "the first 8 session-2 windows, as scripts/mcu_study.py",
+  "all_cores_for": "participant 1, seed 0",
+  "checked_conditions": [
+   "full-22",
+   "relevance-16-prune50"
+  ],
+  "check_cores": [
+   "m0",
+   "m4",
+   "m55"
+  ],
+  "all_cores": [
+   "m0",
+   "m4",
+   "m4-nodsp",
+   "m55",
+   "m55-nomve"
+  ],
+  "stack_reserved_bytes": 16384
+ },
+ "kernel": "mcu/kernels/fir_s8.c: per input row, zero-point padding, exact int32 sums, arm_nn_requantize, out_offset, int8 clamp; Helium: VMLADAVA on 16-tap int8 vectors with the taps held in registers; DSP: SMLAD on int16 pairs, two outputs per pass; plain C: two outputs per tap load",
+ "cores": {
+  "m0": {
+   "flags": [
+    "-mcpu=cortex-m0",
+    "-mthumb",
+    "-mfloat-abi=soft"
+   ],
+   "board": "mps2-an385"
+  },
+  "m4": {
+   "flags": [
+    "-mcpu=cortex-m4",
+    "-mthumb",
+    "-mfpu=fpv4-sp-d16",
+    "-mfloat-abi=hard"
+   ],
+   "board": "mps2-an386"
+  },
+  "m4-nodsp": {
+   "flags": [
+    "-mcpu=cortex-m3",
+    "-mthumb",
+    "-mfloat-abi=soft"
+   ],
+   "board": "mps2-an386"
+  },
+  "m55": {
+   "flags": [
+    "-mcpu=cortex-m55",
+    "-mthumb",
+    "-mfloat-abi=hard"
+   ],
+   "board": "mps3-an547"
+  },
+  "m55-nomve": {
+   "flags": [
+    "-mcpu=cortex-m55+nomve",
+    "-mthumb",
+    "-mfloat-abi=hard"
+   ],
+   "board": "mps3-an547"
+  }
+ },
+ "library_flags": [
+  "-Ofast",
+  "-ffunction-sections",
+  "-fdata-sections",
+  "-DARM_NN_ENABLE_F32=1"
+ ],
+ "program_flags": [
+  "-O2",
+  "-std=c11",
+  "-ffunction-sections",
+  "-fdata-sections",
+  "-DARM_NN_ENABLE_F32=1",
+  "-Wall"
+ ],
+ "tools": {
+  "gcc": "arm-none-eabi-gcc (Arm GNU Toolchain 15.3.Rel2 (Build arm-15.181)) 15.3.1 20260627",
+  "qemu": "QEMU emulator version 11.1.3",
+  "cmsis_nn_commit": "13c97dbb6f781d4aab38ed34e6e441f42b79aff4"
+ },
+ "historical_frozen_config_sha256": "98ddc1c2d2fe025e203459131bce4a204c7dfd18f0897e4aef67958f8b2af271",
+ "source_code_sha256": {
+  "mcu/board.ld.in": "f52e1cc0d2115ec9e01e5de7c539027fe33a39aa627354b4a83b38dfab87ae53",
+  "mcu/icount.c": "5f574c4dbdb7cde3a9c5492104c3a6c32c3114ad7e0020529ef2c5ae0ee4eeb6",
+  "mcu/kernels/eegnet_int8_fir.c": "4632b5c680d63b911bebe51b72f6e9a4f02ff8d282d2fde26f0bea31c8123c6a",
+  "mcu/kernels/fir_s8.c": "9ba1a698b56d1883fddcea5cd2a547384a96a2ef11e712f47043870f37cdcf75",
+  "mcu/kernels/fir_s8.h": "7ecdca6d3d98ea552c3c41a55323fa75d99ee3b5b0d0eb7c8c4b2bce81eb262c",
+  "mcu/main.c": "53d6952c8b262367f51a0015494cd709490150aae1df6c7e12969fa1a1b6305a",
+  "mcu/net.h": "084be14e9c3b57646704ce923db50a42ab0fbfa92e24beb2ca9a3405d7e3867c",
+  "mcu/semihost.c": "6773fce504c42a753f889195a4b0bf37253840b61d03354187b30661a2bf7173",
+  "mcu/semihost.h": "bb1a804b0f9b0aee8f1a17dc3a124d0d3bb3ec0250b36fc490a3504bf7f932f8",
+  "mcu/startup.c": "9904a0f4209d4a13bb3a3f9039d39375f965e8a72bde66bc443b189f176cc681",
+  "scripts/mcu_kernel_study.py": "69a7d7801f62a1b807207c34ba89e49e5118b1b17d1b15d484c909f87b957a2e",
+  "src/mibci/data.py": "f904e58875eb733d0a10078c09c9711ad30266be81a7c810617b41b06337ac95",
+  "src/mibci/experiment.py": "251e188102ac12a5a5f7e346e76d763343f1cfed42473115fa6f79a861cc207b",
+  "src/mibci/fakequant.py": "ce8d4ca74698d50818355ca071accfc7c71ccf6d04005f5f2ee4e3b8238ec61d",
+  "src/mibci/mcu.py": "128776542cd29cf28650de20daef2cbff6a98c9f36ea74f8d3f8e9843599d97d",
+  "src/mibci/mcu_build.py": "49a1267edbdd08382dd96e954b2df3bcdd01f1a708a9a9248a0834b3dcf8384e",
+  "src/mibci/mcu_kernels.py": "0b0b6449bb20bc43b13a3656869999b9f1045419af7d65a74b681fca4672504e",
+  "src/mibci/model.py": "05315425b4feaaed821206dcbb2cdf68b4c771a5cf7400e0cac1c28be97b2175",
+  "src/mibci/study.py": "53a20b0f5dab5271b2782c3b87d5d2a3d768e268d6dc37a43d32c7a8f0e24858",
+  "src/mibci/train.py": "ba247c9a147570f01dc549a19ebf8f13f045ed807cd48e8eead70596d8b29fb7"
+ },
+ "jobs": [
+  {
+   "name": "sub-01_seed-0_full-22_original_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_original_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_original_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_full-22_original_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_original_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_original_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_full-22_original_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_swapped_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_full-22_swapped_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_full-22_swapped_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_full-22_swapped_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_original_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-16_original_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_original_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-16_original_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_original_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "original",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-16_original_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_original_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-16_original_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_original_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "original",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-16_original_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_swapped_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-16_swapped_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_swapped_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-16_swapped_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_swapped_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "swapped",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-16_swapped_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_swapped_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-16_swapped_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16_swapped_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16",
+   "order": "swapped",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-16_swapped_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_original_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-8_original_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_original_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-8_original_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_original_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "original",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-8_original_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_original_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-8_original_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_original_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "original",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-8_original_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_swapped_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-8_swapped_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_swapped_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-8_swapped_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_swapped_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "swapped",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-8_swapped_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_swapped_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-8_swapped_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-8_swapped_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-8",
+   "order": "swapped",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-8_swapped_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_original_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_original_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_original_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_original_int8_m55-nomve"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_swapped_int8-fir_m4-nodsp",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4-nodsp",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_swapped_int8_m4-nodsp"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-01_seed-0_relevance-16-prune50_swapped_int8-fir_m55-nomve",
+   "subject": 1,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55-nomve",
+   "library_job": "sub-01_seed-0_relevance-16-prune50_swapped_int8_m55-nomve"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_original_int8-fir_m0",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-02_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_original_int8-fir_m4",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-02_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_original_int8-fir_m55",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-02_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-02_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-02_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-02_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 2,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-02_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-02_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 2,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-02_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_original_int8-fir_m0",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-03_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_original_int8-fir_m4",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-03_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_original_int8-fir_m55",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-03_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-03_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-03_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-03_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 3,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-03_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-03_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 3,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-03_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_original_int8-fir_m0",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-04_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_original_int8-fir_m4",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-04_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_original_int8-fir_m55",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-04_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-04_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-04_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-04_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 4,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-04_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-04_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 4,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-04_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_original_int8-fir_m0",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-05_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_original_int8-fir_m4",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-05_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_original_int8-fir_m55",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-05_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-05_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-05_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-05_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 5,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-05_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-05_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 5,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-05_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_original_int8-fir_m0",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-06_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_original_int8-fir_m4",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-06_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_original_int8-fir_m55",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-06_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-06_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-06_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-06_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 6,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-06_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-06_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 6,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-06_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_original_int8-fir_m0",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-07_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_original_int8-fir_m4",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-07_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_original_int8-fir_m55",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-07_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-07_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-07_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-07_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 7,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-07_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-07_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 7,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-07_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_original_int8-fir_m0",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-08_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_original_int8-fir_m4",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-08_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_original_int8-fir_m55",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-08_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-08_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-08_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-08_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 8,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-08_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-08_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 8,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-08_seed-0_relevance-16-prune50_swapped_int8_m55"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_original_int8-fir_m0",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-09_seed-0_full-22_original_int8_m0"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_original_int8-fir_m4",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-09_seed-0_full-22_original_int8_m4"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_original_int8-fir_m55",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-09_seed-0_full-22_original_int8_m55"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_swapped_int8-fir_m0",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-09_seed-0_full-22_swapped_int8_m0"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_swapped_int8-fir_m4",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-09_seed-0_full-22_swapped_int8_m4"
+  },
+  {
+   "name": "sub-09_seed-0_full-22_swapped_int8-fir_m55",
+   "subject": 9,
+   "seed": 0,
+   "condition": "full-22",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-09_seed-0_full-22_swapped_int8_m55"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_original_int8-fir_m0",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m0",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_original_int8_m0"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_original_int8-fir_m4",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m4",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_original_int8_m4"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_original_int8-fir_m55",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "original",
+   "core": "m55",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_original_int8_m55"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_swapped_int8-fir_m0",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m0",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_swapped_int8_m0"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_swapped_int8-fir_m4",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m4",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_swapped_int8_m4"
+  },
+  {
+   "name": "sub-09_seed-0_relevance-16-prune50_swapped_int8-fir_m55",
+   "subject": 9,
+   "seed": 0,
+   "condition": "relevance-16-prune50",
+   "order": "swapped",
+   "core": "m55",
+   "library_job": "sub-09_seed-0_relevance-16-prune50_swapped_int8_m55"
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "dataset": "bnci2a",
+ "subject": 2,
+ "seed": 1,
+ "split": "fold-0",
+ "condition": "relevance-16-plus-4",
+ "added": 4,
+ "epochs": 475,
+ "device": "cpu",
+ "name": "bnci2a_sub-02_seed-1_relevance-16-plus-4_fold-0",
+ "n_train": 176,
+ "train_time_s": 290.57206565886736,
+ "train_acc": 0.9204545454545454,
+ "model_sha256": "83a9db58e191f7d101055ef36f606d295e3acde14885012a33fc310492484251",
+ "protocol_sha256": "31dbc16ebc3ae40949f69eefc99ddb1e032d61b25f1928c84878b1e0eea012b1",
+ "n_held": 94,
+ "within_day": {
+  "loss": 1.5704082250595093,
+  "acc": 0.3617021276595745,
+  "macro_f1": 0.36569814366424536,
+  "recall": [
+   0.25,
+   0.4166666666666667,
+   0.391304347826087,
+   0.391304347826087
+  ],
+  "confusion": [
+   [
+    6,
+    12,
+    3,
+    3
+   ],
+   [
+    6,
+    10,
+    6,
+    2
+   ],
+   [
+    6,
+    3,
+    9,
+    5
+   ],
+   [
+    3,
+    10,
+    1,
+    9
+   ]
+  ]
+ }
+}

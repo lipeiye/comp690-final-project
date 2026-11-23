@@ -1,0 +1,210 @@
+{
+ "created_at": "2026-11-12T04:33:29.097490-05:00",
+ "status": "supplementary_post_test",
+ "environment": {
+  "python": "3.12.12",
+  "os": "macOS-27.0.1-arm64-arm-64bit",
+  "cpu": "Apple M4",
+  "physical_memory_bytes": 17179869184,
+  "torch_threads": 4,
+  "packages": {
+   "torch": "2.15.0",
+   "braindecode": "2.0.0",
+   "numpy": "2.5.4",
+   "scipy": "1.18.1",
+   "scikit-learn": "1.9.1"
+  },
+  "onnxruntime": "1.31.1",
+  "machine": "arm64",
+  "hw_model": "Mac16,10",
+  "load_average_before": [
+   3.26025390625,
+   3.1962890625,
+   4.58154296875
+  ],
+  "load_average_after": [
+   2.8916015625,
+   3.115234375,
+   4.51171875
+  ]
+ },
+ "model": "archived sub-01_seed-0_full-22; swapped graphs from scripts/int8_study.py",
+ "backends": {
+  "cpu": null,
+  "coreml-cpu-only": {
+   "MLComputeUnits": "CPUOnly",
+   "ModelFormat": "MLProgram"
+  },
+  "coreml-any-unit": {
+   "MLComputeUnits": "ALL",
+   "ModelFormat": "MLProgram"
+  }
+ },
+ "method": "Batch 1. All sessions are created together and timed in interleaved rounds; the value is the median of the per-round medians. The CPU provider uses one thread; CoreML manages its own threads.",
+ "rows": [
+  {
+   "graph": "fp32",
+   "backend": "cpu",
+   "median_ms": 0.271146,
+   "best_round_ms": 0.26868749999999997,
+   "worst_round_ms": 0.276833,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 12
+   }
+  },
+  {
+   "graph": "fp32",
+   "backend": "coreml-cpu-only",
+   "median_ms": 0.13375,
+   "best_round_ms": 0.1323955,
+   "worst_round_ms": 0.135042,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 3.814697265625e-06,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 3,
+    "CoreMLExecutionProvider": 2
+   }
+  },
+  {
+   "graph": "fp32",
+   "backend": "coreml-any-unit",
+   "median_ms": 0.286229,
+   "best_round_ms": 0.285125,
+   "worst_round_ms": 0.287042,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 3.814697265625e-06,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 3,
+    "CoreMLExecutionProvider": 2
+   }
+  },
+  {
+   "graph": "int8",
+   "backend": "cpu",
+   "median_ms": 0.3513545,
+   "best_round_ms": 0.350042,
+   "worst_round_ms": 0.357208,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 22
+   }
+  },
+  {
+   "graph": "int8",
+   "backend": "coreml-cpu-only",
+   "median_ms": 0.4022915,
+   "best_round_ms": 0.401667,
+   "worst_round_ms": 0.4033335,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 20,
+    "CoreMLExecutionProvider": 3
+   }
+  },
+  {
+   "graph": "int8",
+   "backend": "coreml-any-unit",
+   "median_ms": 0.40266650000000004,
+   "best_round_ms": 0.402292,
+   "worst_round_ms": 0.407292,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 20,
+    "CoreMLExecutionProvider": 3
+   }
+  },
+  {
+   "graph": "fp32-spatial-first",
+   "backend": "cpu",
+   "median_ms": 0.093333,
+   "best_round_ms": 0.092208,
+   "worst_round_ms": 0.094083,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 12
+   }
+  },
+  {
+   "graph": "fp32-spatial-first",
+   "backend": "coreml-cpu-only",
+   "median_ms": 0.098458,
+   "best_round_ms": 0.0980625,
+   "worst_round_ms": 0.10047900000000001,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 2.86102294921875e-06,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 3,
+    "CoreMLExecutionProvider": 2
+   }
+  },
+  {
+   "graph": "fp32-spatial-first",
+   "backend": "coreml-any-unit",
+   "median_ms": 0.099083,
+   "best_round_ms": 0.098833,
+   "worst_round_ms": 0.107542,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 2.86102294921875e-06,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 3,
+    "CoreMLExecutionProvider": 2
+   }
+  },
+  {
+   "graph": "int8-spatial-first",
+   "backend": "cpu",
+   "median_ms": 0.066875,
+   "best_round_ms": 0.06593750000000001,
+   "worst_round_ms": 0.06725,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CPUExecutionProvider": 22
+   }
+  },
+  {
+   "graph": "int8-spatial-first",
+   "backend": "coreml-cpu-only",
+   "median_ms": 0.1511875,
+   "best_round_ms": 0.15070850000000002,
+   "worst_round_ms": 0.1515625,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CoreMLExecutionProvider": 4,
+    "CPUExecutionProvider": 22
+   }
+  },
+  {
+   "graph": "int8-spatial-first",
+   "backend": "coreml-any-unit",
+   "median_ms": 0.15216649999999998,
+   "best_round_ms": 0.1518335,
+   "worst_round_ms": 0.152542,
+   "rounds": 15,
+   "runs_per_round": 500,
+   "max_abs_logit_diff_vs_cpu_provider": 0.0,
+   "nodes_by_provider": {
+    "CoreMLExecutionProvider": 4,
+    "CPUExecutionProvider": 22
+   }
+  }
+ ]
+}

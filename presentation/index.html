@@ -310,7 +310,7 @@ video{object-fit:contain;background:black}
 <ul style="font-size:27px;line-height:1.45;color:#3D4A5C">
 <li>Leave only the grouped spatial convolution in FP32</li>
 <li>Is the mix faster than FP32?</li>
-<li>Time FP32, INT8 and the mix on the M5, apart from M4</li>
+<li>Time FP32, INT8 and the mix on the same M4, same models</li>
 </ul>
 <p style="margin-top:auto;font-size:24px;line-height:1.35;color:#526177">No retraining needed</p>
 </div>
@@ -326,7 +326,7 @@ video{object-fit:contain;background:black}
 </div>
 </div>
 <p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7A808A">Peiye Li · COMP 690 · 18 · plans only, nothing on this slide has been run · both follow-ups come after the frozen plan</p>
-<aside>Every experiment in the proposal is done, and the analysis plan was frozen before day 2 was scored. What is left is the write-up: I will revise the report and slides from today's feedback, keep the frozen-plan results as the main claims, and mark anything added later as post-test. If time allows, two follow-ups, in this order. First, INT8 was slower on the M4, and the profile points to the quantized grouped spatial convolution. Keeping just that layer in floating point tests this directly and needs no retraining; the new timings would come from the M5, so they stay separate from the M4 numbers. Second, the penalty changed little because band power rises and falls together across the scalp. Removing that shared swing first tests whether a better redundancy measure helps, mainly at eight electrodes. Day 2 has already been seen, so a result there would be exploratory; confirming it needs a second two-day dataset.</aside>
+<aside>Every experiment in the proposal is done, and the analysis plan was frozen before day 2 was scored. What is left is the write-up: I will revise the report and slides from today's feedback, keep the frozen-plan results as the main claims, and mark anything added later as post-test. If time allows, two follow-ups, in this order. First, INT8 was slower on the M4, and the profile points to the quantized grouped spatial convolution. Keeping just that layer in floating point tests this directly and needs no retraining. The original models are still on the same M4 Mac mini, so FP32, INT8 and the mixed version can be timed there side by side and compared with the earlier numbers. Second, the penalty changed little because band power rises and falls together across the scalp. Removing that shared swing first tests whether a better redundancy measure helps, mainly at eight electrodes. Day 2 has already been seen, so a result there would be exploratory; confirming it needs a second two-day dataset.</aside>
 </section>
 
 <section class="slide" id="takeaways" data-transition="fade" style="background:#14213D;color:#F6F5F1;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">

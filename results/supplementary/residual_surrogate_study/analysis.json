@@ -1,0 +1,607 @@
+{
+ "tests_lee2019": {
+  "S1": {
+   "mean": 4.299382716049383,
+   "ci": [
+    3.09104938271605,
+    5.496913580246915
+   ],
+   "worse": 7,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": true
+  },
+  "S2": {
+   "mean": -4.1234567901234565,
+   "ci": [
+    -5.310185185185185,
+    -3.018518518518519
+   ],
+   "worse": 45,
+   "people": 54,
+   "rule": "interval upper bound below 0",
+   "holds": true
+  },
+  "S3": {
+   "mean": 0.27160493827160515,
+   "ci": [
+    -0.4907407407407401,
+    1.0246913580246915
+   ],
+   "worse": 21,
+   "people": 54,
+   "rule": "interval lower bound above -2",
+   "holds": true
+  },
+  "S4": {
+   "rho": -0.07898599101913152,
+   "ci": [
+    -0.3402373111832665,
+    0.19991977524385487
+   ],
+   "people": 54,
+   "rule": "interval upper bound below 0",
+   "holds": false
+  }
+ },
+ "decomposition": [
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost",
+   "a": "surr",
+   "b": "none",
+   "mean": -1.5023249171716992,
+   "ci": [
+    -2.2880927328835634,
+    -0.7003559236360285
+   ],
+   "worse": 7,
+   "people": 9,
+   "seed_error": 0.3448310606501426
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "information",
+   "a": "real",
+   "b": "surr",
+   "mean": 0.34002570661738296,
+   "ci": [
+    -0.5280971521976425,
+    1.1764372418041993
+   ],
+   "worse": 4,
+   "people": 9,
+   "seed_error": 0.7131093407281741
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "sum",
+   "a": "real",
+   "b": "none",
+   "mean": -1.1622992105543162,
+   "ci": [
+    -2.451931335777238,
+    0.17947617923763362
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 0.8093164826762107
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "pred_cost",
+   "a": "pred",
+   "b": "none",
+   "mean": 0.48492620857469465,
+   "ci": [
+    -0.4874068794567016,
+    1.6284747361807774
+   ],
+   "worse": 5,
+   "people": 9,
+   "seed_error": 0.6711322231467227
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "order",
+   "a": "real",
+   "b": "full",
+   "mean": -0.8373456736863045,
+   "ci": [
+    -2.3189509604815157,
+    0.5313018926621859
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 0.6451175120855722
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost_d0",
+   "a": "surr-d0",
+   "b": "none",
+   "mean": -1.5283030284874113,
+   "ci": [
+    -2.66521423034777,
+    -0.5664705910768615
+   ],
+   "worse": 8,
+   "people": 9,
+   "seed_error": 0.5524134733941637
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost_d1",
+   "a": "surr-d1",
+   "b": "none",
+   "mean": -1.4583426794062464,
+   "ci": [
+    -2.316567838177899,
+    -0.5653809411345048
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 0.43007758330141954
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost_d2",
+   "a": "surr-d2",
+   "b": "none",
+   "mean": -1.520329043621447,
+   "ci": [
+    -2.6007720851804206,
+    -0.3531321756984575
+   ],
+   "worse": 7,
+   "people": 9,
+   "seed_error": 0.3485997705966005
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost",
+   "a": "surr",
+   "b": "none",
+   "mean": -2.6244636141948083,
+   "ci": [
+    -3.9287711117614776,
+    -1.1893780960146356
+   ],
+   "worse": 7,
+   "people": 9,
+   "seed_error": 0.8582355941149036
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "information",
+   "a": "real",
+   "b": "surr",
+   "mean": 2.1995636081935612,
+   "ci": [
+    1.1425259222459636,
+    3.205566921620753
+   ],
+   "worse": 2,
+   "people": 9,
+   "seed_error": 0.3483827423861418
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "sum",
+   "a": "real",
+   "b": "none",
+   "mean": -0.4249000060012473,
+   "ci": [
+    -1.4924237314643076,
+    0.9572186030254852
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 0.7918016358882498
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "pred_cost",
+   "a": "pred",
+   "b": "none",
+   "mean": 0.34183584644070053,
+   "ci": [
+    -1.046627072234829,
+    1.7786797871424354
+   ],
+   "worse": 5,
+   "people": 9,
+   "seed_error": 1.046638384262409
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "order",
+   "a": "real",
+   "b": "full",
+   "mean": -0.10946065255788698,
+   "ci": [
+    -1.710779717410648,
+    1.5092171754489727
+   ],
+   "worse": 4,
+   "people": 9,
+   "seed_error": 0.40608617468615593
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost_d0",
+   "a": "surr-d0",
+   "b": "none",
+   "mean": -3.05121144401104,
+   "ci": [
+    -5.114381388561004,
+    -1.022346206227116
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 1.0348942076451262
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost_d1",
+   "a": "surr-d1",
+   "b": "none",
+   "mean": -1.4847188665317022,
+   "ci": [
+    -2.4656523452932086,
+    -0.5244958066650147
+   ],
+   "worse": 7,
+   "people": 9,
+   "seed_error": 1.0211464597765416
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost_d2",
+   "a": "surr-d2",
+   "b": "none",
+   "mean": -3.3374605320416837,
+   "ci": [
+    -4.719736470272683,
+    -1.6898229551512094
+   ],
+   "worse": 7,
+   "people": 9,
+   "seed_error": 0.6533915669587063
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost",
+   "a": "surr",
+   "b": "none",
+   "mean": -4.1234567901234565,
+   "ci": [
+    -5.310185185185185,
+    -3.018518518518519
+   ],
+   "worse": 45,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "information",
+   "a": "real",
+   "b": "surr",
+   "mean": 4.299382716049383,
+   "ci": [
+    3.09104938271605,
+    5.496913580246915
+   ],
+   "worse": 7,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "sum",
+   "a": "real",
+   "b": "none",
+   "mean": 0.17592592592592618,
+   "ci": [
+    -1.2530864197530858,
+    1.561805555555555
+   ],
+   "worse": 23,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "pred_cost",
+   "a": "pred",
+   "b": "none",
+   "mean": 0.27160493827160515,
+   "ci": [
+    -0.4907407407407401,
+    1.0246913580246915
+   ],
+   "worse": 21,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "order",
+   "a": "real",
+   "b": "full",
+   "mean": 0.3055555555555554,
+   "ci": [
+    -0.7283950617283956,
+    1.419753086419753
+   ],
+   "worse": 30,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost_d0",
+   "a": "surr-d0",
+   "b": "none",
+   "mean": -4.422839506172839,
+   "ci": [
+    -5.817978395061729,
+    -3.2006172839506175
+   ],
+   "worse": 45,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "measure": "next_day",
+   "term": "cost_d1",
+   "a": "surr-d1",
+   "b": "none",
+   "mean": -3.824074074074074,
+   "ci": [
+    -5.070987654320987,
+    -2.6296296296296298
+   ],
+   "worse": 43,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost",
+   "a": "surr",
+   "b": "none",
+   "mean": -5.361111111111111,
+   "ci": [
+    -7.268518518518518,
+    -3.604861111111111
+   ],
+   "worse": 44,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "measure": "within",
+   "term": "information",
+   "a": "full",
+   "b": "surr",
+   "mean": 3.0956790123456783,
+   "ci": [
+    1.7438271604938274,
+    4.419753086419752
+   ],
+   "worse": 15,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "measure": "within",
+   "term": "sum",
+   "a": "full",
+   "b": "none",
+   "mean": -2.2654320987654324,
+   "ci": [
+    -4.225385802469136,
+    -0.5122685185185196
+   ],
+   "worse": 35,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "measure": "within",
+   "term": "pred_cost",
+   "a": "pred",
+   "b": "none",
+   "mean": 0.12345679012345688,
+   "ci": [
+    -0.6327160493827153,
+    0.9074074074074088
+   ],
+   "worse": 29,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "measure": "within",
+   "term": "cost_d0",
+   "a": "surr-d0",
+   "b": "none",
+   "mean": -5.361111111111111,
+   "ci": [
+    -7.268518518518518,
+    -3.604861111111111
+   ],
+   "worse": 44,
+   "people": 54
+  }
+ ],
+ "conditions": [
+  {
+   "dataset": "bnci2a",
+   "condition": "none",
+   "next_day": 65.14600526806736,
+   "held_out": 62.991919165064324,
+   "train_final": 92.46015702219746,
+   "residual_share": null,
+   "extra_share": null
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "real",
+   "next_day": 63.98370605751305,
+   "held_out": 62.56701915906308,
+   "train_final": 93.20751630560662,
+   "residual_share": 0.03325447136549012,
+   "extra_share": 0.3576318960148557
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "pred",
+   "next_day": 65.63093147664205,
+   "held_out": 63.333755011505026,
+   "train_final": 92.34349666931533,
+   "residual_share": 0.03325447136549012,
+   "extra_share": 0.3602804362845038
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "surr",
+   "next_day": 63.64368035089566,
+   "held_out": 60.36745555086952,
+   "train_final": 92.96924574729958,
+   "residual_share": 0.03325447136549012,
+   "extra_share": 0.33511373834275965
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "full",
+   "next_day": 64.82105173119935,
+   "held_out": 62.676479811620965,
+   "train_final": 93.05125729641456,
+   "residual_share": null,
+   "extra_share": null
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "none",
+   "next_day": 67.02469135802468,
+   "held_out": 62.60185185185184,
+   "train_final": 96.10185185185186,
+   "residual_share": null,
+   "extra_share": null
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "real",
+   "next_day": 67.2006172839506,
+   "held_out": null,
+   "train_final": 98.87037037037037,
+   "residual_share": 0.24968676799096617,
+   "extra_share": 0.6116775750889685
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "pred",
+   "next_day": 67.29629629629629,
+   "held_out": 62.72530864197532,
+   "train_final": 96.04320987654322,
+   "residual_share": 0.24968676799096617,
+   "extra_share": 0.6146940245813357
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "surr",
+   "next_day": 62.90123456790122,
+   "held_out": 57.24074074074075,
+   "train_final": 99.01851851851852,
+   "residual_share": 0.24968676799096617,
+   "extra_share": 0.5969034095038229
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "full",
+   "next_day": 66.89506172839508,
+   "held_out": 60.33641975308642,
+   "train_final": 99.0216049382716,
+   "residual_share": null,
+   "extra_share": null
+  }
+ ],
+ "seed_split_cost": {
+  "rho": 0.4925435752698425,
+  "people": 54,
+  "halves": "seed 0 against seeds 1-2",
+  "note": "post hoc; not one of the registered tests"
+ },
+ "interpolated_input_kind": {
+  "bnci2a": {
+   "a": 0.03686792995117663,
+   "next_day_cost_at_a": -1.7295888701060154,
+   "held_out_cost_at_a": -1.500275147476551,
+   "points": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+   ]
+  },
+  "lee2019": {
+   "a": 0.2855514123145563,
+   "next_day_cost_at_a": -4.4944388624210685,
+   "held_out_cost_at_a": -4.3443002770939065,
+   "points": [
+    0.0,
+    0.5,
+    1.0
+   ]
+  }
+ }
+}

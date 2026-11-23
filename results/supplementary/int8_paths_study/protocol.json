@@ -1,0 +1,284 @@
+{
+ "created_at": "2026-11-22T17:08:22.844924-05:00",
+ "status": "supplementary_post_test",
+ "historical_test_results_already_known": true,
+ "purpose": "Map which grouped-convolution shapes ONNX Runtime runs faster in INT8 than in FP32, and on which CPUs, to show whether EEGNet's slow layer is one case of a general slow path.",
+ "claim_boundary": "Exploratory and synthetic: random weights and inputs, no EEG. Timings are batch-1, single-threaded medians of interleaved rounds on shared machines (the load is recorded); they are not the decoders' end-to-end latency.",
+ "timing": {
+  "rounds": 7,
+  "runs": 200,
+  "warmup": 50,
+  "calibration_windows": 32,
+  "timing_windows": 8
+ },
+ "kernels": {
+  "spatial": {
+   "size": [
+    22,
+    1
+   ],
+   "padding": [
+    0,
+    0
+   ]
+  },
+  "temporal": {
+   "size": [
+    1,
+    64
+   ],
+   "padding": [
+    0,
+    32
+   ]
+  }
+ },
+ "input_shape": [
+  "G",
+  22,
+  500
+ ],
+ "quantization": "mibci.deploy.quantize_int8: QDQ, per-channel int8 weights, int8 activations, min-max",
+ "historical_frozen_config_sha256": "98ddc1c2d2fe025e203459131bce4a204c7dfd18f0897e4aef67958f8b2af271",
+ "source_code_sha256": {
+  "scripts/int8_paths_study.py": "793eb4761603470d13525d4b0272a56f033abf25b5502e377f42da164c9641f2",
+  "src/mibci/data.py": "f904e58875eb733d0a10078c09c9711ad30266be81a7c810617b41b06337ac95",
+  "src/mibci/deploy.py": "1ab5f0c7a5244bc7407d2ec63ad7c6620860ff6412ee98396aee09c5cec9df5f",
+  "src/mibci/experiment.py": "251e188102ac12a5a5f7e346e76d763343f1cfed42473115fa6f79a861cc207b",
+  "src/mibci/int8_paths.py": "18b3b64e1bd02fc00624fc7feb47df73d8e044962c7124b06e3bc93c058e4a8c",
+  "src/mibci/model.py": "05315425b4feaaed821206dcbb2cdf68b4c771a5cf7400e0cac1c28be97b2175",
+  "src/mibci/study.py": "53a20b0f5dab5271b2782c3b87d5d2a3d768e268d6dc37a43d32c7a8f0e24858",
+  "src/mibci/timing.py": "6f29d4c2b729363ef64b2e55de62a12afaada5a8ada7799da80c13f9b1a0457b",
+  "src/mibci/train.py": "ba247c9a147570f01dc549a19ebf8f13f045ed807cd48e8eead70596d8b29fb7"
+ },
+ "jobs": [
+  {
+   "name": "spatial_g1_m1",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 1
+  },
+  {
+   "name": "spatial_g1_m2",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 2
+  },
+  {
+   "name": "spatial_g1_m4",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 4
+  },
+  {
+   "name": "spatial_g1_m8",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 8
+  },
+  {
+   "name": "spatial_g1_m16",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 16
+  },
+  {
+   "name": "spatial_g2_m1",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 1
+  },
+  {
+   "name": "spatial_g2_m2",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 2
+  },
+  {
+   "name": "spatial_g2_m4",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 4
+  },
+  {
+   "name": "spatial_g2_m8",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 8
+  },
+  {
+   "name": "spatial_g2_m16",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 16
+  },
+  {
+   "name": "spatial_g4_m1",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 1
+  },
+  {
+   "name": "spatial_g4_m2",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 2
+  },
+  {
+   "name": "spatial_g4_m4",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 4
+  },
+  {
+   "name": "spatial_g4_m8",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 8
+  },
+  {
+   "name": "spatial_g8_m1",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 1
+  },
+  {
+   "name": "spatial_g8_m2",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 2
+  },
+  {
+   "name": "spatial_g8_m4",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 4
+  },
+  {
+   "name": "spatial_g16_m1",
+   "kernel": "spatial",
+   "groups": 16,
+   "per_group": 1
+  },
+  {
+   "name": "spatial_g16_m2",
+   "kernel": "spatial",
+   "groups": 16,
+   "per_group": 2
+  },
+  {
+   "name": "temporal_g1_m1",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 1
+  },
+  {
+   "name": "temporal_g1_m2",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 2
+  },
+  {
+   "name": "temporal_g1_m4",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 4
+  },
+  {
+   "name": "temporal_g1_m8",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 8
+  },
+  {
+   "name": "temporal_g1_m16",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 16
+  },
+  {
+   "name": "temporal_g2_m1",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 1
+  },
+  {
+   "name": "temporal_g2_m2",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 2
+  },
+  {
+   "name": "temporal_g2_m4",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 4
+  },
+  {
+   "name": "temporal_g2_m8",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 8
+  },
+  {
+   "name": "temporal_g2_m16",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 16
+  },
+  {
+   "name": "temporal_g4_m1",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 1
+  },
+  {
+   "name": "temporal_g4_m2",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 2
+  },
+  {
+   "name": "temporal_g4_m4",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 4
+  },
+  {
+   "name": "temporal_g4_m8",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 8
+  },
+  {
+   "name": "temporal_g8_m1",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 1
+  },
+  {
+   "name": "temporal_g8_m2",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 2
+  },
+  {
+   "name": "temporal_g8_m4",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 4
+  },
+  {
+   "name": "temporal_g16_m1",
+   "kernel": "temporal",
+   "groups": 16,
+   "per_group": 1
+  },
+  {
+   "name": "temporal_g16_m2",
+   "kernel": "temporal",
+   "groups": 16,
+   "per_group": 2
+  }
+ ]
+}

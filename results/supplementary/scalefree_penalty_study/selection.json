@@ -1,0 +1,89 @@
+{
+ "rule": "for each dataset and condition, the lam (0 included) with the highest held-out accuracy of the training day, averaged over seeds and folds within each participant and then over participants; ties go to the smaller lam. When lam = 0 is selected, a second reading also trains the final models at the largest lam within 1.0 point of the best",
+ "selection": {
+  "bnci2a|full-22": {
+   "held_out_accuracy": {
+    "0.0": 0.6267647981162097,
+    "0.001": 0.6259253498507618,
+    "0.003": 0.6242511099127444,
+    "0.01": 0.6235778183143336,
+    "0.03": 0.5886237778509245,
+    "0.1": 0.5188654504835389
+   },
+   "selected_lam": 0.0,
+   "second_reading_lam": 0.01
+  },
+  "bnci2a|relevance-16": {
+   "held_out_accuracy": {
+    "0.0": 0.6299191916506433,
+    "0.001": 0.6279582560297468,
+    "0.003": 0.6265000343755953,
+    "0.01": 0.6151844814962685,
+    "0.03": 0.5816473013016201,
+    "0.1": 0.5163209504052191
+   },
+   "selected_lam": 0.0,
+   "second_reading_lam": 0.003
+  },
+  "bnci2a|relevance-16-plus-6": {
+   "held_out_accuracy": {
+    "0.0": 0.5563407445539901,
+    "0.001": 0.5598156448964662,
+    "0.003": 0.5611635326584894,
+    "0.01": 0.5663485224288818,
+    "0.03": 0.540830556642108,
+    "0.1": 0.4646503340856039
+   },
+   "selected_lam": 0.01,
+   "second_reading_lam": null
+  },
+  "bnci2a|relevance-16-plus-16": {
+   "held_out_accuracy": {
+    "0.0": 0.4836290063884889,
+    "0.001": 0.48923277949326366,
+    "0.003": 0.4885667995591606,
+    "0.01": 0.4897011076824767,
+    "0.03": 0.4802244283256802,
+    "0.1": 0.40748509723856974
+   },
+   "selected_lam": 0.01,
+   "second_reading_lam": null
+  },
+  "lee2019|full-62": {
+   "held_out_accuracy": {
+    "0.0": 0.5937037037037037,
+    "0.001": 0.5939814814814814,
+    "0.003": 0.5961111111111111,
+    "0.01": 0.5841666666666667,
+    "0.03": 0.5703703703703704,
+    "0.1": 0.5398148148148147
+   },
+   "selected_lam": 0.003,
+   "second_reading_lam": null
+  },
+  "lee2019|relevance-16": {
+   "held_out_accuracy": {
+    "0.0": 0.6350925925925925,
+    "0.001": 0.6357407407407407,
+    "0.003": 0.6378703703703704,
+    "0.01": 0.6367592592592594,
+    "0.03": 0.6181481481481481,
+    "0.1": 0.5782407407407408
+   },
+   "selected_lam": 0.003,
+   "second_reading_lam": null
+  },
+  "lee2019|relevance-16-plus-46": {
+   "held_out_accuracy": {
+    "0.0": 0.5164814814814815,
+    "0.001": 0.5125925925925926,
+    "0.003": 0.5152777777777777,
+    "0.01": 0.5195370370370371,
+    "0.03": 0.5174074074074074,
+    "0.1": 0.5321296296296295
+   },
+   "selected_lam": 0.1,
+   "second_reading_lam": null
+  }
+ }
+}

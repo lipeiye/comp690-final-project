@@ -1,0 +1,1158 @@
+{
+ "label": "novnni-intel-6140",
+ "host": "c0316.ll.unc.edu",
+ "cpu": {
+  "model": "Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz",
+  "features": {
+   "avx2": true,
+   "avx512f": true,
+   "avx512_vnni": false,
+   "avx_vnni": false,
+   "amx_int8": false,
+   "amx_tile": false,
+   "asimddp": false,
+   "i8mm": false
+  }
+ },
+ "onnxruntime": "1.31.1",
+ "finished": "2026-11-22T18:35:48.002940-05:00",
+ "rows": [
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-01_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 273
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-02_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-03_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 270
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-04_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-05_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 262
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-06_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 219
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-07_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 271
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-08_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 264
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_full-22",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "int8",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_temporal",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_spatial",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_depth",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-conv_separable_point",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-final_layer",
+   "tensors": 15,
+   "capture_equals_plain": true,
+   "windows": 237
+  },
+  {
+   "model": "sub-09_seed-0_relevance-16-prune50",
+   "variant": "7bit-all",
+   "tensors": 13,
+   "capture_equals_plain": true,
+   "windows": 237
+  }
+ ],
+ "files": {
+  "sub-01_seed-0_full-22__int8.npz": "830736b7c3f019669a7b4583c6ec008acdb2ed7bf2f16f12f3057735df2dafe0",
+  "sub-01_seed-0_full-22__int8.onnx": "1d6728495901ef5104971529fb281f084f93e49e9a9313f683493a50d27e43da",
+  "sub-01_seed-0_full-22__7bit-conv_temporal.npz": "1059e7f37a03d4a9a1bd7eeda4df976c4537eb5fec85bf59fda146e94d8e21c7",
+  "sub-01_seed-0_full-22__7bit-conv_temporal.onnx": "1dadcac4ffc769e417014a6813ad98efe79a592dca32d6b1bbfd9f82735d7d81",
+  "sub-01_seed-0_full-22__7bit-conv_spatial.npz": "595102da1a5066809341c324d9d049a35d2c8970a125303b1a39853786560575",
+  "sub-01_seed-0_full-22__7bit-conv_spatial.onnx": "3aef9d9c36b4e0c63346c82aa44696ea04c73811d8e0a0df0289ae62c8d8c9b9",
+  "sub-01_seed-0_full-22__7bit-conv_separable_depth.npz": "5a56aab6fce5ce290fecf2c995d7f09e3edf4b3435f079ea3cfde1df8ff91a50",
+  "sub-01_seed-0_full-22__7bit-conv_separable_depth.onnx": "8d4a77fafa2e709e05e9deedb6f491971fb49c7eb009493d2ac80f88e2348494",
+  "sub-01_seed-0_full-22__7bit-conv_separable_point.npz": "9fb9cf6cfc359a7926c66b49b9973084953105f891db55bdb236d0ac8be66a0c",
+  "sub-01_seed-0_full-22__7bit-conv_separable_point.onnx": "eef25cbf0dcc4f31185d4c84e5b5c97b41be4bdfb11aa5d208bb758889c332c9",
+  "sub-01_seed-0_full-22__7bit-final_layer.npz": "bf964536a622bdb6ce64ff336a5e40d2f33047c4b70d74d7511b6b526c1c72b3",
+  "sub-01_seed-0_full-22__7bit-final_layer.onnx": "cbba8746cdced28d56dfb3cfc76989d1c6fef09a22cbd0d297de6e81980dc1ff",
+  "sub-01_seed-0_full-22__7bit-all.npz": "f8abad05024def65b039114085fd3689c017a44c4afb1a2ee9fdc5eb560bec6e",
+  "sub-01_seed-0_full-22__7bit-all.onnx": "b60a377afa9bbe7cbd2c86d467e89e72b50b2023f1d3dd7733f32be60abc4f66",
+  "sub-01_seed-0_relevance-16-prune50__int8.npz": "1dcc5260c75bc2f4b41a4546bf8a70e1e5982befa93daf9953272aa5fd120338",
+  "sub-01_seed-0_relevance-16-prune50__int8.onnx": "3c5a59d2f5f8a5e9122938f4604ece95446d2ffa1d0b4b605a5ecf9dd063721a",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "274fefd9cb5756eea31574a738a466664c4d60b1dc102b367ad348e0f9f822dc",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "4041b59ea201871c4af524954f64459a6f5ba88c689f475a00c80438cb9ba631",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "fdfba4c8b1b000856ffdbe739b913007bdd4ec9cbbd0db8217bb8f53112b1a56",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "2baa289185c2ae29b0f5c6d0745d896016ae69f66d56e845577456a38b854f6b",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "73150269103e0d20631aca5a708170c0989844a6cdabf6b218684273608870f0",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "00f9dee0fc82348eafeedbd560a171d1872ff82a442a194e2860c5c28ce88109",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "967cc43043ff64455559648e5b11c3fd561ea4e18d8b2bd1cd55fa41010ec605",
+  "sub-01_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "be8863790e28dc7783adc91026982f469899b22d3e6ab2118feb0eda2a58da92",
+  "sub-01_seed-0_relevance-16-prune50__7bit-final_layer.npz": "81c0f487cb5ad6bbf4542412a95a611219452846629f4c7a47f8c1dc78c1ef4f",
+  "sub-01_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "87c997b51ed8de5faf6256199fb8f230bf4cd14b1db8d2bd1346969f9f18424d",
+  "sub-01_seed-0_relevance-16-prune50__7bit-all.npz": "12d0c57823b816839d8d72296b8db3e06c5671f9c0756af9640b7ee73b0d8d61",
+  "sub-01_seed-0_relevance-16-prune50__7bit-all.onnx": "832fac38c57f434474291e283ed20ebc942b628852b4d61f40c2f32b245d0429",
+  "sub-02_seed-0_full-22__int8.npz": "4caf5848461bf2ba0c2829cc9aba452facc7fe8def6124f5a3ec124778948718",
+  "sub-02_seed-0_full-22__int8.onnx": "9b9ac66a26ea65dd57d2f91104a51263bf155008a3e762c30e743b21e0c5ae9c",
+  "sub-02_seed-0_full-22__7bit-conv_temporal.npz": "44d66fdefb3c1ee2c7d5314490e03f95f66911c1b0369e081e1761175baee2fb",
+  "sub-02_seed-0_full-22__7bit-conv_temporal.onnx": "e4abfda40759777ce6c9f24e45447909dee37bbaa69d79020440261f0b783fd0",
+  "sub-02_seed-0_full-22__7bit-conv_spatial.npz": "1b67327501b5545c38b088e7fb759681d12ad21e6353e3113673b14f47382c11",
+  "sub-02_seed-0_full-22__7bit-conv_spatial.onnx": "a514948c4befdd4384459ed63df557545b041d29cd0b13ed26773404177b918c",
+  "sub-02_seed-0_full-22__7bit-conv_separable_depth.npz": "7cf7692fbe1f49b768652563bb6bcefd3694b5e3489f15ae3f470aaf4fdb4e82",
+  "sub-02_seed-0_full-22__7bit-conv_separable_depth.onnx": "50658f1c28ac3babfe849ff638df8653db3b92b78e220504a218f379124bdca6",
+  "sub-02_seed-0_full-22__7bit-conv_separable_point.npz": "582586f5d2a0b78b619e1a7924e5178a8c2fed048f01ffa77b9f4d72a77bba66",
+  "sub-02_seed-0_full-22__7bit-conv_separable_point.onnx": "2e3400d6a093e6d44db0c1644a77bfc6fd29290350614ffff5b2bfac8abd504c",
+  "sub-02_seed-0_full-22__7bit-final_layer.npz": "05699befb6a7255d1ef0b6fd6d562e82095864c58040d64a630b102211fa42cf",
+  "sub-02_seed-0_full-22__7bit-final_layer.onnx": "3d77ddf1ffcc081be178857500fc3ec4e7b4c7cc259d976bf88fbfd44a321ad7",
+  "sub-02_seed-0_full-22__7bit-all.npz": "9789a28feed72e31a9fa12ac646e5a491ded7e28b92cf2b89411c0d9446a262a",
+  "sub-02_seed-0_full-22__7bit-all.onnx": "3ded79e0f74a7a460eefa8c5ff2d02a5449d52b43c855360891290ecd3632cd6",
+  "sub-02_seed-0_relevance-16-prune50__int8.npz": "f88b3e91171ee28dbfe7ba1541095486a0e30e3e041df9053e5bbb76f8f55bb4",
+  "sub-02_seed-0_relevance-16-prune50__int8.onnx": "e1a5378410b194931d1789e34be326106ef91fbfa0e5a71bcd08c0fd8c53fc8e",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "36ce611cab70a1217e7e4513ae6b5821d0f183c3d87e163c4ab959d66583769e",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "3ad7ecf7bb698f4a6fc9ab7706d58a64b964140be2993dd287f4c4ada1ca2f94",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "741f0acc11a92019c2095a817fa54fe346ee1f0e159787dee114356ca39a6970",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "2f6cb8ebf23c7022dce856aac0dd37f8aa4e44f71e26eb9945de9e4ad65be6cd",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "f1fb58f8b8db3db0185af236fc9fd558619c0705f436180c25a40ee4af128d38",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "8c87aff3368feb262f646f19b110a9dc355a5be5a670dc78467341f442d06374",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "265de68b116a5f17783935fbbfeb32433bcce8efb5101ead85a0340958d19abf",
+  "sub-02_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "3dbb896100e819e4b67406e187ad96f6028255550147a4a35e793d62067d041e",
+  "sub-02_seed-0_relevance-16-prune50__7bit-final_layer.npz": "62f44847566bb5d66f007e6a88b6acd13975e785d68254e5e83c463c85eccf4d",
+  "sub-02_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "c5fa138be0a4a488c6adab283ff00afe937dff7bbbd4bf3901005aa4937f30db",
+  "sub-02_seed-0_relevance-16-prune50__7bit-all.npz": "2861164cab4d51bb6c577d8a80ced257787b74d4b869958e44bc4b2b85102901",
+  "sub-02_seed-0_relevance-16-prune50__7bit-all.onnx": "145d07cf7375dd019694b43c986474e26c0e08ce2593ef57089b75b93fefb47c",
+  "sub-03_seed-0_full-22__int8.npz": "d7c56b7e57b71682426f6be016c46128fecc6af2cfcd23c9b507c25a1bb63ab4",
+  "sub-03_seed-0_full-22__int8.onnx": "97a83b3794f382594aa17b69984c7699600581af50747112693cbe17caeb9c36",
+  "sub-03_seed-0_full-22__7bit-conv_temporal.npz": "b54a0fb64053ae21718792bf6b20c6534a81a753f4d504e7fb2043e1788503e3",
+  "sub-03_seed-0_full-22__7bit-conv_temporal.onnx": "523ba9f72e313f360feaf0f87e23d14c848968ece98b3744604a3ea1111abf24",
+  "sub-03_seed-0_full-22__7bit-conv_spatial.npz": "9faa2768d0f0041c79add4cd85a72c39fa66a3b6c9cedda955a50d0c85a342fd",
+  "sub-03_seed-0_full-22__7bit-conv_spatial.onnx": "1bdd42f5e41ba4e7c757794eacb0607ab4dbf171af9e8c911bb9d8da804fe7ef",
+  "sub-03_seed-0_full-22__7bit-conv_separable_depth.npz": "10da59bdae21219f1edfa797428a697322af7726fd548e11bc824454b9512ca8",
+  "sub-03_seed-0_full-22__7bit-conv_separable_depth.onnx": "0bb4776083b249383590f57b40b1c06e66f65b48c2f89e6a9e9acd57d365262c",
+  "sub-03_seed-0_full-22__7bit-conv_separable_point.npz": "1c60dbde16337b0281226bff8135032b4bc5773f00a9321d7169a45db3522da4",
+  "sub-03_seed-0_full-22__7bit-conv_separable_point.onnx": "6cc4f820bf0d0c8a0967337d4d2f2a8351c52705899549eaaa21ae862a37d01e",
+  "sub-03_seed-0_full-22__7bit-final_layer.npz": "01ba2cf160803b181ac5bf6105d0039ccb9ee191a31ee96900a86b5e4d38a30e",
+  "sub-03_seed-0_full-22__7bit-final_layer.onnx": "f502b6dcc82fffa13b3c7b4de537e91e087b3a22c6a727e5ab6601e01caf614f",
+  "sub-03_seed-0_full-22__7bit-all.npz": "9fc919ec3896a80d7fe4fb5425420c4b3e1f9953dbef7bb2bc772162a5b84c07",
+  "sub-03_seed-0_full-22__7bit-all.onnx": "c9de8f414e9abad5ae74e49cd03f402482cf2bf8eccdd7826bf83d4709a90158",
+  "sub-03_seed-0_relevance-16-prune50__int8.npz": "ea32e1d5e127e493d5d19a39dbec64ea13fb9d9060800437e29756a77850134f",
+  "sub-03_seed-0_relevance-16-prune50__int8.onnx": "8b176408930477609382aec2fc50c3f36fc78fc9aacce38a80e8b2f6b170dc1e",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "67202bfb0bdcb842a2631ea0635d87f9bf701d417990f938409efd89615cd2e3",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "808aaa589950b130fff89a74b3fc4c9cf3e64386b333670fc8b11f3989175495",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "ad99f02147776abe73c69213477e29a95deb50c718fffe118b2af462b7921ba9",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "b3ddc64422e505db83a8c0ee33ebaf4cf59160e697e7081fa292393bff09382c",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "7be75748cfca02b1162228bcc3e8337743742047b3da1466fc812df824b9af73",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "082aef34a936d92cfd6f353daa8a620c028962aae1e621d5f2b5db528e39cf45",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "a51dbe7c7cddc94d0346573ff1c6ad9f5819d7410f9009e2453120112aa038c9",
+  "sub-03_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "8c3ee00c3559d1e08b27ff89a88bea5f914939fb7b1d8fe78e3ade7c6d10593d",
+  "sub-03_seed-0_relevance-16-prune50__7bit-final_layer.npz": "e7b162ab06260ed116e1f0ede95f4168d0a919921c9942f91229b349ce766b1d",
+  "sub-03_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "60bbc76a14d94f924cf017755ad882145268fb30117058e54501c2ad02759e68",
+  "sub-03_seed-0_relevance-16-prune50__7bit-all.npz": "40e59e5e396ab4fabbca1325489a28de1b6c1c54e53f2c7ee86f300da66b7e78",
+  "sub-03_seed-0_relevance-16-prune50__7bit-all.onnx": "b5261d569f26fa620fcd5b995da05b3026ff407ac1412476edc256b730aaf032",
+  "sub-04_seed-0_full-22__int8.npz": "379162f8e7b91036375b8fc2d0509d7e1085e29740e9b03cb881de61435589dc",
+  "sub-04_seed-0_full-22__int8.onnx": "390e378d57dd8249f04c5538fffd096f38266eadf995225bc8a24ce43066c948",
+  "sub-04_seed-0_full-22__7bit-conv_temporal.npz": "47f3ee2ec744428dacc5d1c5598af61e2dc3d59b5e6b9757063da2bb82c78384",
+  "sub-04_seed-0_full-22__7bit-conv_temporal.onnx": "f41c5d3a896fe9b73169de7440181e251c854725c8bff77114d32b9a6144b5a7",
+  "sub-04_seed-0_full-22__7bit-conv_spatial.npz": "6c90c35547eca46039de90d2547c0829e3736a97f5e9bb020312aef4fe25685f",
+  "sub-04_seed-0_full-22__7bit-conv_spatial.onnx": "d57ded2b6a0e551f8619419c547e2e188469e53f2d579000c727598bfd1cc12e",
+  "sub-04_seed-0_full-22__7bit-conv_separable_depth.npz": "795bc5bcfc9cb8b2f13e9c3f12726b578209890708bf4f39fba0597fb92f9d3a",
+  "sub-04_seed-0_full-22__7bit-conv_separable_depth.onnx": "e62e9d0e6b03525eea23ee1b864bc4b597dfd78bf41938eff8a77c8bb8e17484",
+  "sub-04_seed-0_full-22__7bit-conv_separable_point.npz": "f49135e2bb6c627a1a386f67e482ad3e56fa9e9c42e7e2e6aba7b461c5b5a511",
+  "sub-04_seed-0_full-22__7bit-conv_separable_point.onnx": "0c5dcdd8f4df73e7d134a1ce1b15957748a137b5f310bd0223595664c2cd30ea",
+  "sub-04_seed-0_full-22__7bit-final_layer.npz": "e0ec4b3d9703cd613de07ab7d20d0e7778a5fd16b2f101e5dc86e0d34656cc80",
+  "sub-04_seed-0_full-22__7bit-final_layer.onnx": "cf5ed9ca02fadcc2d779a61506c3c34f33fee6304da1feaf8b854be9529ef97b",
+  "sub-04_seed-0_full-22__7bit-all.npz": "5ba58eb823e1bffdeb85a28999417c993bbad8784bfb56564b04f5110cd3efb5",
+  "sub-04_seed-0_full-22__7bit-all.onnx": "9176b02e9f13f1be10d05c2a3eefe6cf4f9410272efa3e62d63082e9ddddca69",
+  "sub-04_seed-0_relevance-16-prune50__int8.npz": "83e1cb76a3dc4ee6d201e9304aedcc4c676f434f72790f9c8e6780f2d6bdbf0f",
+  "sub-04_seed-0_relevance-16-prune50__int8.onnx": "6b9c38b8506220547297249291cc3a90cef4760d9c568ab080cb88e1906193f9",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "e1e2d079a4a5856738af964af346b3b26a08cbc2cfc0e2034736f1a6656b92f1",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "8119e4fd64e7dc1d139acbc897650ae636500c15f0499de1dc9917739e5cf464",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "a1e8b8bfc8738198a7add52d3b8c361a4f5b8bec7a8120aa94b22ddfed14110b",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "27a6c56dd70aebe31edfa21a4942743f75f7f97c0d4ea55bb0901375562d50bd",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "642b5d8139b9c2d1703c9a481983471088f89e2d21a2d3847d15c103afc619ea",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "e601dc34982155430334291f37d417d1cb59fa202ea70fabe131778c739bf07b",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "3286ca08a80c00e7fb818116bc4f24d8d7097b61d70b5c6fa2debb631c0df5db",
+  "sub-04_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "91479db805e26c6275a2ebeb01fd3effcccabb55a63eb416a151d0e44baf63a9",
+  "sub-04_seed-0_relevance-16-prune50__7bit-final_layer.npz": "b820f680d71edc9b14a192759cfcd554376f298486e0b7d0729cec138cfd1186",
+  "sub-04_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "85e63ee64831558466335ec253ebef1701e40c02e778997fb0efb213ebd9da64",
+  "sub-04_seed-0_relevance-16-prune50__7bit-all.npz": "1cea485807eedaede2387a185b73c7095fd0d9f606d9f2e77108755c758d5183",
+  "sub-04_seed-0_relevance-16-prune50__7bit-all.onnx": "8a81f9497dffbdf97b2aa9e99c2dfc0a8f151d81b5ec06b0ba77d13b065382c7",
+  "sub-05_seed-0_full-22__int8.npz": "e0d86eb138b1b0cc483688b9ce05fcf1811f683fbf8e570bd5e37607ba52a18b",
+  "sub-05_seed-0_full-22__int8.onnx": "800cb4bfa776548725f3a717b1b2e9d222f6ea3768e69bec20d00d92fde71d89",
+  "sub-05_seed-0_full-22__7bit-conv_temporal.npz": "5b6a6592a2dc95ee8e94257fdcfdeb5360fe7143404ff035322c85e4edd66817",
+  "sub-05_seed-0_full-22__7bit-conv_temporal.onnx": "a061645874f24c03ca89ba72f3e16d2a3812f974859d96352964947468dead3a",
+  "sub-05_seed-0_full-22__7bit-conv_spatial.npz": "ce81dec7a22311d43782d0790dea1c95f99e3634bdbc1a48f4cc9aaeebc6f580",
+  "sub-05_seed-0_full-22__7bit-conv_spatial.onnx": "c25987a28f12536e7e4322f1429811bc87fb1140c729f522852bedcdbcb1877e",
+  "sub-05_seed-0_full-22__7bit-conv_separable_depth.npz": "1c69c34dd33bcc63f4bc45ef0bb5df1a86f241c70648ee37a1e4989d83b4884a",
+  "sub-05_seed-0_full-22__7bit-conv_separable_depth.onnx": "72702122327e160104c327128946026fe2c0e7b4068fe34e015c03d20a754e5d",
+  "sub-05_seed-0_full-22__7bit-conv_separable_point.npz": "f3c968e21f1fa6d21ce25c694774c7eb249be23228df5272832296541a380bcb",
+  "sub-05_seed-0_full-22__7bit-conv_separable_point.onnx": "7a7db9776697b5afbe6497062dc774d0293dc58a580b008f01a3bdf5f250b19d",
+  "sub-05_seed-0_full-22__7bit-final_layer.npz": "0af6f2f25a828b9432f684c28e5ecb77702a6423fb2d8ada76907170da2646ef",
+  "sub-05_seed-0_full-22__7bit-final_layer.onnx": "1c679bc67fd58d799a6572d6aa938761daeecdc48437cdda1e3c8b525393260a",
+  "sub-05_seed-0_full-22__7bit-all.npz": "92857144a57e2af1b0a8bbc0760ccf6460514bef20bb49a1202451371ca1b447",
+  "sub-05_seed-0_full-22__7bit-all.onnx": "c2386d6fd1c327958b69899f51217c0c52a291c047781985e3ba6656a8b6d502",
+  "sub-05_seed-0_relevance-16-prune50__int8.npz": "81ba9f9880b9755008c5f44b9ccbe2be0435d07a2c193cb9060eefd6d0f4efd8",
+  "sub-05_seed-0_relevance-16-prune50__int8.onnx": "6c2b5375ad200f42f5eed3566e58970c94f278c4e8ca022805c15bf75fec3aeb",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "9deb7fc3c5f2188379e3b57d03907e01df3af43a58577879cb6dc19e13f967b7",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "7b9d9d9723c4f3d3660be6ce098715af4c38521f996c144e621e15aab054e842",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "e7b5bcc8dfb752a61dc80bd7e82832846f5f5f4002507123c3d61c2800f30423",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "965b69008e575efa03bf63ab0f704862c6e5489085a3290470b583d5c784bb8f",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "28f8b638a96cb9f8d190a94841116f0013f938685247da90dbeaffbca77df8af",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "a052e04dc6166f03549b403922a427c65d86dc408e8a28ca409c0dafd5af6012",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "be3c8dd353c76e01468b7b6ed8bfa005dc2ecafe5b1259510d050018996353bb",
+  "sub-05_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "9a3b6e91e341fbe5104859c79be895ac9760c74b3357bac027165b89da6f929d",
+  "sub-05_seed-0_relevance-16-prune50__7bit-final_layer.npz": "e00a0d45c2a12c0247d114f2b2c0504e2022dc41528247476930c2409a74d421",
+  "sub-05_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "b7d850236b1fd4c15669e994d0101be1b91598238f3a56d24380de6544e42b22",
+  "sub-05_seed-0_relevance-16-prune50__7bit-all.npz": "e57bf3bd53e3b6008ba36139f76061d44d2c758e17a91de31dbd8cfffd5da793",
+  "sub-05_seed-0_relevance-16-prune50__7bit-all.onnx": "d731c3d76d0c5cd4d095dbefc30b26b469874090e4722e482a75da0af34fbfaf",
+  "sub-06_seed-0_full-22__int8.npz": "003a51d34dacf46a764c5674d55a780be9d1dbcc7793435aa499a5181960059b",
+  "sub-06_seed-0_full-22__int8.onnx": "a64ca8c18e180a6f46c2334a8edd515f5d69b3836238ef7c5a939e699d8a5734",
+  "sub-06_seed-0_full-22__7bit-conv_temporal.npz": "2e7120607b5f797f6de33eba53f62ee868afd7bb15865a6a1c1ace2c0af1ca09",
+  "sub-06_seed-0_full-22__7bit-conv_temporal.onnx": "565029b39b2d94429fd5123a91dd08afef26491f414b6073259cd6f8651e1cd6",
+  "sub-06_seed-0_full-22__7bit-conv_spatial.npz": "53aae73cbf2494fb968937054c54ce20c16bf167301fe1d29d64212c6ad86b7f",
+  "sub-06_seed-0_full-22__7bit-conv_spatial.onnx": "3243cdb5740d660924fa0af45ed2127b918e8efb03f0553c1783e95021c1887e",
+  "sub-06_seed-0_full-22__7bit-conv_separable_depth.npz": "fce9c36ff67fa5425e21486586e0639bea5b4decff337ca0d6d689267e7d28c8",
+  "sub-06_seed-0_full-22__7bit-conv_separable_depth.onnx": "a8344d85732a79b5d05c6a45cb7f7651f690a900aef2dd9a68410f24170a0875",
+  "sub-06_seed-0_full-22__7bit-conv_separable_point.npz": "0e959386ffa92d6f98d969e06f760922891f345f11678914ad8967b6e6eb11d2",
+  "sub-06_seed-0_full-22__7bit-conv_separable_point.onnx": "9691d0c05eb55425d63ed1e4f4d4b3d13c370ce667fee9d972f951f0963dc29a",
+  "sub-06_seed-0_full-22__7bit-final_layer.npz": "131cacacb9a0c729e7ec11a708f54d33a2d2beea99830fefdde2178b155d0778",
+  "sub-06_seed-0_full-22__7bit-final_layer.onnx": "9c268df3ecc41d5845653b2336935140343093b06b6233f5a1da79ce3d6bad6d",
+  "sub-06_seed-0_full-22__7bit-all.npz": "6628c437da258e142f9087793e9b73013dd3c1ad6a20d267a922871f2e43c0b3",
+  "sub-06_seed-0_full-22__7bit-all.onnx": "b6d1d5f0a2e5040dc2c264b7af8563d6ab3a54260f4800d22e094585bcd15b4e",
+  "sub-06_seed-0_relevance-16-prune50__int8.npz": "83ca4a4c48342d7f9daff68460f03290b4dae4feb1bbb9ba48c07066b75e048a",
+  "sub-06_seed-0_relevance-16-prune50__int8.onnx": "3b774fde7ea876ef1062088e5cedb8b8f500bd13ea3931170e78fbc7db71752a",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "e4b46e447137f4230afc7bbcf30d9ed891e2c81f060b3e259e346f7a3ec40251",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "815e07b8321ee7c5f8e40cc132d65364018a5dee5f5cc44a289e6b76a7a8cfea",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "805d620621e723dc0d87498d4651d607516ec3bfcb7c41980d9ccdf67c68644c",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "6d844192a3c3461a326b267dbe1f298e032a806ffe15176692496436344623d6",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "3e146f49ba4156a0c845d4c2c0f582315747ea6f989469bdeea9b6da5c5e9e2d",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "f0ef102238f3f6d86a47356b7b6686e2a61e96ff1c5a37a4252009af9cbf86f6",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "bff7306c2d9c9b6a6e5e72aa74988c99d6f1ace7abddd5bcb7ed1019c53aba2b",
+  "sub-06_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "5f25d8770efa538b251f22affa122fc3f50816fe3489ab3ce71036d18e874e76",
+  "sub-06_seed-0_relevance-16-prune50__7bit-final_layer.npz": "f1bb59cb2cf188edf22f9c914c81c42f6fac4b913e9ac8680b4d4714fbf289dd",
+  "sub-06_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "c9830a6f420f445df9fa743352104cdf527e558f041bebfb501796ffe8b7d36e",
+  "sub-06_seed-0_relevance-16-prune50__7bit-all.npz": "524e973246ecfb69af31f8e1ab1572e7f761fc3102f3cab66e83eab86ded5f9f",
+  "sub-06_seed-0_relevance-16-prune50__7bit-all.onnx": "aa62a17204f64e7735b6f195db3456d3faf3e983f887b00e3cf634ea6feff0d5",
+  "sub-07_seed-0_full-22__int8.npz": "2ca94402bea069907c01a6d41c6cc2d84001ceea4982eada96c00b44980c3cbc",
+  "sub-07_seed-0_full-22__int8.onnx": "4ad8590c115c6fcd54f2ae25d85e5d6478118b31df3f56b643ef18e47c0e7abb",
+  "sub-07_seed-0_full-22__7bit-conv_temporal.npz": "0ecb4e51aecee123c1b03e86584f4b425b58548ed52792d3e5559d2802a74e76",
+  "sub-07_seed-0_full-22__7bit-conv_temporal.onnx": "e48d1e0d8d6958070980c6592445e648927a28ae47e48b43d1dafc56b6fad10c",
+  "sub-07_seed-0_full-22__7bit-conv_spatial.npz": "ddb83ee298d095ba394f2a5879e725cc0a7770171d43f38b61e61551eb0ad62a",
+  "sub-07_seed-0_full-22__7bit-conv_spatial.onnx": "3f34812262c98d9425445e8ca00b65f02c4b77052174f3f2cfe37c427dd08cb2",
+  "sub-07_seed-0_full-22__7bit-conv_separable_depth.npz": "25ea773860be61c28071e524c0f0afc3ead8224ef5ff552275a34b149f8175d0",
+  "sub-07_seed-0_full-22__7bit-conv_separable_depth.onnx": "642da3b5753f2450a26cd2159821f1ad59a354fdf3fe39faca18da30e88468b2",
+  "sub-07_seed-0_full-22__7bit-conv_separable_point.npz": "2c21c8a565fe043af103535756f317b86858f949340c31d9dc7555039752dfbe",
+  "sub-07_seed-0_full-22__7bit-conv_separable_point.onnx": "b2109430d17cc9fd2bc0e22374047b99291350796b988494f53185e702502296",
+  "sub-07_seed-0_full-22__7bit-final_layer.npz": "4ecb2aebdab7c26001a2011b6d4b47326a5dc0a054d5b65933a5126671f7d1e8",
+  "sub-07_seed-0_full-22__7bit-final_layer.onnx": "ae1168756b5942ea175cd5e67c2fb1d9cd1c60cbac718b4a745f5a7ed92a9e41",
+  "sub-07_seed-0_full-22__7bit-all.npz": "59783add6bf1a77b76a265f378f25aad556167583ac72c9a4240cc1c64239a7f",
+  "sub-07_seed-0_full-22__7bit-all.onnx": "602b9cdee9a24169221bf2e7eb090ee8df3bc35bb44cfedd240f18c9a3aa41df",
+  "sub-07_seed-0_relevance-16-prune50__int8.npz": "e329499bea8c5b78670eb4cef2b361274f8da80778994be0d71da267ec51c91e",
+  "sub-07_seed-0_relevance-16-prune50__int8.onnx": "9bb9d9f90f38a5b8c3c30cf6f37fbc1cc359c0afc503bbad6b8c3bf510bebb88",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "211b633f0f653222fb3364d0c9830f3ebf9d8a327354cbdbf920a32177bbe0e2",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "278fa9f944d732a0ea2418be80c245dac8df834d5ba614e013a55cbb637355cc",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "a4e6c7b7de1335c79527923c9a59b28918e46540d20c030ee5245e4cd5e12dd2",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "e2d052b54006f893fe6186d251ad0979d4e5c49ed62b58d8c1ad67abf91b65d1",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "04d40bf4fb2f52fdd060b3975e5b5279d6072adfb76dbe0eabdb111f4de5a867",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "befe0e4822d7d5388c8ef33857d54779d05e2e55b536b17ba2a01c1cdd80b628",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "6497b21bd5753434f95f90cb4d22f0b38b4fa3e525640865f9dcca2afef9861d",
+  "sub-07_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "bee1f857048de11e5773a21f061f944b24882967b282f87426fe8647bf28930b",
+  "sub-07_seed-0_relevance-16-prune50__7bit-final_layer.npz": "4cd0f417254e7526151fa34b424275e6aef09401011757eda029c31dfba5fd7a",
+  "sub-07_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "c8ff710d465146c2926514315734bd9e4ca8ce4eb78207163ed10c94efc3c65f",
+  "sub-07_seed-0_relevance-16-prune50__7bit-all.npz": "d95574740513e8a7b53b2467d5672333aa7c6d42481f16a97a7a94bcc4b8ae8e",
+  "sub-07_seed-0_relevance-16-prune50__7bit-all.onnx": "5999d4c837317d1cf3eb690780666513a8bebf7607707f43e492d0e2787d968d",
+  "sub-08_seed-0_full-22__int8.npz": "d939b9f79876a364cae28946027e1885fe4c9e3f3f4889515c5abe4d76ea064b",
+  "sub-08_seed-0_full-22__int8.onnx": "7fb3a80e02e0ebc4dfdd340d225d1fd2fa7a91ad6c7aed3ba0f711ea7f5e4c06",
+  "sub-08_seed-0_full-22__7bit-conv_temporal.npz": "2a83c604fb20f8023e3ecd6345250ff27218ac94aee928c208fdb1a5750b8745",
+  "sub-08_seed-0_full-22__7bit-conv_temporal.onnx": "12e78ed4b70295f74d5b1d65bcfc931589c3fc21450939697efd9a881dc381e1",
+  "sub-08_seed-0_full-22__7bit-conv_spatial.npz": "2be6a92ae1cc68b25df781d7e6be3220f109b703f6cb114d23254a9f3a9ab7e5",
+  "sub-08_seed-0_full-22__7bit-conv_spatial.onnx": "da826ab7dd4200645b4111a51b78dd96d693263f48432427acd2f5dcc78e3ceb",
+  "sub-08_seed-0_full-22__7bit-conv_separable_depth.npz": "6586f78690643e7cdba1a2d0c04a0580091316f905e8794ebd5ca59e487dd11b",
+  "sub-08_seed-0_full-22__7bit-conv_separable_depth.onnx": "817a77ea29dc38b71394102d3127e68581098f8b8e01039623c211dfe1c99e2e",
+  "sub-08_seed-0_full-22__7bit-conv_separable_point.npz": "80798ceecd2cc2e0e0c66bfbcca702ad546f152f8bfda7da109b32815ed0c4c1",
+  "sub-08_seed-0_full-22__7bit-conv_separable_point.onnx": "676d5732435caf0d418fc67a4d737774be382422a3f42ee23aa7c8d04d028fad",
+  "sub-08_seed-0_full-22__7bit-final_layer.npz": "3449a34a77516a09f37e694abd793113dbcacb3f1cb345b87b7b74995d6627a8",
+  "sub-08_seed-0_full-22__7bit-final_layer.onnx": "e974df3a5775ef95d2b46ab10e8389b123123585cc3f54ce086357982dc0f5c1",
+  "sub-08_seed-0_full-22__7bit-all.npz": "2cdaab56dc4243c191744f4f45a3320c11b545756220f3f3c9a4efc40c7469b9",
+  "sub-08_seed-0_full-22__7bit-all.onnx": "ade6463968eab98dc65aefada4134c7e4d17928a1fd1729fa0b03e4ad65759dc",
+  "sub-08_seed-0_relevance-16-prune50__int8.npz": "f3c31e5392bd2c7216a1cba804dc1ad9bcc2e6981a3714a4d9480f167472ae99",
+  "sub-08_seed-0_relevance-16-prune50__int8.onnx": "7201e37973e49851b8f19db2b448af349e55f13d03db6b13c05bd08f75c7c634",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "bf53f465fcff073147d3125ae9aa2ef1f2b8c2ceb7e650b4036f00dc36e92487",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "6946050adf00d5ddc9685306777fa91946d0c43a11828c150c8cf892e56dd50b",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "e6acb97dfee850358a02921af5fa637322fa81574893d0132cc73026a2963113",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "6fba1630e2b67a70ecb18c69282d75dad30eb1954ea76431f890d53ecf176bff",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "e62f498b9bc87e2bdbdffdae5ee3ccf11efa3a90af49a3ae03c0b902966d987b",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "4c686b584fab106a743d6988f69f71ae3403a3cf5db06fac42438656b64fc26a",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "b9c0f13bac8035cbd7f5dbef0ba089221bac7de9fbda09b75c73e9c40757dfa7",
+  "sub-08_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "303a69c1688b7699179b24db5d3c0c04c7217d5c15b6397487ac9dcd65f36cf8",
+  "sub-08_seed-0_relevance-16-prune50__7bit-final_layer.npz": "f738ab79d00b286d5d5943cc3d438bc7e9f8b615379f5d9d2bda132aa4334096",
+  "sub-08_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "8f9ca6b5eafe8094968b20b5ce4f85d9f35aec3de48c4dd97dac2290a6c4bab4",
+  "sub-08_seed-0_relevance-16-prune50__7bit-all.npz": "f863393d9098dea70757191d05aed2fd4326678ab0bc82a606fc484a07588b89",
+  "sub-08_seed-0_relevance-16-prune50__7bit-all.onnx": "9358b328dad1ea6a869d9548af5540e3749c462b55639a6434081ea1fcb23bf6",
+  "sub-09_seed-0_full-22__int8.npz": "a0cee436086d9828df3d44f69db231be3367b01008c02aa7c023fd080412aa1e",
+  "sub-09_seed-0_full-22__int8.onnx": "2c0aeee0816327b9699008c8822b42a2eb5985f85bc08d07ca36e0a127a9e71a",
+  "sub-09_seed-0_full-22__7bit-conv_temporal.npz": "6102c03b489bfdd3225c490bb228f5ea83187701128a8e7e3033765be1f06673",
+  "sub-09_seed-0_full-22__7bit-conv_temporal.onnx": "c8bec51737d9bf094b86f41eba5e6a85c1fefa9df3c9ac28ecab8b6685cdb524",
+  "sub-09_seed-0_full-22__7bit-conv_spatial.npz": "c525495d1c0aa4e91be9f73d000f95d058818651250e404182a7fe2bca7193b1",
+  "sub-09_seed-0_full-22__7bit-conv_spatial.onnx": "7e3259ff4501467a57641dcb19be155b2d8eefd75573c4799e3f931b635e7f44",
+  "sub-09_seed-0_full-22__7bit-conv_separable_depth.npz": "dd7382f92f2582090438da7cdb2202ad2811d3b629f59647fabfb7edde069ddd",
+  "sub-09_seed-0_full-22__7bit-conv_separable_depth.onnx": "6532819935c7118557ec5e6f587db17ff21745ba81ab718254dd4e1d52850b7c",
+  "sub-09_seed-0_full-22__7bit-conv_separable_point.npz": "5988edb791fcd49570d3164a51ecc9a88bcb553f8b0ab67833775b4036b8110f",
+  "sub-09_seed-0_full-22__7bit-conv_separable_point.onnx": "72b085b9453ddabd5f444a0f6ca15851ba141d2456311ed179a3402a1702aade",
+  "sub-09_seed-0_full-22__7bit-final_layer.npz": "4061b0f070d54e7b0d9cfbcdc06cc34fe8093b66d2f1d321f177e9ee1c87ebce",
+  "sub-09_seed-0_full-22__7bit-final_layer.onnx": "95b2d169ed682127aa0f182570ba3879a63330e54178dd939e8aae2459d88dec",
+  "sub-09_seed-0_full-22__7bit-all.npz": "9f976ffee2996c1f01ecc70afc4eb97341d5206ac5734d61fc5c4a065537e551",
+  "sub-09_seed-0_full-22__7bit-all.onnx": "ddb29e8053e6c3e808864733e95213a3796c6d224d7fe222e8d6b9b1a2a70cf8",
+  "sub-09_seed-0_relevance-16-prune50__int8.npz": "7064c9ea76379dede46c6dac57902d602efa5e1ae42118a8b5c4f8e8d01bb614",
+  "sub-09_seed-0_relevance-16-prune50__int8.onnx": "1304e9122e10849bacb9346c7c965624714d480a51baadf55589f3a62e6e46d8",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_temporal.npz": "9145937c54af507698f0a94d68c45a52febef2ebc65e14c7d946df1710bbc01f",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_temporal.onnx": "5da44e3916135a5616490dd99414c0ec8d16774ff9c0547c6debd7ae818b2b58",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_spatial.npz": "7c410b7d63bb442fae5534d5133f9f5ccf889ab210f7fcbdac22b0771d82dcfd",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_spatial.onnx": "2cb6dd57b334180969fd3171d52716c7273bb817fa2f82059b655810dfba511a",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_separable_depth.npz": "7f1de5c6dc0f31a7e7602d8132bb8c844320aec4d4f4ad2ee91f94def3afbf22",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_separable_depth.onnx": "c84de95961d76ee7085cf92f08b91f4aab5ec780bc6e6f7d48feacdd96fec2c8",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_separable_point.npz": "3059bde43817a7b5d64b596876c6b851fb9f57f15d3d9eacda774ef86f4d9536",
+  "sub-09_seed-0_relevance-16-prune50__7bit-conv_separable_point.onnx": "2c388249f834703c370fe3baf639bc15fce7cc97a71516fe4394eb6337018229",
+  "sub-09_seed-0_relevance-16-prune50__7bit-final_layer.npz": "5e9293d12a7dd00e5572f71f2fe709516a43d1bb730db9354eb1c6e2a0dc8f0d",
+  "sub-09_seed-0_relevance-16-prune50__7bit-final_layer.onnx": "5aae0344ac64e38e594e298dc5c35b737218cbd1ab69bf459eb3eca3ce90c8e5",
+  "sub-09_seed-0_relevance-16-prune50__7bit-all.npz": "ee0cf42c19490a4c32ca3ab2170cb28673c77fb63ca0829743514e90a58b46ce",
+  "sub-09_seed-0_relevance-16-prune50__7bit-all.onnx": "5539deb8f3bce67595ea28a47761f7a242f04f23d19130c97fe9636c6df4012f"
+ },
+ "protocol_sha256": "86df658e4dbb14deebeac4e21ecca6e569acbba14d9dbc43de12b9002433c721"
+}

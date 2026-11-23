@@ -11,9 +11,9 @@ def environment() -> dict:
     ram_bytes = None
     try:
         cpu = subprocess.run(
-            ["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True
+            ["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True, check=False
         ).stdout.strip()
-        ram = subprocess.run(["sysctl", "-n", "hw.memsize"], capture_output=True, text=True).stdout.strip()
+        ram = subprocess.run(["sysctl", "-n", "hw.memsize"], capture_output=True, text=True, check=False).stdout.strip()
         ram_bytes = int(ram) if ram.isdigit() else None
     except FileNotFoundError:  # not macOS
         cpu = platform.processor()
@@ -23,7 +23,5 @@ def environment() -> dict:
         "cpu": cpu,
         "physical_memory_bytes": ram_bytes,
         "torch_threads": torch.get_num_threads(),
-        "packages": {
-            p: md.version(p) for p in ["torch", "braindecode", "numpy", "scipy", "scikit-learn"]
-        },
+        "packages": {p: md.version(p) for p in ["torch", "braindecode", "numpy", "scipy", "scikit-learn"]},
     }

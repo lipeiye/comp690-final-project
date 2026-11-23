@@ -1,0 +1,364 @@
+{
+ "machines": [
+  {
+   "machine": "novnni-intel-6140",
+   "cpu": "Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz",
+   "models": 459,
+   "kernel_equals_runtime": 9,
+   "max_abs_kernel_minus_runtime": 9.184358596801758,
+   "runtime_models_changed_vs_m4": 457,
+   "kernel_models_changed_vs_m4": 441,
+   "runtime_acc_minus_m4_pp": -3.9697243711501224,
+   "kernel_acc_minus_m4_pp": -1.882963472085955
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "cpu": "AMD EPYC 9654 96-Core Processor",
+   "models": 459,
+   "kernel_equals_runtime": 459,
+   "max_abs_kernel_minus_runtime": 0.0,
+   "runtime_models_changed_vs_m4": 0,
+   "kernel_models_changed_vs_m4": 0,
+   "runtime_acc_minus_m4_pp": 0.0,
+   "kernel_acc_minus_m4_pp": 0.0
+  }
+ ],
+ "latency": [
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "fp32",
+   "us": 561.3755,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "int8",
+   "us": 1823.2944999999997,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "int8-kernel",
+   "us": 951.847,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "fp32-spatial-first",
+   "us": 114.768,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "int8-spatial-first",
+   "us": 323.72599999999994,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "full-22",
+   "variant": "int8-spatial-first-kernel",
+   "us": 430.794,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "fp32",
+   "us": 429.493,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "int8",
+   "us": 1374.9289999999999,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "int8-kernel",
+   "us": 725.3345,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "fp32-spatial-first",
+   "us": 113.563,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "int8-spatial-first",
+   "us": 292.589,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16",
+   "variant": "int8-spatial-first-kernel",
+   "us": 364.2925,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "fp32",
+   "us": 418.528,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8",
+   "us": 1363.394,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-kernel",
+   "us": 718.607,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "fp32-spatial-first",
+   "us": 106.9125,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-spatial-first",
+   "us": 284.17099999999994,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-spatial-first-kernel",
+   "us": 359.178,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "fp32",
+   "us": 256.1845,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "int8",
+   "us": 752.2975,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "int8-kernel",
+   "us": 425.4785,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "fp32-spatial-first",
+   "us": 110.7585,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "int8-spatial-first",
+   "us": 243.391,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "novnni-intel-6140",
+   "architecture": "relevance-8",
+   "variant": "int8-spatial-first-kernel",
+   "us": 293.137,
+   "swapped_kernel_exact": false
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "fp32",
+   "us": 297.404,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "int8",
+   "us": 725.114,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "int8-kernel",
+   "us": 391.83,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "fp32-spatial-first",
+   "us": 49.101,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "int8-spatial-first",
+   "us": 124.997,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "full-22",
+   "variant": "int8-spatial-first-kernel",
+   "us": 174.867,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "fp32",
+   "us": 224.818,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "int8",
+   "us": 529.6419999999999,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "int8-kernel",
+   "us": 294.8635,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "fp32-spatial-first",
+   "us": 48.27,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "int8-spatial-first",
+   "us": 109.516,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16",
+   "variant": "int8-spatial-first-kernel",
+   "us": 146.842,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "fp32",
+   "us": 222.603,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8",
+   "us": 520.397,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-kernel",
+   "us": 292.854,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "fp32-spatial-first",
+   "us": 45.916,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-spatial-first",
+   "us": 108.261,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-16-prune50",
+   "variant": "int8-spatial-first-kernel",
+   "us": 145.8215,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "fp32",
+   "us": 129.1815,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "int8",
+   "us": 302.149,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "int8-kernel",
+   "us": 172.9925,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "fp32-spatial-first",
+   "us": 46.650999999999996,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "int8-spatial-first",
+   "us": 93.582,
+   "swapped_kernel_exact": true
+  },
+  {
+   "machine": "vnni-amd-9654",
+   "architecture": "relevance-8",
+   "variant": "int8-spatial-first-kernel",
+   "us": 111.3265,
+   "swapped_kernel_exact": true
+  }
+ ]
+}

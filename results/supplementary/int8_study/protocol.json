@@ -1,0 +1,27 @@
+{
+ "created_at": "2026-11-12T01:10:37.208124-05:00",
+ "status": "supplementary_post_test",
+ "historical_test_results_already_known": true,
+ "purpose": "Explain the INT8 slowdown on the Apple M4 CPU and measure variants that avoid it",
+ "models": "all 459 archived final models; no retraining",
+ "calibration": "each model's own session-1 training trials",
+ "scored_variants": [
+  "int8-mixed",
+  "int16",
+  "int16-w16",
+  "int8-dense",
+  "fp32-spatial-first",
+  "int8-spatial-first"
+ ],
+ "timed_only_variants": [
+  "int8-u8act",
+  "int8-pertensor",
+  "int8-qoperator"
+ ],
+ "claim_boundary": "Exploratory. Does not change the frozen final configuration or the archived benchmark.",
+ "sources_sha256_at_build": {
+  "src/mibci/variants.py": "4cdf1a95a29495aa02ff9feafc979cac39ee930d1a160bce1f00dde462e1b134",
+  "src/mibci/deploy.py": "1ab5f0c7a5244bc7407d2ec63ad7c6620860ff6412ee98396aee09c5cec9df5f",
+  "scripts/int8_study.py": "61afa71950e6b7bc5b45957f9789eaa8e06eb6906d8ac497b79daadb0d3b8987"
+ }
+}

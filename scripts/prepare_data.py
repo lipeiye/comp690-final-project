@@ -15,13 +15,17 @@ import numpy as np
 from mibci import data
 from mibci.artifacts import sha256 as file_sha256
 from mibci.experiment import RESULTS_DIR
+from mibci.paths import display
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--subjects", type=int, nargs="+", default=data.SUBJECTS)
-    parser.add_argument("--expected-summary", type=Path,
-                        help="Verify source SHA-256 against a historical data_summary.csv before caching")
+    parser.add_argument(
+        "--expected-summary",
+        type=Path,
+        help="Verify source SHA-256 against a historical data_summary.csv before caching",
+    )
     args = parser.parse_args()
     data.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     expected = {}
@@ -59,25 +63,27 @@ def main() -> None:
     # Rebuild the summary from every cached session, not only the ones processed now.
     rows = []
     for path in sorted(data.PROCESSED_DIR.glob("sub-*_ses-*.npz")):
-        with np.load(path) as f:
+        with np.load(path) as f:  # noqa: TID251  summarises the session cache this script writes; nothing is trained
             subject, session = int(path.stem[4:6]), int(path.stem[-1])
             counts = np.bincount(f["y"], minlength=len(data.CLASSES))
-            rows.append({
-                "subject": subject,
-                "session": session,
-                "trials": len(f["y"]),
-                "flagged": int(f["artifact"].sum()),
-                **{f"n_{c}": int(n) for c, n in zip(data.CLASSES, counts)},
-                "first_window_s": round(float(f["first_window_s"]), 2),
-                "source_sha256": str(f["source_sha256"]),
-            })
+            rows.append(
+                {
+                    "subject": subject,
+                    "session": session,
+                    "trials": len(f["y"]),
+                    "flagged": int(f["artifact"].sum()),
+                    **{f"n_{c}": int(n) for c, n in zip(data.CLASSES, counts, strict=False)},
+                    "first_window_s": round(float(f["first_window_s"]), 2),
+                    "source_sha256": str(f["source_sha256"]),
+                }
+            )
     out = RESULTS_DIR / "data_summary.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
-    with open(out, "w", newline="") as f:
+    with out.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
-    print(f"wrote {out.relative_to(data.PROJECT_ROOT)}")
+    print(f"wrote {display(out)}")
 
 
 if __name__ == "__main__":

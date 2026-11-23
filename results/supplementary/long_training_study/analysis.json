@@ -1,0 +1,478 @@
+{
+ "tests_lee2019": {
+  "L1": {
+   "mean": 0.518518518518519,
+   "ci": [
+    -0.40131172839506096,
+    1.4876543209876534
+   ],
+   "worse": 30,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": false
+  },
+  "L2": {
+   "mean": 0.6820987654320986,
+   "ci": [
+    -0.614274691358025,
+    1.9351851851851847
+   ],
+   "worse": 23,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": false
+  },
+  "L3": {
+   "mean": 0.18793546021268737,
+   "ci": [
+    -0.47653327832783315,
+    0.8489205170517043
+   ],
+   "worse": 28,
+   "people": 54,
+   "rule": "interval lower bound above 0",
+   "holds": false
+  }
+ },
+ "contrasts": [
+  {
+   "dataset": "bnci2a",
+   "what": "noise cost",
+   "epoch": 475,
+   "mean": -7.288226813953396,
+   "ci": [
+    -9.76209947651742,
+    -5.292906350743701
+   ],
+   "worse": 9,
+   "people": 9,
+   "seed_error": 0.5043396583591693
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 475,
+   "mean": -0.2563916205343928,
+   "ci": [
+    -1.0027110261822438,
+    0.5104724989295789
+   ],
+   "worse": 6,
+   "people": 9,
+   "seed_error": 0.43076114510704944
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "noise cost",
+   "epoch": 950,
+   "mean": -7.084240215679056,
+   "ci": [
+    -9.191739370431407,
+    -5.383264333522318
+   ],
+   "worse": 9,
+   "people": 9,
+   "seed_error": 0.48025629099893796
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 950,
+   "mean": 0.1388098463498524,
+   "ci": [
+    -0.9184832443538998,
+    1.3061889204478518
+   ],
+   "worse": 5,
+   "people": 9,
+   "seed_error": 0.5301029204443691
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "noise cost",
+   "epoch": 1900,
+   "mean": -6.485774677236708,
+   "ci": [
+    -8.858802318659906,
+    -4.469222080580176
+   ],
+   "worse": 9,
+   "people": 9,
+   "seed_error": 0.7810435458027023
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 1900,
+   "mean": 0.103088909231589,
+   "ci": [
+    -1.1745372336043167,
+    1.4211678028608787
+   ],
+   "worse": 4,
+   "people": 9,
+   "seed_error": 0.6348739261956161
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "relevance-16: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": 1.6788582291641798,
+   "ci": [
+    0.3866551530562019,
+    3.2117371641192394
+   ],
+   "worse": 2,
+   "people": 9,
+   "seed_error": 0.33013971469982595
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "relevance-16-plus-6: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": 2.4813103658808675,
+   "ci": [
+    0.7094409424166173,
+    4.278681908477097
+   ],
+   "worse": 3,
+   "people": 9,
+   "seed_error": 0.4756790453285702
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "full-22: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": 2.0383387589301614,
+   "ci": [
+    0.01055239168300182,
+    4.433189663679531
+   ],
+   "worse": 2,
+   "people": 9,
+   "seed_error": 0.43717208396704005
+  },
+  {
+   "dataset": "bnci2a",
+   "what": "noise cost at 1900 minus at 475 epochs",
+   "epoch": 1900,
+   "mean": 0.8024521367166884,
+   "ci": [
+    -0.6026117582195102,
+    2.259718784006818
+   ],
+   "worse": 2,
+   "people": 9,
+   "seed_error": 0.6341159581871331
+  },
+  {
+   "dataset": "lee2019",
+   "what": "noise cost",
+   "epoch": 475,
+   "mean": -13.311728395061728,
+   "ci": [
+    -16.814814814814813,
+    -9.962962962962964
+   ],
+   "worse": 52,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 475,
+   "mean": -0.17283950617283875,
+   "ci": [
+    -1.7809413580246902,
+    1.4198302469135797
+   ],
+   "worse": 25,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "noise cost",
+   "epoch": 950,
+   "mean": -12.907407407407407,
+   "ci": [
+    -16.36111111111111,
+    -9.614043209876543
+   ],
+   "worse": 50,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 950,
+   "mean": 0.26234567901234535,
+   "ci": [
+    -1.2592592592592597,
+    1.7840277777777764
+   ],
+   "worse": 24,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "noise cost",
+   "epoch": 1900,
+   "mean": -12.793209876543212,
+   "ci": [
+    -16.10802469135803,
+    -9.61720679012346
+   ],
+   "worse": 51,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "all electrodes minus relevance-16",
+   "epoch": 1900,
+   "mean": 0.6820987654320986,
+   "ci": [
+    -0.614274691358025,
+    1.9351851851851847
+   ],
+   "worse": 23,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "relevance-16: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": -0.364197530864197,
+   "ci": [
+    -1.2531635802469137,
+    0.475308641975309
+   ],
+   "worse": 24,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "relevance-16-plus-46: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": 0.1543209876543218,
+   "ci": [
+    -0.30246913580246837,
+    0.6172839506172844
+   ],
+   "worse": 26,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "full-62: 1900 minus 475 epochs",
+   "epoch": 1900,
+   "mean": 0.49074074074074037,
+   "ci": [
+    -0.39197530864197566,
+    1.4476080246913572
+   ],
+   "worse": 26,
+   "people": 54
+  },
+  {
+   "dataset": "lee2019",
+   "what": "noise cost at 1900 minus at 475 epochs",
+   "epoch": 1900,
+   "mean": 0.518518518518519,
+   "ci": [
+    -0.40131172839506096,
+    1.4876543209876534
+   ],
+   "worse": 30,
+   "people": 54
+  }
+ ],
+ "held_out_window_gain": {
+  "bnci2a|relevance-16": {
+   "mean": 3.1428849284928493,
+   "ci": [
+    1.3215953593692669,
+    5.18284400440044
+   ],
+   "worse": 1,
+   "people": 9
+  },
+  "bnci2a|relevance-16-plus-6": {
+   "mean": 1.898112944627795,
+   "ci": [
+    0.9528121305463872,
+    3.115084449944993
+   ],
+   "worse": 0,
+   "people": 9
+  },
+  "bnci2a|full-22": {
+   "mean": 3.7211292262559588,
+   "ci": [
+    1.665398093142648,
+    6.397806019435277
+   ],
+   "worse": 0,
+   "people": 9
+  },
+  "lee2019|relevance-16": {
+   "mean": -0.07893289328932991,
+   "ci": [
+    -0.7721236707004041,
+    0.6147002200220014
+   ],
+   "worse": 29,
+   "people": 54
+  },
+  "lee2019|relevance-16-plus-46": {
+   "mean": 0.18793546021268737,
+   "ci": [
+    -0.47653327832783315,
+    0.8489205170517043
+   ],
+   "worse": 28,
+   "people": 54
+  },
+  "lee2019|full-62": {
+   "mean": 1.247341400806748,
+   "ci": [
+    0.46057251558489215,
+    2.0442037953795382
+   ],
+   "worse": 19,
+   "people": 54
+  }
+ },
+ "identity_475": {
+  "found": 1485,
+  "identical": 495,
+  "max_abs_diff": 0.4040473997592926
+ },
+ "checkpoints": [
+  {
+   "dataset": "bnci2a",
+   "condition": "full-22",
+   "epoch": 475,
+   "next_day": 64.89069100927222,
+   "train": 93.0289397363212
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "full-22",
+   "epoch": 950,
+   "next_day": 66.3099030868801,
+   "train": 97.77479271538996
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "full-22",
+   "epoch": 1900,
+   "next_day": 66.92902976820238,
+   "train": 99.49266428223574
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16",
+   "epoch": 475,
+   "next_day": 65.1470826298066,
+   "train": 92.41765151621514
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16",
+   "epoch": 950,
+   "next_day": 66.17109324053024,
+   "train": 96.98642082541441
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16",
+   "epoch": 1900,
+   "next_day": 66.8259408589708,
+   "train": 99.22380720947936
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16-plus-6",
+   "epoch": 475,
+   "next_day": 57.85885581585322,
+   "train": 93.88542503064964
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16-plus-6",
+   "epoch": 950,
+   "next_day": 59.086853024851195,
+   "train": 98.29719621303747
+  },
+  {
+   "dataset": "bnci2a",
+   "condition": "relevance-16-plus-6",
+   "epoch": 1900,
+   "next_day": 60.340166181734084,
+   "train": 99.7630118254138
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "full-62",
+   "epoch": 475,
+   "next_day": 66.83333333333334,
+   "train": 99.04012345679013
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "full-62",
+   "epoch": 950,
+   "next_day": 67.10802469135803,
+   "train": 99.83024691358024
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "full-62",
+   "epoch": 1900,
+   "next_day": 67.32407407407406,
+   "train": 99.87345679012346
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16",
+   "epoch": 475,
+   "next_day": 67.00617283950618,
+   "train": 96.09259259259261
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16",
+   "epoch": 950,
+   "next_day": 66.84567901234567,
+   "train": 98.80864197530865
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16",
+   "epoch": 1900,
+   "next_day": 66.64197530864197,
+   "train": 99.85185185185185
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16-plus-46",
+   "epoch": 475,
+   "next_day": 53.694444444444436,
+   "train": 100.0
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16-plus-46",
+   "epoch": 950,
+   "next_day": 53.93827160493827,
+   "train": 100.0
+  },
+  {
+   "dataset": "lee2019",
+   "condition": "relevance-16-plus-46",
+   "epoch": 1900,
+   "next_day": 53.84876543209876,
+   "train": 99.99691358024691
+  }
+ ]
+}

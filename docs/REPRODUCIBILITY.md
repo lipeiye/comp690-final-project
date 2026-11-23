@@ -85,6 +85,46 @@ bash scripts/run_all.sh
 
 见 [补充实验协议](SUPPLEMENTARY_PROTOCOL.md)。该实验与原主分析隔离，不改变原最终模型的选择。
 
+## 重跑期中后的研究
+
+期中之后的每项研究都是一个独立的 `mibci.study.Study`。计划 `protocol.json`、每个任务的记录和分析表在 `results/supplementary/<研究名>/`，模型在 `data.nosync/models/supplementary/<研究名>/`（Longleaf 上是 `~/comp690/data/models/supplementary/<研究名>/`）。计划在打分前写定，里面有设计、Lee 2019 上事先登记的预测和所用源码的 SHA-256；源码改过以后旧计划拒绝运行（`Pinned source changed`），要换新目录。没有产生任何记录就作废的计划整个归档为 `<研究名>_unexecuted_v1`，不当作执行过。
+
+**只重建表和图**（几分钟，不需要脑电数据或模型）：
+
+```bash
+python3 scripts/rebuild_all_tables.py   # 在沙盒里从记录重建全部表、图、两份报告和幻灯片 HTML，与仓库逐字节比较
+python3 tools/golden.py --all           # 同样的对照，逐个生成器列出 SAME 或 DIFF
+```
+
+**重新做一项研究**。不要在原目录里重跑：已有记录的任务会被跳过，源码不同则计划拒绝运行。要独立重做，就用一份不带该研究目录和模型目录的副本，`plan` 会重新写一份计划（时间不同，不能冒充原计划）。读 Lee 2019 的研究在 Longleaf 上跑，Lee 2019 的数据（约 65 GB）不下载到本机。以 `input_kind_study` 为例，实际用过的命令：
+
+```bash
+python3 tools/longleaf.py push
+ssh longleaf 'cd ~/comp690 && export MIBCI_DATA_DIR=$HOME/comp690/data MIBCI_RESULTS_DIR=$HOME/comp690/results && .venv/bin/python scripts/input_kind_study.py --stage plan'
+python3 tools/longleaf.py submit input_kind_study --stage train --tasks 199 --cpus 4 --hours 6 --constraint 'amd&avx512'
+python3 tools/longleaf.py submit input_kind_study --stage evaluate --tasks 53 --cpus 2 --hours 2 --after <训练的任务号>
+python3 tools/longleaf.py pull input_kind_study
+python3 tools/longleaf.py pull input_kind_study --models
+.venv.nosync/bin/python scripts/analyze_input_kind_study.py
+```
+
+打分（`evaluate`）用 `--after` 排在训练后面，训练全部结束前不读第二天。数组任务数用 199、53 这样的质数，避免和计划的重复周期有公因数。Longleaf 账户有约 1,000 个 CPU 的总上限，先提交的先跑。期末冲刺的十项研究按下面的顺序运行各阶段（每个脚本的 `--help` 有各阶段的说明）：
+
+| 研究 | 阶段顺序 | 在哪里跑 |
+|---|---|---|
+| `input_kind_study` | plan → train → evaluate；predictability 只用第一天，随时可跑 | Longleaf |
+| `long_training_study` | plan → train → evaluate | Longleaf |
+| `scalefree_penalty_study` | pilot（定 λ 的范围）→ plan → reference → train `--part folds` → select → train `--part final` → evaluate | Longleaf |
+| `pretrain_study` | plan → pretrain 和 scratch → budget → finetune → evaluate | Longleaf |
+| `chdrop_study` | plan → train 和 reference → evaluate | Longleaf |
+| `alignment_mechanism_study` | plan → spectra 和 train → evaluate | Longleaf |
+| `mcu_kernel_study` | plan → emulate | 本机：Arm GNU Toolchain 15.3、CMSIS-NN v8.0.0、QEMU 11.1.3（版本写在计划里） |
+| `int8_paths_study` | plan → map（每台机器一次） | 本机 M4 和 Longleaf 的四种 CPU |
+| `int8_layers_study` | plan → capture（有 VNNI 和没有 VNNI 的机器各一次）→ compare | Longleaf |
+| `int8_kernel_x86_study` | plan → run（每台机器一次，需要 ONNX Runtime 的 C 头文件 `--ort-headers`） | Longleaf |
+
+做完后重跑 `scripts/analyze_compute.py` 更新算力汇总，再重建课程报告和期末幻灯片（见 README 第 11 节）。
+
 ## 生成本地报告和演示
 
 ```bash

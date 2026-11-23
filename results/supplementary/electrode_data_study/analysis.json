@@ -1,0 +1,435 @@
+{
+ "tests_lee2019": {
+  "D1": {
+   "dataset": "lee2019",
+   "level": "fold",
+   "contrast": "(16 minus 62) with 1 of 2 runs minus the same with all",
+   "mean": 0.47993827160493874,
+   "ci": [
+    -1.052623456790122,
+    2.0402006172839497
+   ],
+   "rule": "interval lower bound above 0",
+   "holds": false
+  },
+  "D2": {
+   "argmax_fold": 20,
+   "argmax_final": 20,
+   "share_lower": 0.3062,
+   "rule": "argmax(fold) < argmax(final) in at least 95% of resamples",
+   "holds": false
+  }
+ },
+ "gap_changes": [
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "contrast": "(16 minus 62) with 1 of 2 runs minus the same with all",
+   "mean": 0.47993827160493874,
+   "ci": [
+    -1.052623456790122,
+    2.0402006172839497
+   ]
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "contrast": "(16 minus 22) with 4 of 6 runs minus the same with all",
+   "mean": -0.003936497142957605,
+   "ci": [
+    -1.8448299430084727,
+    2.221262027706278
+   ]
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "contrast": "(16 minus 22) with 2 of 6 runs minus the same with all",
+   "mean": 0.3228805825866089,
+   "ci": [
+    -0.9913654653599033,
+    1.6177273099129519
+   ]
+  }
+ ],
+ "peaks": [
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "data": "6 of 6 runs",
+   "best_count": 16,
+   "best_accuracy": 65.14600526806734,
+   "full_accuracy": 64.82105173119935,
+   "bootstrap_best": {
+    "12": 0.0003,
+    "14": 0.1529,
+    "16": 0.6572,
+    "18": 0.0272,
+    "20": 0.0002,
+    "22": 0.1622
+   }
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "data": "4 of 6 runs",
+   "best_count": 16,
+   "best_accuracy": 60.65994550397995,
+   "full_accuracy": 60.33892846425489,
+   "bootstrap_best": {
+    "12": 0.0087,
+    "14": 0.028,
+    "16": 0.4872,
+    "18": 0.0736,
+    "20": 0.1653,
+    "22": 0.2372
+   }
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "data": "2 of 6 runs",
+   "best_count": 20,
+   "best_accuracy": 50.509489659648686,
+   "full_accuracy": 49.488196294551905,
+   "bootstrap_best": {
+    "6": 0.0015,
+    "8": 0.0121,
+    "10": 0.0188,
+    "12": 0.2925,
+    "14": 0.0309,
+    "16": 0.1009,
+    "18": 0.1297,
+    "20": 0.4132,
+    "22": 0.0004
+   }
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "data": "2 of 2 runs",
+   "best_count": 20,
+   "best_accuracy": 67.50000000000001,
+   "full_accuracy": 66.89506172839505,
+   "bootstrap_best": {
+    "16": 0.0623,
+    "20": 0.5501,
+    "32": 0.0355,
+    "45": 0.209,
+    "62": 0.1431
+   }
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "data": "1 of 2 runs",
+   "best_count": 20,
+   "best_accuracy": 62.3858024691358,
+   "full_accuracy": 60.984567901234556,
+   "bootstrap_best": {
+    "8": 0.0144,
+    "16": 0.0033,
+    "20": 0.7035,
+    "32": 0.0381,
+    "45": 0.2304,
+    "62": 0.0103
+   }
+  }
+ ],
+ "curves": [
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 4,
+   "within": null,
+   "next_day": 55.6292967309404
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 6,
+   "within": null,
+   "next_day": 58.19772405246498
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 8,
+   "within": null,
+   "next_day": 59.83351588673887
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 10,
+   "within": null,
+   "next_day": 62.23225451881602
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 12,
+   "within": null,
+   "next_day": 63.65236782837147
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 14,
+   "within": null,
+   "next_day": 64.49794370061711
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 16,
+   "within": null,
+   "next_day": 65.14600526806736
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 18,
+   "within": null,
+   "next_day": 64.55752179138153
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 20,
+   "within": null,
+   "next_day": 63.55254564115127
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "final",
+   "electrodes": 22,
+   "within": null,
+   "next_day": 64.82105173119935
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 4,
+   "within": 54.43261763554268,
+   "next_day": 52.47192580954033
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 6,
+   "within": 57.56128559874641,
+   "next_day": 55.34967665558627
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 8,
+   "within": 58.666842594819514,
+   "next_day": 56.5193365457022
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 10,
+   "within": 59.46177981815455,
+   "next_day": 57.28262375995103
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 12,
+   "within": 61.42547074553332,
+   "next_day": 59.533044620992946
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 14,
+   "within": 62.08160635361079,
+   "next_day": 60.178776046245794
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 16,
+   "within": 62.991919165064324,
+   "next_day": 60.65994550397995
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 18,
+   "within": 63.239584045918974,
+   "next_day": 60.29289709157393
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 20,
+   "within": 61.99300908380147,
+   "next_day": 60.35973831505109
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "fold",
+   "electrodes": 22,
+   "within": 62.676479811620965,
+   "next_day": 60.33892846425489
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 4,
+   "within": 47.46951177502274,
+   "next_day": 46.16038800752304
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 6,
+   "within": 49.61515069871743,
+   "next_day": 48.26992063124893
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 8,
+   "within": 50.33108539041264,
+   "next_day": 49.03961245175723
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 10,
+   "within": 51.536789475300566,
+   "next_day": 49.57455165835032
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 12,
+   "within": 52.159828643890336,
+   "next_day": 50.410992134796885
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 14,
+   "within": 51.65530630492829,
+   "next_day": 50.10435786092325
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 16,
+   "within": 52.12553011242257,
+   "next_day": 50.13603041400653
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 18,
+   "within": 51.71975116399541,
+   "next_day": 50.34319494300891
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 20,
+   "within": 52.2240084390177,
+   "next_day": 50.50948965964868
+  },
+  {
+   "dataset": "bnci2a",
+   "level": "rfold",
+   "electrodes": 22,
+   "within": 50.829725458032286,
+   "next_day": 49.488196294551905
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 8,
+   "within": null,
+   "next_day": 64.41666666666667
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 16,
+   "within": null,
+   "next_day": 67.0246913580247
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 20,
+   "within": null,
+   "next_day": 67.5
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 32,
+   "within": null,
+   "next_day": 66.95370370370371
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 45,
+   "within": null,
+   "next_day": 67.16666666666667
+  },
+  {
+   "dataset": "lee2019",
+   "level": "final",
+   "electrodes": 62,
+   "within": null,
+   "next_day": 66.89506172839506
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 8,
+   "within": 62.601851851851855,
+   "next_day": 61.47067901234568
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 16,
+   "within": 62.601851851851855,
+   "next_day": 61.59413580246914
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 20,
+   "within": 62.623456790123456,
+   "next_day": 62.385802469135804
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 32,
+   "within": 61.132716049382715,
+   "next_day": 61.7283950617284
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 45,
+   "within": 60.69135802469136,
+   "next_day": 62.0246913580247
+  },
+  {
+   "dataset": "lee2019",
+   "level": "fold",
+   "electrodes": 62,
+   "within": 60.33641975308642,
+   "next_day": 60.98456790123456
+  }
+ ]
+}

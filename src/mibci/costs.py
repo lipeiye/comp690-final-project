@@ -28,15 +28,17 @@ def layer_costs(model: nn.Module) -> list[dict]:
             macs = module.in_features * module.out_features
         else:
             macs = 0
-        rows.append({
-            "layer": name,
-            "type": type(module).__name__,
-            "out_shape": list(output.shape[1:]),
-            "in_elems": inputs[0].numel(),
-            "out_elems": output.numel(),
-            "macs": macs,
-            "params": sum(p.numel() for p in module.parameters(recurse=False)),
-        })
+        rows.append(
+            {
+                "layer": name,
+                "type": type(module).__name__,
+                "out_shape": list(output.shape[1:]),
+                "in_elems": inputs[0].numel(),
+                "out_elems": output.numel(),
+                "macs": macs,
+                "params": sum(p.numel() for p in module.parameters(recurse=False)),
+            }
+        )
 
     handles = [
         m.register_forward_hook(lambda mod, i, o, name=name: record(name, mod, i, o))
@@ -62,5 +64,6 @@ def cost_summary(model: nn.Module) -> dict:
         "input_bytes": {"fp32": 4 * rows[0]["in_elems"], "int8": 4 * rows[0]["in_elems"]},
         "modeled_input_bytes": {"fp32": 4 * rows[0]["in_elems"], "int8": rows[0]["in_elems"]},
         "peak_activation_bytes": {"fp32": 4 * peak, "int8": peak},
-        "activation_memory_kind": "idealized layer input+output, uniformly 4 or 1 byte per element; not measured QDQ/ORT memory",
+        "activation_memory_kind": "idealized layer input+output, uniformly 4 or 1 byte per element; "
+        "not measured QDQ/ORT memory",
     }

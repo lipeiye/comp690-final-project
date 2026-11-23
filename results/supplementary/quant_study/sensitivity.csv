@@ -1,0 +1,721 @@
+condition,session,tensor,kind,name,bits,description,diff_pp,ci_low_pp,ci_high_pp,worst_participant_pp,n_losing_over_2pp
+all conditions,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.1069312600123814,-0.21981298294178123,0.0033279153058131334,-0.3340595497458245,0
+all conditions,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.903462868903883,-7.093532293319427,-4.793992619214541,-9.159973952680705,9
+all conditions,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.01698108635343654,-0.009363454201857274,0.042047378288455776,-0.04490345756623202,0
+all conditions,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.05236127939681071,-0.12690452283355994,0.02927279850207305,-0.20828844358256093,0
+all conditions,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.08830794702265982,-0.13647300295048695,-0.041277948275136464,-0.22512708787218524,0
+all conditions,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-15.636310919697545,-18.847193935599567,-12.945486181229931,-25.391709195093565,9
+all conditions,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-58.804488830654364,-64.68662220026548,-52.68797651002865,-70.38140150574998,9
+all conditions,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.1578251061622507,-1.541863420243724,-0.8159341704306267,-2.402334979793444,1
+all conditions,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.8378818046693195,-3.292710824679661,-2.3780678985290953,-3.7872683319903295,8
+all conditions,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.744014895964505,-6.124087399114848,-3.4966963404612983,-8.973207603652149,9
+all conditions,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-40.31592875437927,-46.57690374527252,-33.45783462207618,-53.75877288184646,9
+all conditions,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-49.230055580151344,-58.058343827332905,-40.08014552143608,-65.64677152912446,9
+all conditions,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3353078143117376,-1.7412989577003615,-0.9688615875258362,-2.327495883849723,3
+all conditions,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.099053214754039,-1.6095441410332334,-0.7061323536115932,-2.837032248796955,1
+all conditions,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.0315195439660076,-1.3720371906902855,-0.6972132626519435,-1.8171371112547585,0
+all conditions,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.0474582485534325,-1.3802864939143404,-0.7473067780894606,-2.005347593582889,1
+all conditions,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.05171537517180194,-0.13540275893699466,0.02772838479395268,-0.25252525252525204,0
+all conditions,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.2253945433253141,-0.3326381838334563,-0.13369684305625407,-0.5103411227504702,0
+all conditions,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.27024274791516334,-0.37202168504216265,-0.17708685129237833,-0.5737109658678287,0
+all conditions,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.0905872804676178,-2.5325135545968736,-1.7006500927326573,-3.4946820056435866,4
+all conditions,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.16460776026881951,-0.3300388374142824,-0.011862200565008751,-0.6158420046719054,0
+all conditions,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.972278160864104,-7.130744180715046,-3.1683153214830537,-12.161109931337155,7
+all conditions,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.06799272779739983,-0.12186486350672,-0.0047214017320178015,-0.1708259061200234,0
+all conditions,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.04264582414442093,-0.1229245356986067,0.04341633859910911,-0.2525252525252521,0
+all conditions,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.053353059396512775,-0.10064033799310203,0.00014662482828176177,-0.1454998960715031,0
+all conditions,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-9.004755848324818,-11.737281516254274,-6.840151176618358,-18.56020386493948,9
+all conditions,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-35.39000370669059,-45.79949849112951,-24.987233640941465,-53.35710041592394,9
+all conditions,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.05988951514962066,-0.6651439183900556,0.7978094100619844,-1.2444830330656247,0
+all conditions,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.6964182031401636,-2.6369979315794594,-0.9451854978489161,-4.840460169307574,2
+all conditions,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.921777545493069,-4.4290169403622315,-1.6836362874378583,-7.761437908496734,5
+all conditions,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-23.213135934750976,-30.609467529698716,-16.23213337728958,-38.93254052523537,9
+all conditions,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-31.01284067228847,-41.17250566858222,-20.648249447270693,-48.007815225734426,9
+all conditions,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3296185012071702,-2.168695211955619,-0.6579549698161795,-4.218871664189142,2
+all conditions,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.8422440351916354,-1.331209527812475,-0.34709830547103826,-1.931075460487226,0
+all conditions,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.0667254745202335,-1.6951673740748054,-0.5309011324378966,-3.157075104409995,1
+all conditions,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.6531701935933703,-1.0875025668530742,-0.2832368161445701,-2.0910209102091013,1
+all conditions,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.1239394157209382,-0.20727096363973785,-0.04427979880664052,-0.37516811778863307,0
+all conditions,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.08952977786228196,-0.18152868185471147,0.0059706131107631925,-0.31007751937984473,0
+all conditions,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.14576040714758454,-0.2751694075758897,-0.024475989419906703,-0.47114252061248507,0
+all conditions,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.3672302031770734,-1.219270127885477,0.6126240188574534,-2.6770855943853546,1
+full-22,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.12085846095230579,-0.14789627570971373,0.36463353981658386,-0.6361323155216314,0
+full-22,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-9.311411148380861,-14.004416342122116,-5.301015091361922,-23.809523809523803,9
+full-22,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.08764718314642533,-0.02412300354601263,0.1974794595659729,-0.24691358024691765,0
+full-22,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.08034975422748432,-0.2243280951748395,0.06816602811290373,-0.4566210045662082,0
+full-22,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.05288226891520057,-0.21266542888782147,0.08571537607506513,-0.5089058524173036,0
+full-22,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-13.995675695677848,-19.566173336150484,-9.72791786401415,-32.592592592592595,9
+full-22,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-62.19239260832631,-67.51136435771923,-56.487137817548955,-72.29254571026722,9
+full-22,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.402761948646497,-1.9727580282335677,-0.9419916867591015,-3.180661577608146,2
+full-22,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.9143089476925097,-2.450096302927092,-1.3255373647561342,-2.839506172839508,5
+full-22,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.686578473693024,-6.701175065733889,-2.690951898736934,-9.629629629629633,7
+full-22,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-43.434745255506684,-50.63128868488033,-36.158712842244626,-60.07326007326007,9
+full-22,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-53.889280368659435,-63.30831955614807,-43.510374100161044,-72.77167277167277,9
+full-22,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3209729255078448,-2.299805932119555,-0.40500149371974775,-3.580246913580254,3
+full-22,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.16340877243738758,-0.7739258565794066,0.485968785026494,-1.2626262626262652,0
+full-22,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.6054191096967653,-1.2921801464999239,0.06107590999037437,-2.2900763358778624,1
+full-22,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.2843897372963649,-1.8799894687318641,-0.6725045196539688,-2.777777777777779,2
+full-22,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.02483014644642368,-0.2039726084294046,0.14754371313826994,-0.5089058524173036,0
+full-22,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.0674810430559593,-0.24004092081256337,0.08498476395061705,-0.5089058524173036,0
+full-22,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",0.03037230462019976,-0.20570269556474602,0.26807964896684827,-0.6172839506172867,0
+full-22,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.8575995707895363,-2.1983808436999217,-1.5338444465684866,-2.8083028083028054,4
+full-22,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.06764274260536883,-0.5412418419571398,0.31576264464780074,-1.6414141414141437,0
+full-22,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-8.348687033781975,-12.583163440765329,-4.626776501331739,-19.49458483754513,9
+full-22,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.0009881223992385976,-0.19365235801528594,0.2015924752703221,-0.49200492004919755,0
+full-22,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.13896347773094797,-0.010218219275666407,0.28042795741982784,-0.31007751937984585,0
+full-22,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.09107095340678384,-0.11062248131534043,0.275335795125762,-0.6016847172081841,0
+full-22,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-8.024862138422383,-10.642130511221158,-5.600633878357619,-16.60649819494585,9
+full-22,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-37.255221175531425,-48.140942641766195,-26.116020541645984,-55.93434343434344,9
+full-22,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.05843122707868664,-0.9075877472259912,1.1549276597425597,-2.3989898989899046,1
+full-22,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.2961571988026155,-2.410502980261432,-0.06780682686841363,-3.321033210332099,4
+full-22,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.95532163276202,-5.003860219365817,-0.9991128980570565,-8.913308913308915,5
+full-22,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-25.949387033986095,-35.26710527391958,-17.503239630224,-48.27995255041519,9
+full-22,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-34.54472483613996,-46.574197633484225,-22.227050199717475,-55.753262158956105,9
+full-22,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.512696313929552,-2.5113038204941787,-0.6315867339401351,-4.693140794223827,3
+full-22,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.4155904781670017,-1.1694027667782523,0.2663480764978862,-2.3199023199023228,2
+full-22,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.010558758211555,-1.5158952133537111,-0.4928276509504248,-2.197802197802201,1
+full-22,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.972376256214655,-1.6935850707939655,-0.4080524195170376,-3.444034440344401,1
+full-22,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.0846428963178874,-0.4082895315493762,0.2216181983648368,-0.9840098400983988,0
+full-22,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.09794006418560255,-0.3834227198547398,0.1686411037850544,-0.9626955475330915,0
+full-22,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",0.26085349101858074,0.005349567137011965,0.5355892748204629,-0.25252525252525226,0
+full-22,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",0.24614172352242747,-0.7216417985678413,1.1976274526758617,-2.3370233702337,1
+full-22-prune25,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.09245166659126612,-0.2541422760243962,0.05644529882455591,-0.4938271604938242,0
+full-22-prune25,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-8.23536487531922,-11.532545269566436,-5.161792336481486,-15.555555555555554,9
+full-22-prune25,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.0026685223973380422,-0.0945028901543408,0.09973284196660559,-0.24691358024691393,0
+full-22-prune25,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.01636638207156548,-0.2104322858137219,0.15722512769316088,-0.6172839506172829,0
+full-22-prune25,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.013667552907985587,-0.24016487141064335,0.18085032009815594,-0.7610350076103483,0
+full-22-prune25,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-13.793682551280135,-17.899327702776915,-9.993653049215878,-25.679012345679013,9
+full-22-prune25,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-62.517600366986784,-67.74447940330614,-57.01690131919823,-72.9957805907173,9
+full-22-prune25,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.3494117160402221,-1.8224466820776222,-0.807441998288735,-2.5445292620865145,1
+full-22-prune25,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.01550494630009,-3.899131611992934,-2.0907695710812693,-4.884004884004885,7
+full-22-prune25,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.313661477497572,-6.295071485454436,-2.4316035725902165,-9.287531806615775,6
+full-22-prune25,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-45.00273826846792,-52.24862933502858,-37.86529659462861,-62.637362637362635,9
+full-22-prune25,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-55.081309241325144,-64.80664332858008,-44.45610311234671,-72.52747252747253,9
+full-22-prune25,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.9354441845413083,-1.6266784729760222,-0.15157385692646952,-2.5445292620865185,2
+full-22-prune25,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.508111371507068,-0.864704924697975,-0.17214229677278062,-1.3994910941475869,0
+full-22-prune25,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.3684277030125099,-0.8154376533393269,0.029962302735879326,-1.604938271604935,0
+full-22-prune25,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.5835099860647424,-1.1324548197326174,-0.12382591115744958,-2.020202020202022,1
+full-22-prune25,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.13194915406611576,-0.04828387603362306,0.3354654657787048,-0.24691358024691024,0
+full-22-prune25,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.08090198164988802,-0.21476865190806857,0.04255971489210529,-0.4566210045662082,0
+full-22-prune25,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.3210857299097815,-0.5889639698704501,-0.09821378424714507,-1.21765601217656,0
+full-22-prune25,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.9004128015257156,-2.277705097992393,-1.5431554512693508,-2.839506172839505,3
+full-22-prune25,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.3093129314994002,-0.9266173662508936,0.2781187927164036,-2.16606498194946,1
+full-22-prune25,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-7.549213168463431,-11.773273795746258,-4.071478908519586,-21.29963898916968,7
+full-22-prune25,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.06293104185293226,-0.24660486123090333,0.10506952917295152,-0.6313131313131308,0
+full-22-prune25,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.08475739112126451,-0.1526401172110649,0.3628204187148368,-0.37878787878787845,0
+full-22-prune25,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.07933852650637759,-0.19159196422207084,0.34356841572262603,-0.6016847172081841,0
+full-22-prune25,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-9.208849952227586,-12.993965337271701,-5.51941121243761,-17.44885679903731,8
+full-22-prune25,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-38.4073662209552,-49.28992104586865,-27.439027990516085,-56.69191919191919,9
+full-22-prune25,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.07125711608120115,-1.1567424242835038,1.1024918337606586,-2.4806201550387614,2
+full-22-prune25,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.0799370223461695,-3.531896523183848,-0.6577512371967523,-5.736434108527131,4
+full-22-prune25,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.3085811579552695,-5.653597450671576,-1.1274313213228722,-9.469696969696969,5
+full-22-prune25,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-27.15528051852402,-36.33831411629767,-18.7641993600668,-48.014440433213,9
+full-22-prune25,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-35.81462209164811,-47.97802283777287,-23.690170526010828,-54.67171717171717,9
+full-22-prune25,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.239918706567334,-2.4527607963726448,-0.22482851634144188,-4.8134777376654645,2
+full-22-prune25,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.2299798412665693,-1.0060951060881589,0.5146566153177071,-2.16606498194946,1
+full-22-prune25,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.6077030122925279,-1.3770090747995332,0.2044828808261307,-2.527075812274371,1
+full-22-prune25,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.992277119866682,-1.6592198022862028,-0.3713706601191883,-2.829028290282898,2
+full-22-prune25,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.17863252112225927,-0.13683788514171763,0.47532232776264766,-0.7220216606498224,0
+full-22-prune25,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.011466965106016587,-0.25199553542725295,0.29906608163844034,-0.46511627906976605,0
+full-22-prune25,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.02354740457007384,-0.3120248682343442,0.33568090144308865,-0.7751937984496138,0
+full-22-prune25,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",0.03453415711348469,-0.7995954944640911,0.8942625561245995,-1.8979833926453193,0
+full-22-prune50,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.03762368921086185,-0.28983607820080304,0.18875569820947932,-0.740740740740738,0
+full-22-prune50,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-8.154631563439986,-11.49994724893832,-5.175433853792159,-16.36141636141636,9
+full-22-prune50,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.11681526908036471,-0.18456589201280404,-0.05498705526978028,-0.3044140030441437,0
+full-22-prune50,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.04072165640132706,-0.1894961198309119,0.2196524881676449,-0.7407407407407418,0
+full-22-prune50,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.24943000347449054,-0.41543866025922827,-0.1103283228430716,-0.7407407407407418,0
+full-22-prune50,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-14.602114289160575,-20.26821650925774,-9.795096573395343,-31.97530864197531,9
+full-22-prune50,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-61.13182875721644,-66.82550482366975,-55.200309878930035,-71.44866385372714,9
+full-22-prune50,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.5627931054645954,-2.3772173181761316,-0.8950442843102888,-4.261796042617964,2
+full-22-prune50,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.7540093483419636,-4.954275220055836,-2.494258680616566,-6.4197530864197505,7
+full-22-prune50,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.737089150499013,-5.356464897556877,-2.1992704961318124,-8.778625954198475,6
+full-22-prune50,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-43.55147071816614,-50.327767106476266,-36.50556585912207,-59.70695970695971,9
+full-22-prune50,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-52.29267676627065,-61.933585755399754,-42.151440893482615,-71.7948717948718,9
+full-22-prune50,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3331973252544296,-1.9229540446673605,-0.6780306918892366,-2.4691358024691317,4
+full-22-prune50,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.46521544058996395,-0.8452052716966483,-0.06896885950583585,-1.4652014652014635,0
+full-22-prune50,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.5414713256048512,-0.970580269689504,-0.1445463829660742,-1.5873015873015854,0
+full-22-prune50,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.7417004529779481,-1.016052279212961,-0.4521277549692593,-1.369863013698632,0
+full-22-prune50,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.0514173826922422,-0.16424571276847327,0.062206095779503943,-0.3703703703703728,0
+full-22-prune50,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.11868506809463719,-0.3732528812749745,0.09325194409682698,-1.0178117048346036,0
+full-22-prune50,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.42428665298286744,-0.6713323199734509,-0.17148004890967394,-0.91324200913242,0
+full-22-prune50,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.0296390019040027,-2.4340961685463984,-1.6369980303557832,-3.1806615776081384,5
+full-22-prune50,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.11260188888722106,-0.15068490782662963,0.41703391753982016,-0.36101083032490744,0
+full-22-prune50,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-7.444582693174373,-11.665507871379107,-3.967453197960643,-20.336943441636578,8
+full-22-prune50,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.025709022095749396,-0.13893451915722818,0.16090183520273255,-0.4884004884004904,0
+full-22-prune50,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.024926913635814136,-0.23220070641349777,0.22543259014278638,-0.48309178743961384,0
+full-22-prune50,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.10498857910326873,-0.004525339754556669,0.19614760206433682,-0.23557126030624245,0
+full-22-prune50,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-8.465161354943113,-11.229212798549607,-5.683398363307216,-15.129151291512914,8
+full-22-prune50,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-38.103156552602805,-48.745858054694274,-27.387330891916964,-55.35499398315282,9
+full-22-prune50,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.198912420112889,-0.16174849301701244,0.5620853315275445,-0.4920049200492012,0
+full-22-prune50,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.607193313419388,-4.981897069614838,-2.2742367087909825,-7.257072570725709,6
+full-22-prune50,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.117791657349434,-3.9269270854647313,-2.3697539657872557,-5.250305250305254,7
+full-22-prune50,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-26.64677767784201,-35.327984972580204,-19.166179290063596,-47.65342960288808,9
+full-22-prune50,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-34.79395773839095,-45.74870011472017,-23.67917949080815,-55.16014234875445,9
+full-22-prune50,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.2587641433918326,-2.170177720500318,-0.48037972156222275,-4.211793020457277,2
+full-22-prune50,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.7094655655950576,-1.2145588157881337,-0.2300077631611357,-1.8979833926453156,0
+full-22-prune50,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.0082324338391129,-1.5647593172557044,-0.45921223632152414,-2.406738868832729,1
+full-22-prune50,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.7194249958661679,-1.3019456913298857,-0.11022355562243234,-2.192982456140352,1
+full-22-prune50,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.008742018059724348,-0.2509300342268691,0.2825681258511843,-0.6016847172081841,0
+full-22-prune50,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.07914948300520595,-0.2249963245195323,0.07105804272752142,-0.366300366300365,0
+full-22-prune50,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.16771666834107593,-0.47075766806096486,0.12630201192405222,-0.9661835748792277,0
+full-22-prune50,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",0.015319819579046958,-1.0892885915488875,1.147801774747151,-3.075030750307502,1
+proposed-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.14426187848805908,-0.38895204312034554,0.08662769259699714,-0.8547008547008553,0
+proposed-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-6.612657398420712,-10.280461630552386,-3.5622322804850466,-19.16971916971917,8
+proposed-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.12274170448422393,0.013211272753257647,0.2591837978273851,-0.12626262626262613,0
+proposed-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.10505187943317693,-0.13681793870580852,0.3258081820870128,-0.49382716049382785,0
+proposed-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.11859080239543723,-0.246237383497946,-0.006338318076229114,-0.5089058524173036,0
+proposed-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-13.436911809245998,-18.185897482056053,-9.21787954694874,-28.15829528158295,9
+proposed-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-61.85191884156105,-68.1876008947364,-55.33097034676315,-73.55836849507736,9
+proposed-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.3341050279435478,-2.2257793129026857,-0.5540688489715752,-3.9440203562341014,3
+proposed-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.192520943238873,-3.0040485214173516,-1.353211788594106,-4.074074074074074,5
+proposed-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.472941007257528,-6.3303472953754065,-2.8129602740440482,-9.03307888040713,7
+proposed-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-40.94046182689298,-49.39665999614293,-32.742539648013754,-65.43665436654366,9
+proposed-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-54.56586489371691,-62.2275729968156,-46.39360197422705,-71.95571955719556,9
+proposed-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.7821708791423936,-2.608826126684124,-1.014291105716553,-4.071246819338425,3
+proposed-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.0119355378022246,-1.745827868945916,-0.29810315811728444,-3.196347031963468,1
+proposed-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.3874004436035103,-2.2208294750565933,-0.6231328726702474,-3.6529680365296766,3
+proposed-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1121343699242783,-2.1286556310158953,-0.2958153579321396,-3.6616161616161693,2
+proposed-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.14386072112417084,-0.3230305124565807,0.011867419274828008,-0.6361323155216314,0
+proposed-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.10012087389417745,-0.17088620865054982,-0.020944062098047375,-0.25445292620865556,0
+proposed-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.144816042800873,-0.29853840746773985,0.03005172404000059,-0.5089058524173036,0
+proposed-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.200807263528504,-1.9606694730026308,-0.4734406877018267,-2.9262086513994907,3
+proposed-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.3041787323518613,-0.6583485217662612,0.0879483813566541,-0.9626955475330953,0
+proposed-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-6.139887453172904,-8.401892712771684,-3.934436759636,-11.862396204033214,8
+proposed-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.056013352522736745,-0.14107082304739027,0.028593457786529594,-0.2406738868832766,0
+proposed-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.13078030531393742,-0.31733943036846374,0.058775004022298544,-0.4884004884004904,0
+proposed-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.043102844129182,-0.23737670818088416,0.1437416414282343,-0.4884004884004904,0
+proposed-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-8.09494321597425,-10.57827958312994,-5.777458777497457,-15.643802647412755,9
+proposed-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-39.57008882533248,-50.66736696176758,-28.30694386928771,-60.10101010101011,9
+proposed-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.4803901450364971,-1.1499082213511334,0.3098719190756045,-1.8115942028985494,0
+proposed-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.1518364500977765,-1.8663026854949938,-0.38536836258328083,-2.631578947368422,3
+proposed-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.5521037089075436,-3.9602183433053098,-1.40048673583489,-7.323232323232327,5
+proposed-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-25.594468462617826,-34.21946129614813,-18.20075784411426,-49.699157641395914,9
+proposed-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-35.445349257825725,-45.86454713681291,-24.937771286866713,-54.419191919191924,9
+proposed-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.7979605729573933,-2.730733760627347,-0.861538056041106,-4.452466907340558,4
+proposed-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.01270517427405,-1.7162775800205972,-0.2593961578240042,-2.657004830917871,2
+proposed-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.7056790184228037,-2.244949868724571,-1.1789643695495102,-3.2490974729241895,2
+proposed-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.5880293882209694,-1.4012426489908083,0.021131626808748152,-3.444034440344401,1
+proposed-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.606590748167815,-0.834264629213861,-0.338454928960539,-1.0830324909747335,0
+proposed-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.04530955444333646,-0.16556124876270198,0.2628557488859744,-0.366300366300365,0
+proposed-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.17190026643611692,-0.44945430274275294,0.12704255440044,-0.7067137809187274,0
+proposed-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.5788358654031073,-1.2717708142872288,0.19885558921929314,-1.9680196801967975,0
+random1-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.07650189838389569,-0.30043249912443587,0.17382791026305888,-0.6150061500614996,0
+random1-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.9377731996321845,-8.841691709607645,-3.91741239333331,-16.666666666666664,9
+random1-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.05248297781237159,-0.06507866169157345,0.19640738199428803,-0.15220700152206817,0
+random1-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.2577903508264556,0.10657862847413133,0.4061980654942711,-0.14064697609001237,0
+random1-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.029656985389246042,-0.2089459962680804,0.2169630319603655,-0.7610350076103483,0
+random1-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-15.930391552921074,-22.185183591223186,-10.54004222087123,-36.2962962962963,9
+random1-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-58.385876127315605,-65.0956514160747,-51.31520828637425,-71.72995780590718,9
+random1-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.21440624777561967,-0.7539467313694882,0.3784694740264977,-1.358024691358025,0
+random1-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.634986235262501,-3.458860126023523,-1.8091632967171147,-4.639804639804642,5
+random1-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.815119400372804,-6.827323109746755,-2.9277414948633074,-10.178117048346055,7
+random1-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-40.28122174588176,-48.771854371986564,-30.3034215847486,-56.94956949569495,9
+random1-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-53.61119053742896,-61.915733665963835,-45.10415548166856,-69.19831223628692,9
+random1-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3567934053782569,-2.1996446066402706,-0.5935988359919996,-3.435114503816794,3
+random1-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.4290711419222544,-2.126281025469918,-0.875900693406194,-3.805175038051752,1
+random1-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.5859223579828614,-2.30432136203506,-0.936702316449575,-3.5623409669211217,3
+random1-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.7875741889527673,-1.171443323620795,-0.38871353000403724,-1.8518518518518527,0
+random1-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.043911393396713745,-0.1815760594699538,0.3174789552918171,-0.25445292620865556,0
+random1-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.14631381788583228,-0.4220613656285852,0.07115083873485038,-1.065449010654488,0
+random1-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.07026948571892039,-0.26760772376962627,0.05690050219312253,-0.7633587786259555,0
+random1-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.6469226610957737,-2.365059212912328,-1.0322348476374088,-3.813038130381304,2
+random1-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.2758011348020968,-0.8582202264161986,0.33939880261140687,-1.705426356589144,0
+random1-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.250898098366541,-7.2439033559598025,-3.394670973315001,-10.144927536231885,8
+random1-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.034369864449743825,-0.1073752083677346,0.03982325775324606,-0.15503875968992203,0
+random1-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.1291135344444445,-0.08252479076621827,0.3635025476315224,-0.25252525252525604,0
+random1-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.08325930311542878,-0.17166097546632197,0.35556400445904424,-0.5050505050505045,0
+random1-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-7.4826315894219215,-10.095908741418977,-4.895237502111103,-13.663133097762072,7
+random1-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-35.53916004150119,-45.74675894370339,-25.121279941339267,-55.42929292929294,9
+random1-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.06218119326728885,-1.1088790257740995,0.7572684565299924,-3.6616161616161658,1
+random1-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.309409276722809,-2.070729315639386,-0.4765057086300758,-3.0084235860409163,2
+random1-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.9592405962548187,-4.510614998449104,-1.7462866314899583,-8.207070707070711,6
+random1-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-23.210528908859466,-30.385286838754787,-16.161865120858025,-42.238267148014444,9
+random1-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-33.45009007372113,-43.20627081966938,-23.75306900595495,-53.15656565656566,9
+random1-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.6633060101696968,-2.5171641143740433,-0.6406991293956545,-3.1980319803198043,5
+random1-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.9179035266088628,-1.5007513454714088,-0.33815022461538735,-2.4420024420024404,1
+random1-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.2956361331364066,-2.2475670120681674,-0.4713103708445977,-3.971119133574008,2
+random1-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.930658235049707,-1.7481703136485338,-0.2902608146876378,-3.6616161616161658,1
+random1-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.008601787275973265,-0.20431599798916375,0.20468108784567104,-0.4711425206124868,0
+random1-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.13001553701085802,-0.45429443807648556,0.23330269634850812,-0.7220216606498224,0
+random1-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.020795649197777002,-0.41813400725734856,0.38645008678719134,-0.9422850412249717,0
+random1-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.313111236630638,-0.926893188678438,0.30088139172606887,-1.550387596899224,0
+random2-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.13446248258546772,-0.30750058078083425,0.5671295017023336,-1.065449010654488,0
+random2-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-7.943686406979285,-10.75622788771539,-5.604926868014861,-17.589175891758916,9
+random2-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.06824379446912499,-0.04712487757692044,0.17555305467111526,-0.24691358024691393,0
+random2-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.058628971424440554,-0.12688412553361672,0.25540702713876373,-0.3816793893129796,0
+random2-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.018460644838714093,-0.14383271872489106,0.10665418947595494,-0.370370370370369,0
+random2-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-10.73541367699786,-12.71244995954094,-8.49097886399317,-14.267676767676774,9
+random2-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-60.40651326935431,-66.98265756642954,-53.649246797742094,-73.1364275668073,9
+random2-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.5900505515106984,-0.9441743058611993,-0.2278420108231439,-1.3530135301352977,0
+random2-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.1378165436810277,-3.8620931940090264,-2.4171616122883846,-4.870624048706237,7
+random2-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.195037275485576,-5.6322375650493655,-2.742901844829252,-7.760814249363864,8
+random2-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-40.36981524997812,-47.99106384081167,-31.81877316359581,-58.67158671586715,9
+random2-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-49.570537498494346,-59.43118414034811,-40.0685188160857,-69.33895921237693,9
+random2-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.215822656020723,-1.8432485820352342,-0.6272420511696621,-2.592592592592595,2
+random2-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.963413141409752,-1.8347477662301723,-0.08724142981185118,-3.1746031746031744,2
+random2-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.7322390694544454,-1.4215076514027494,-0.007358107908851098,-2.43531202435312,1
+random2-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.6234814632943488,-2.6098172146667458,-0.8130608117880246,-4.87062404870624,3
+random2-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.0854109679058696,-0.2107589893849454,0.012645105568737726,-0.5050505050505083,0
+random2-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.257035594687818,-0.4930946571404189,-0.0005537556663020222,-0.7610350076103483,0
+random2-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.3173671160535134,-0.7256989308041658,0.04917167522608144,-1.5220700152207,0
+random2-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.121499514576503,-3.0390486351662376,-1.1416392030522944,-4.674046740467404,5
+random2-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.2572649512767555,-0.0654153672016005,0.581926777600061,-0.7220216606498224,0
+random2-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.572928769946107,-8.860338332069407,-2.844782779949475,-15.523465703971121,6
+random2-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.07378095697321037,-0.06353662342573979,0.21081451881044697,-0.2923976608187181,0
+random2-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.08911062241108408,-0.3549387421215349,0.17550858580166262,-0.730994152046786,0
+random2-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.02673269235332744,-0.13742021630966772,0.1714135767206602,-0.43859649122807154,0
+random2-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-6.324673953738153,-9.97506626111882,-3.117434786312224,-18.17087845968713,8
+random2-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-36.2075953747624,-47.14379355209667,-24.959880479575762,-57.19696969696969,9
+random2-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.16467259695920744,-1.0521132660442005,0.5680722164707978,-3.075030750307502,1
+random2-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.1635166080617063,-2.3631165221133474,-0.13053529852498377,-4.428044280442803,2
+random2-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.2716451110240827,-4.614559385930657,-1.811769002539582,-6.227106227106224,7
+random2-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-21.926869757248646,-29.63265293906408,-14.923579304689639,-40.31287605294826,9
+random2-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-31.297497262352937,-41.61118784519528,-21.177415197790666,-53.15656565656566,9
+random2-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.2488928933881573,-2.341949493557845,-0.29958790634411975,-4.239766081871349,2
+random2-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.3822096480288283,-0.9578164757959173,0.2602307375304604,-2.016607354685647,1
+random2-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.0403299786791347,-2.0004937664142033,-0.1749458983275313,-4.091456077015646,1
+random2-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.44404865514785286,-1.2570762570762568,0.11856400206133139,-3.2828282828282838,1
+random2-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.0940362271792306,-0.08177111088272905,0.2711662522326802,-0.3610108303249112,0
+random2-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.07654802778367448,-0.09153374947571771,0.24734710478405053,-0.36231884057971364,0
+random2-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.05062735109570518,-0.40399909234924336,0.25551544896889844,-1.1695906432748573,0
+random2-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.470568325189807,-1.3278784879945638,0.4879928049533049,-1.7220172201722006,0
+random3-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.06832524687057086,-0.3230994846270586,0.198850696212715,-0.7610350076103483,0
+random3-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-9.006283603498952,-12.470614963722895,-6.182402417565887,-20.17220172201722,9
+random3-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.07414358508080005,-0.09695722658685625,0.3052517081509994,-0.24691358024691393,0
+random3-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.007208941883924871,-0.2041941088551141,0.20280071306959577,-0.49382716049382785,0
+random3-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.03811184423978624,-0.16366289713039361,0.09895391574780966,-0.2544529262086518,0
+random3-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-13.361326301918146,-16.933753013831623,-9.972067271960693,-23.43987823439878,9
+random3-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-60.676813540896305,-68.14810032214699,-52.80594531357503,-73.9803094233474,9
+random3-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.2427854429396235,-1.8018437040701727,-0.7315706918964688,-2.829028290282902,2
+random3-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.4099928305315856,-3.7119065552774253,-1.3477756878659959,-6.715506715506709,4
+random3-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.509240188398054,-5.424624781127013,-3.2955978982709686,-5.979643765903308,8
+random3-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-44.04444020090158,-52.990058344908576,-34.623678690247345,-64.82164821648216,9
+random3-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-54.809465884434296,-66.04469572477434,-41.364936601769614,-72.43319268635724,9
+random3-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.4162213528331753,-1.9496389323325236,-0.9207427804476477,-3.0864197530864184,1
+random3-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.1658233347062228,-1.954825186549739,-0.49966635216125704,-3.663003663003661,2
+random3-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.3145417942487447,-1.836388048183842,-0.8658803942840894,-2.926208651399494,1
+random3-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.052841924835612,-1.6126987848267054,-0.5120118590739714,-2.3456790123456805,2
+random3-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.0859875312318389,-0.18280772097566075,0.0,-0.37878787878787845,0
+random3-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.18470110657424438,-0.2637383473473025,-0.11332113790123856,-0.37878787878787845,0
+random3-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.25061824425535867,-0.5404777246259034,0.07000637629972946,-0.7633587786259555,0
+random3-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.282364308799429,-3.2236355109841455,-1.4536318966730388,-5.289052890528904,5
+random3-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.3353016228445397,-0.8302135882718262,0.14292763154320864,-1.8050541516245484,0
+random3-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-7.562867195806057,-12.003557299341738,-3.7705450243591367,-21.0589651022864,8
+random3-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.11044857187136614,-0.26559519323866104,0.06769586293014207,-0.4651162790697679,0
+random3-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.20980662144703605,-0.08553796845040017,0.47959407900444084,-0.7326007326007338,0
+random3-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.205816921362281,-0.5520415567903478,0.126304284600865,-1.085271317829458,0
+random3-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-7.482990151063877,-10.563911847601481,-4.757463994924108,-17.208182912154033,9
+random3-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-35.264119252675805,-47.31663471143358,-23.060643735480227,-57.19696969696969,9
+random3-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.4396895542746002,-0.46445199974298795,2.0131625836915354,-0.8610086100861003,0
+random3-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.5786027093243105,-3.0795787439797504,-0.21505226637769267,-5.781057810578105,3
+random3-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.5938757166213158,-4.0393927541110495,-1.1543085756722862,-5.808080808080806,5
+random3-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-25.192546200928362,-34.563457666228175,-16.242150340592737,-47.2123368920522,9
+random3-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-34.31215883531718,-46.39822311640913,-21.843521211557846,-56.186868686868685,9
+random3-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.5298507357658993,-2.7076093088284305,-0.6057034999180982,-5.7761732851985546,2
+random3-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.25703759905788803,-1.709244680555402,1.4497292400383621,-4.151838671411626,1
+random3-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.56738586105617,-1.0817574410695818,-0.0828672468000446,-2.0757020757020754,1
+random3-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.46499723426113004,-1.1155942923964683,0.16242940763544533,-2.1201413427561837,1
+random3-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.271511153583336,-0.6356108752753632,0.053126626198012894,-1.3285024154589375,0
+random3-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.1296321481108618,-0.5508779453257711,0.34188488846113396,-1.085271317829458,0
+random3-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",0.025852427679763073,-0.43528229128833673,0.5017268098495112,-1.2077294685990336,0
+random3-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",0.14496037428128097,-1.454163160845051,2.015758814595232,-3.6900369003690017,1
+relevance-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.16238530628069778,-0.35345745974658915,0.00395468163962823,-0.6361323155216276,0
+relevance-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.880533970222993,-8.488594780971454,-3.5231810845809215,-13.899138991389915,8
+relevance-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.1647811782767936,0.04058743613400156,0.3133189682775497,-0.12626262626262613,0
+relevance-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.07500157380377942,-0.1796677097105876,0.3211144512260751,-0.49382716049382785,0
+relevance-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.048378904347703255,-0.19184020717709435,0.08397993696269124,-0.5089058524173036,0
+relevance-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-14.10541484059327,-18.729123047866576,-9.750076968000863,-28.15829528158295,9
+relevance-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-62.39596675610557,-68.44269137312115,-56.22103001898883,-73.55836849507736,9
+relevance-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.1485245666900992,-1.9893033870756733,-0.48448098749639706,-3.9440203562341014,2
+relevance-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.4099883193778346,-3.0790188229244397,-1.7281737979455705,-4.074074074074074,5
+relevance-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.9047278854074197,-5.636937727700879,-2.30915066885627,-8.524173027989823,6
+relevance-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-41.64362980703907,-50.01952456059579,-33.347225420073194,-62.48462484624846,9
+relevance-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-55.46425171221867,-63.554390461395364,-46.926493140091374,-71.18437118437119,9
+relevance-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.6290503655625495,-2.3728699587742783,-0.9169505316432094,-3.1806615776081424,3
+relevance-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.212560068257839,-1.9233923773207873,-0.5239784090442742,-3.196347031963468,2
+relevance-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.9950057806249186,-1.8658837094082528,-0.21765467019649826,-3.6529680365296766,2
+relevance-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1009150414087232,-2.1133683768346696,-0.2693223262311261,-3.6616161616161693,2
+relevance-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.0721402889444091,-0.21264628186770435,0.05654509471303252,-0.5050505050505045,0
+relevance-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.10172953112755859,-0.25680968903497164,0.010104100638218823,-0.6361323155216314,0
+relevance-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.06083721831708581,-0.2782843628541355,0.22027453561566057,-0.5089058524173036,0
+relevance-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.104338655374779,-1.7359240538044307,-0.5111519300962073,-2.9262086513994907,2
+relevance-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.03579307215326054,-0.36327496605120185,0.2861513366883141,-0.724637681159418,0
+relevance-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-6.3648137233897275,-9.989703509539055,-3.445146557937103,-19.37424789410349,7
+relevance-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.07681747825012882,-0.24227411897346365,0.07280493080036285,-0.6016847172081878,0
+relevance-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.17414682532451997,-0.33347713274258,-0.0076295927368120265,-0.4884004884004904,0
+relevance-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.0582318841784956,-0.26399302541092007,0.14745253548420015,-0.4884004884004904,0
+relevance-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-8.997167890464585,-13.05270239647782,-5.877033903685304,-23.465703971119133,9
+relevance-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-39.4971710804872,-50.44069752663923,-28.37076478911954,-60.10101010101011,9
+relevance-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.1907476962621345,-0.900024721823128,0.7469990429289866,-1.8115942028985494,0
+relevance-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.4109317740317,-2.151836535117078,-0.6971819138179968,-3.677342823250296,3
+relevance-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.4288850833034794,-4.161252136269048,-0.9529846629235448,-7.323232323232327,3
+relevance-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-25.632505707157677,-34.11332852467342,-18.302796840240898,-46.81107099879663,9
+relevance-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-35.51240388138834,-46.03356278406189,-24.886849320441456,-54.419191919191924,9
+relevance-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.7793149957964844,-2.7523683565863255,-0.9675775548954902,-5.054151624548738,3
+relevance-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.58389514947948,-2.4526992634941815,-0.8044263836156623,-4.33212996389892,3
+relevance-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.7981869010798712,-3.3965995393192436,-0.5857749239885162,-7.460890493381466,2
+relevance-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.49780652424846455,-1.340318050360581,0.15548952650847286,-3.444034440344401,1
+relevance-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.3821158886199769,-0.6804290906518045,-0.05360583421697227,-0.9302325581395395,0
+relevance-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.033434719924059955,-0.16282639289382422,0.23047577422802829,-0.366300366300365,0
+relevance-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.21602811151394585,-0.4304682346065991,-0.013404378491583503,-0.7067137809187274,0
+relevance-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.2706651269370756,-1.2301961431204864,0.9966534076153422,-1.9680196801967975,0
+relevance-16-prune25,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.22012768452148762,-0.36775347123496577,-0.05860808122527497,-0.5089058524173036,0
+relevance-16-prune25,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.890203199191142,-8.729705913517673,-3.606426838144135,-15.25215252152522,9
+relevance-16-prune25,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.0033114618125685094,-0.0864074749829947,0.08168320303502613,-0.14064697609001603,0
+relevance-16-prune25,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.24582986195302325,-0.46758580498843055,-0.03398536167625453,-0.91324200913242,0
+relevance-16-prune25,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.05508020849007617,-0.05664633029329036,0.16409145366245703,-0.2544529262086518,0
+relevance-16-prune25,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-12.030629172964476,-16.27051783336618,-8.695668072861718,-26.48401826484018,9
+relevance-16-prune25,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-63.662999679147866,-68.75617362763771,-58.39266634316809,-74.12095639943742,9
+relevance-16-prune25,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.1375528784452238,-1.6942053083319433,-0.5888235691687798,-2.5875190258751917,2
+relevance-16-prune25,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.5232553078388005,-4.837812708249466,-2.2609493846497335,-6.313131313131315,6
+relevance-16-prune25,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.710836633908023,-6.726451213500236,-2.778130426783926,-9.541984732824432,8
+relevance-16-prune25,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-43.44778005289231,-51.316990342553154,-34.97385105064658,-60.07326007326007,9
+relevance-16-prune25,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-55.80526633617558,-64.0057076300315,-47.05035809467678,-70.94017094017094,9
+relevance-16-prune25,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.016184228109914,-1.8594482985531677,-0.16194482717013053,-2.904040404040413,3
+relevance-16-prune25,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.7767619896152465,-1.3416140972226211,-0.25789302263887937,-2.43531202435312,1
+relevance-16-prune25,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.8085316837816189,-1.5175789606090517,-0.16014457272881902,-3.0441400304414,1
+relevance-16-prune25,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.2207009119560341,-1.7183647047396233,-0.6926011162906144,-2.3989898989899006,2
+relevance-16-prune25,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.04808756926109417,-0.18431814239290964,0.09756984062069964,-0.370370370370369,0
+relevance-16-prune25,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.29237358097807686,-0.5618880640897191,-0.07597418804680042,-1.21765601217656,0
+relevance-16-prune25,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.25755438698266286,-0.45581153824019693,-0.09650866588647196,-0.9132420091324237,0
+relevance-16-prune25,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.6615539970533764,-3.2074026835407485,-2.190511719160753,-4.305043050430505,7
+relevance-16-prune25,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.15266608386698566,-0.46036935946461793,0.1732004280119112,-0.8547008547008553,0
+relevance-16-prune25,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.1797093842439725,-8.532948143636936,-2.566666495918247,-17.087845968712394,7
+relevance-16-prune25,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.1040373715126018,-0.03930401136827289,0.26074466093628096,-0.23557126030624245,0
+relevance-16-prune25,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.135705992898662,-0.07710746745482641,0.36219102281597304,-0.366300366300365,0
+relevance-16-prune25,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.05986584581506355,-0.18264997627670398,0.34846695169439007,-0.4711425206124868,0
+relevance-16-prune25,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-7.4602680457493555,-10.683588258114783,-4.597215142571915,-17.930204572803852,9
+relevance-16-prune25,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-40.29904471053259,-51.20754156095303,-29.28896494240451,-60.10101010101011,9
+relevance-16-prune25,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.4046636849246241,-1.2763475111801432,0.5662105670778157,-2.135231316725979,2
+relevance-16-prune25,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.2313778787250715,-4.235985707666315,-0.782599644322717,-9.348093480934812,3
+relevance-16-prune25,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-1.8121535882892603,-3.6002191018381366,-0.2555309025253799,-6.691919191919197,3
+relevance-16-prune25,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-25.961435694798055,-34.9864430748772,-18.17658575520662,-47.09371293001186,9
+relevance-16-prune25,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-35.963966670315855,-46.91037035173709,-24.87684543959455,-56.1868686868687,9
+relevance-16-prune25,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.9561909580950605,-1.8839254320858398,-0.16099806668536326,-3.6900369003690057,2
+relevance-16-prune25,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.883563652845596,-1.7231271270567339,-0.2110896361679443,-3.85078219013237,1
+relevance-16-prune25,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.2086515604782462,-2.349414649990208,-0.40593973222857144,-5.294825511432007,1
+relevance-16-prune25,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.06988619824194374,-0.8155573555685918,0.5978981327094655,-2.2140221402214055,1
+relevance-16-prune25,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.2298746823755481,0.011730025828463572,0.45935756019605745,-0.366300366300365,0
+relevance-16-prune25,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.07373516495323468,-0.16506624734442762,0.32722696859927936,-0.3690036900369028,0
+relevance-16-prune25,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",0.11575549656231482,-0.20598496344134828,0.42633044671268877,-0.4920049200492012,0
+relevance-16-prune25,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.8881474967663349,-2.0897091092031865,0.5105431682624686,-3.558718861209964,3
+relevance-16-prune50,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.08053940231365692,-0.29987493482777067,0.08566348602297433,-0.8547008547008517,0
+relevance-16-prune50,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-5.752790223554329,-8.716300460673986,-3.633109093374778,-16.23616236162361,9
+relevance-16-prune50,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.020570955528663608,-0.16445720012755544,0.12161235115717263,-0.370370370370369,0
+relevance-16-prune50,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.038848786186844814,-0.22582060356770647,0.31840501358022233,-0.6105006105006083,0
+relevance-16-prune50,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.1771030016686988,-0.4350900449914864,0.03243018361269106,-1.0178117048346036,0
+relevance-16-prune50,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-12.23509582175111,-15.921044260622208,-9.532077946101166,-24.961948249619486,9
+relevance-16-prune50,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-61.398613600956395,-66.3584980739123,-56.38408851534208,-69.86469864698647,9
+relevance-16-prune50,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.1714964935142897,-1.8813896013216664,-0.5267614685968917,-3.0534351145038148,2
+relevance-16-prune50,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.864607900677419,-5.586941328156488,-2.2054041224188534,-8.080808080808081,5
+relevance-16-prune50,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.122172472011489,-5.404150672156527,-2.93055793764569,-8.01526717557252,8
+relevance-16-prune50,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-41.25697972913692,-49.29181344355242,-32.673118518784214,-58.17958179581796,9
+relevance-16-prune50,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-52.947925761767884,-61.304676701625176,-44.87547177185293,-68.98656898656897,9
+relevance-16-prune50,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.2741382593244337,-1.954999494374545,-0.6584174354901714,-3.2828282828282873,2
+relevance-16-prune50,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.8450163460400731,-1.4628132438675407,-0.20222794373591926,-2.4420024420024404,1
+relevance-16-prune50,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.5504327404228525,-0.9610810364507371,-0.07413983720499101,-1.2722646310432593,0
+relevance-16-prune50,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1297076867899718,-1.7440092566457306,-0.5447971387893398,-2.5445292620865145,2
+relevance-16-prune50,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.03377563992162648,-0.2443299627179625,0.16743917708669975,-0.6313131313131308,0
+relevance-16-prune50,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.08468283564034469,-0.24930303203800092,0.11616623135362866,-0.45662100456621185,0
+relevance-16-prune50,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.2063451223485654,-0.4205059690246846,0.015527833219754532,-0.7633587786259555,0
+relevance-16-prune50,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-3.0259221127980838,-3.9386673440440285,-2.0939768554134033,-4.9618320610687014,7
+relevance-16-prune50,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.1647402005531139,-0.6297189956542171,0.28437194302197355,-1.4440433212996409,0
+relevance-16-prune50,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.900321431827234,-8.111755606646586,-2.2133517413771773,-14.801444043321297,6
+relevance-16-prune50,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.046111377031495045,-0.1757783664082132,0.06651718182040328,-0.48309178743961384,0
+relevance-16-prune50,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.21669112667074875,-0.4400147194475361,0.00899129209576682,-0.7246376811594217,0
+relevance-16-prune50,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.13092715387026138,-0.41727424248420264,0.1882224015166979,-0.6038647342995158,0
+relevance-16-prune50,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-7.780957526702535,-11.60909964559777,-4.527187805556348,-21.179302045728036,8
+relevance-16-prune50,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-38.62699904156609,-49.141228969602764,-28.06410122245468,-55.42929292929294,9
+relevance-16-prune50,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.4059317435629706,-1.3204310572328473,0.6202741261376938,-2.2727272727272747,1
+relevance-16-prune50,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.3859811603150494,-4.722698864639076,-0.5787383128032938,-10.33210332103321,3
+relevance-16-prune50,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-1.854932577196894,-3.6084610570045976,-0.6021502457716414,-7.954545454545459,3
+relevance-16-prune50,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-23.956763793611824,-32.8289350046949,-16.360294433584166,-44.28399518652226,9
+relevance-16-prune50,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-33.15503984797949,-43.41381355618062,-23.023035004489405,-52.90404040404041,9
+relevance-16-prune50,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.0196861925965068,-2.184557213492202,0.03467167389960899,-4.059040590405905,3
+relevance-16-prune50,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.0640564284837974,-2.215503523494798,-0.13995051574939005,-5.05415162454873,1
+relevance-16-prune50,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.4779702963329868,-1.9025689590660506,0.4974056754333853,-5.655836341756918,1
+relevance-16-prune50,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.30381540211850067,-1.0365325376757308,0.3796732783648455,-2.583025830258301,1
+relevance-16-prune50,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.011855802122052648,-0.31431352380413013,0.33731677734368143,-0.77519379844961,0
+relevance-16-prune50,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.20211727883731065,-0.500371792117895,0.106546145463037,-0.8838383838383831,0
+relevance-16-prune50,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.24378214057762382,-0.5419887509983871,0.0536724149963013,-0.8771929824561412,0
+relevance-16-prune50,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.8391412725348143,-2.0391994305950956,0.4300066448074811,-3.6900369003690057,2
+weightnorm-16,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.24883500001538147,-0.5367571536381925,0.07200163047816381,-0.8838383838383868,0
+weightnorm-16,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.794383480946473,-5.950866616766566,-3.6912206105315977,-7.626076260762608,9
+weightnorm-16,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.06188213950771066,-0.027853694803086988,0.15758805713143606,-0.12722646310432778,0
+weightnorm-16,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.3367246057888123,-0.5513284031376541,-0.15157748410958888,-0.9132420091324164,0
+weightnorm-16,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.167115198937464,-0.34968081688466185,-0.014179921587330077,-0.6361323155216276,0
+weightnorm-16,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-16.6482593609653,-22.719909407969226,-11.629856561187657,-36.039360393603936,9
+weightnorm-16,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-61.712364497569375,-66.82179934482582,-56.77969773638393,-73.8396624472574,9
+weightnorm-16,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.2486354125412835,-1.883562189204234,-0.715347131878628,-3.30788804071247,1
+weightnorm-16,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.4802224456351167,-3.1364024046525643,-1.7952156637160925,-4.029304029304034,5
+weightnorm-16,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.397867193276129,-6.176708496818639,-2.7182825134112933,-9.923664122137406,7
+weightnorm-16,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-37.986284692684116,-45.47843032719812,-28.999524346516033,-54.7008547008547,9
+weightnorm-16,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-49.734294390503806,-59.451464047570234,-39.66371337270689,-69.71916971916973,9
+weightnorm-16,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.9460095069170775,-3.3047383673356157,-1.0672457394038541,-6.870229007633584,2
+weightnorm-16,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.2419902054529652,-2.5801600762408006,-0.27677443887510506,-5.852417302798981,1
+weightnorm-16,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.548478676870575,-2.497862510557525,-0.7436473659494203,-4.2735042735042725,3
+weightnorm-16,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1254580793473454,-1.8015313216063953,-0.5616586002072013,-3.2967032967032996,2
+weightnorm-16,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.15361383466820308,-0.4363443143884385,0.09957301450394511,-1.0178117048346036,0
+weightnorm-16,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.1994648071679763,-0.3759318789179237,-0.03906878114842663,-0.740740740740738,0
+weightnorm-16,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.2484466738344554,-0.4221946834954262,-0.0591748432539714,-0.6361323155216276,0
+weightnorm-16,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.526957695652242,-1.988364891406583,-1.060415500043269,-2.5445292620865105,2
+weightnorm-16,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.003992108512233343,-0.3307158217173184,0.32506265549262053,-0.7575757575757569,0
+weightnorm-16,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-6.32617826689383,-9.647728566857179,-3.6148652218873423,-17.328519855595665,8
+weightnorm-16,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.012572710692994775,-0.20473316604621553,0.18034986643710196,-0.48309178743961195,0
+weightnorm-16,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.02500498057895802,-0.22957789833017006,0.19148909610655548,-0.6105006105006083,0
+weightnorm-16,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.17014726214782805,-0.4768942992097924,0.08267568711118106,-1.1695906432748537,0
+weightnorm-16,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-11.130550782116114,-16.01713335763137,-7.511022135561227,-28.51985559566787,9
+weightnorm-16,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-38.64722336483707,-48.35544918373564,-29.060855672476876,-60.858585858585855,9
+weightnorm-16,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.41172235111619854,-1.6438583822614936,0.8325298942484901,-4.059040590405908,1
+weightnorm-16,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.725701234951003,-3.5900842872199954,-0.12611102194388307,-7.872078720787208,3
+weightnorm-16,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.918797991638382,-4.584469769818856,-1.2511106019680467,-6.8376068376068355,6
+weightnorm-16,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-22.82959269988217,-30.711096752494434,-15.357584718348681,-44.6026097271649,9
+weightnorm-16,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-33.060916362470564,-43.84980862885733,-22.311497508380132,-56.439393939393945,9
+weightnorm-16,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.5963972121414716,-2.765727762717852,-0.6535063269908434,-5.409356725146201,3
+weightnorm-16,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.6274904310953869,-1.7092138737624971,0.3818707009285794,-3.2828282828282838,3
+weightnorm-16,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.01246022146721,-2.161941200929011,0.11323152926548388,-4.040404040404041,2
+weightnorm-16,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.877105380501094,-1.3910208412216551,-0.3572611341066274,-2.046783625730997,1
+weightnorm-16,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.1773541797337291,-0.4326644877715724,0.07525877876951022,-0.730994152046786,0
+weightnorm-16,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.2014561119802632,-0.49805993250850755,0.06886321004753879,-0.9661835748792258,0
+weightnorm-16,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",0.0934964595391433,-0.283396212582306,0.4714340414246488,-0.7067137809187292,0
+weightnorm-16,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.4747753245457531,-1.589065543799691,0.7989630057349075,-2.7060270602705994,3
+proposed-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.12600470512132322,-0.5611661163183509,0.2690320133773049,-1.3888888888888915,0
+proposed-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.701142854573753,-7.827961112016938,-2.3204405910000006,-14.938271604938269,7
+proposed-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.02263868696415546,-0.09068307174022153,0.1486972592429194,-0.2544529262086518,0
+proposed-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.11562756247538893,-0.37409033888145293,0.1068876047985837,-0.8547008547008553,0
+proposed-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.0023053167249322535,-0.24853327368019096,0.2582984641728734,-0.6172839506172829,0
+proposed-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-19.56877067797958,-27.843170582997946,-11.662151714739519,-40.084388185654,9
+proposed-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-54.60825072281556,-60.98676208914197,-47.93988146032731,-67.04545454545455,9
+proposed-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.3048225253681314,-2.085888312391677,-0.5433625049809526,-3.3333333333333326,3
+proposed-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.544407535956085,-3.6633476640979716,-1.528936583800049,-6.1050061050061055,6
+proposed-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-5.695084376329912,-7.156211051621132,-4.526685639060045,-10.687022900763358,9
+proposed-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-39.29605349376745,-46.628333829698285,-32.40438380192654,-59.77496483825598,9
+proposed-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-43.23643950111932,-52.85196377917913,-33.38303833036521,-67.42424242424242,9
+proposed-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.144471724650206,-1.4875998454057195,-0.8243150344846293,-2.020202020202022,1
+proposed-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.4162379125877012,-2.624845059674432,-0.3819856519516814,-5.25030525030525,2
+proposed-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.4032844034277474,-2.527641691657834,-0.3775466979059579,-4.395604395604399,3
+proposed-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.6898427903297343,-1.0271341920510617,-0.35253078593860704,-1.6414141414141399,0
+proposed-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.016902272328675774,-0.2816231226256264,0.2554935605359859,-0.49382716049382785,0
+proposed-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.37320110266412243,-0.7484634216335548,-0.0972785055340893,-1.7283950617283939,0
+proposed-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.41444848287307995,-0.7193949655257229,-0.11684909629186103,-1.1111111111111107,0
+proposed-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.3163086876117434,-3.004767743149508,-1.5284405770441096,-4.059040590405905,7
+proposed-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.3652019227398404,-1.0275843206700541,0.24696536883684225,-2.020202020202018,1
+proposed-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-2.9038586181753505,-5.445157524468033,-0.7224135003252297,-10.83627797408716,4
+proposed-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.18624419036402068,-0.5009449064497941,0.11101597933735323,-0.9840098400984024,0
+proposed-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.18547009703410888,-0.5328581708908824,0.14525609959928631,-1.2626262626262617,0
+proposed-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.14292531485209473,-0.3498757353945824,0.07455340410100168,-0.5931198102016588,0
+proposed-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-10.989440622881192,-17.224268221838773,-5.979808884903667,-30.934343434343432,9
+proposed-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-32.13960600168597,-41.172109485058655,-22.919671211097477,-47.72447724477245,9
+proposed-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.2531532602197367,-0.36177540355511745,1.003749576600138,-0.9489916963226541,0
+proposed-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.6930607762003707,-2.9377496618666625,-0.5862443947173618,-5.05050505050505,3
+proposed-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.0377694122337795,-6.389207819892994,-2.1379050499575003,-11.237373737373735,7
+proposed-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-22.560081467277175,-30.588330594578494,-15.110662416692989,-42.8030303030303,9
+proposed-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-27.55739833556799,-37.09221326199044,-17.74892950260519,-47.478474784747846,9
+proposed-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.9301426276998652,-2.0237322003914646,0.099999808433281,-3.7304452466907354,2
+proposed-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.9115689215586994,-2.0901251094192146,0.19599091379629982,-4.166666666666666,3
+proposed-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.2591530867564364,-2.5819092316110415,-0.06667236464551494,-5.303030303030302,3
+proposed-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.2177462554217504,-1.8430290259043594,-0.6835401769530708,-3.1565656565656575,2
+proposed-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.05158508324559033,-0.17515034669552026,0.08500284838074072,-0.31007751937984773,0
+proposed-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.06043196817347544,-0.3118957204901277,0.17509341168215156,-0.7067137809187256,0
+proposed-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.29784817396530383,-0.48773736003696067,-0.11099197199052485,-0.8244994110718477,0
+proposed-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.6302299038446121,-1.8008453703865177,0.45351088976114023,-4.182041820418206,2
+random1-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.12147047848880711,-0.517810196180881,0.17880318768125028,-1.4814814814814725,0
+random1-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-3.551357961446774,-5.65928218837938,-2.149298887465875,-11.237373737373735,6
+random1-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.0402650529564008,-0.20571181156120322,0.08444829482734646,-0.6172839506172867,0
+random1-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.2856690738597923,-0.43190267906604685,-0.14075465044551236,-0.6172839506172905,0
+random1-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.12487229848117123,-0.4126600478464873,0.14858793221011446,-0.8641975308642006,0
+random1-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-19.13354553099307,-24.997110241683167,-13.969585079365132,-36.37747336377473,9
+random1-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-52.56156022293343,-61.539493183702724,-43.27368889989426,-67.65067650676507,9
+random1-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.9056562242660596,-1.52900132732705,-0.2917154211969703,-2.3456790123456805,1
+random1-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.284562632078494,-3.651335744410578,-1.0807594558197313,-6.3131313131313105,5
+random1-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-5.439711643334359,-7.293530166273172,-3.6868886948708015,-10.134310134310136,8
+random1-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-34.99972481427192,-42.910125864954004,-26.645553636466147,-50.18315018315018,9
+random1-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-43.10901560634327,-54.335438621775886,-32.04563362619173,-64.32964329643296,9
+random1-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.0591940831593336,-1.3832474312493779,-0.7163270290514161,-1.9680196801968013,0
+random1-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.9225111264948013,-1.918982490829655,-0.12022202248201064,-4.2735042735042805,2
+random1-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.8663740000103627,-1.1611861684046827,-0.5877889453659887,-1.8264840182648439,0
+random1-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1692804055890011,-1.7937090161489249,-0.6049934329379466,-3.0750307503074987,1
+random1-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.21712882769171982,-0.5661556189546009,0.13853396096281492,-0.987654320987652,0
+random1-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.4041594200870905,-0.713840093376938,-0.17717979120986996,-1.4814814814814836,0
+random1-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.437093411145284,-0.9278251543478272,0.03421849030527317,-1.7283950617283976,0
+random1-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.697124989756859,-3.644592108550086,-1.8074562587173029,-5.043050430504303,5
+random1-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.3736918905058029,-0.6879920643806979,-0.012566962309601281,-1.1862396204033212,0
+random1-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-1.9662655704976406,-3.8373263425861386,-0.5179347274387865,-8.36408364083641,3
+random1-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.234635593429378,-0.38463327772063544,-0.08780376336134875,-0.588928150765607,0
+random1-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.13472884230839796,-0.3401984396437131,0.054843664414908774,-0.6313131313131308,0
+random1-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.29546165643940325,-0.6515288145833512,0.009916032418079805,-1.4134275618374568,0
+random1-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-9.526679235520797,-13.397294182622979,-6.1421498508852315,-20.216606498194945,9
+random1-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-27.482024447760498,-38.46622953854018,-16.22220330966899,-48.962148962148966,9
+random1-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.08905057838641735,-0.6637032324446798,0.9757624227241499,-1.5421115065243205,0
+random1-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.2977650839949904,-2.754756950418368,0.10650369369127957,-5.166051660516605,3
+random1-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.8892571169103274,-4.535811440050809,-1.6324579942024269,-8.58585858585859,5
+random1-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-17.775207157218727,-24.93874473886804,-10.949734384115134,-31.013431013431013,9
+random1-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-22.842151947754942,-32.57453134923922,-13.060972434531914,-42.92742927429274,9
+random1-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.8809212770119209,-1.7687695005879445,-0.1975019993355394,-3.971119133574008,1
+random1-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",0.2727285284980962,-0.6895032432318287,1.3796842516753298,-2.1352313167259758,1
+random1-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",0.3458494348553967,-0.6704870407817608,1.544666259070098,-2.135231316725979,1
+random1-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.5400890642351955,-1.384915486406391,0.2229294537298839,-3.075030750307506,1
+random1-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.4791530035626741,-0.669863564947072,-0.2944434206314308,-0.9840098400984024,0
+random1-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.47681136015048015,-1.1588975547258387,0.12403370913440469,-2.6474127557160054,1
+random1-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.576371683429907,-0.8740730170182542,-0.256516186535556,-1.3953488372093017,0
+random1-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.2270809948747487,-1.640141598506361,1.0258509754556753,-4.744958481613285,1
+random2-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.1099758280868929,-0.6148421661388884,0.30870186003906364,-1.72839506172839,0
+random2-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.003725113157293,-5.3778930039440205,-2.6850144070023085,-7.449494949494946,7
+random2-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.08740696109441576,-0.18700482046867084,0.013277849876858797,-0.30441400304413635,0
+random2-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.19273046207162273,-0.3370910758866482,-0.034067813075924706,-0.5050505050505045,0
+random2-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.0900713125509491,-0.32462142217977225,0.13111754756456231,-0.7633587786259555,0
+random2-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-20.602231418276155,-26.582830082124154,-15.230706356356214,-38.86838868388684,9
+random2-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-53.42766398933676,-60.843598002689134,-45.18770637531253,-66.80731364275667,9
+random2-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.055495542941034,-2.0947871037414827,-0.014777806982328362,-3.6895674300254457,2
+random2-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.043033618633762,-3.708675611751779,-2.2771552959043877,-4.109589041095888,7
+random2-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-5.341601868556541,-7.2678389174661895,-3.720961438298935,-11.577608142493641,9
+random2-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-35.943235564229234,-43.8142236218161,-27.41548000130866,-50.430504305043044,9
+random2-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-41.081230152017625,-51.49069008001451,-29.92837277474633,-63.85836385836385,9
+random2-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.628991930620484,-2.5069472985139196,-0.8685979755393479,-4.2735042735042725,2
+random2-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.3950272759308857,-2.8795963931207895,-0.20615542611753682,-6.1050061050060975,2
+random2-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.8713285136588866,-1.5489452085026356,-0.2082541368140612,-2.5875190258751886,2
+random2-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.1777811375586955,-2.21216611860993,-0.34657099933880786,-4.671717171717168,1
+random2-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.0017878604609424314,-0.34430540547867805,0.33674086527290714,-0.91324200913242,0
+random2-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.2663288334353693,-0.4676718288243778,-0.09268496258650853,-0.91324200913242,0
+random2-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.33086882204614,-0.5524830603352282,-0.10832535001089438,-0.8641975308641969,0
+random2-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.186920391972661,-3.1041919063982033,-1.4251442561725964,-5.289052890528908,5
+random2-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.09528857570835439,-0.5960085067746,0.4362312154718035,-1.2626262626262617,0
+random2-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-3.017599456969007,-5.176804100828406,-1.2628106698571722,-10.46931407942238,6
+random2-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.08668097564481791,-0.32306285270574375,0.08570556392053671,-0.9302325581395376,0
+random2-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.13404519589129854,-0.5351574672406927,0.22666488035368487,-1.4440433212996373,0
+random2-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",0.09960597717436688,-0.08328383398915698,0.30024951699066404,-0.25252525252525226,0
+random2-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-12.085250838548838,-16.188442078383,-8.305116416775029,-25.511432009626954,9
+random2-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-32.20794773803001,-43.79763027058867,-20.600643005168237,-50.75757575757576,9
+random2-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.04976587758220953,-0.6887964535187712,1.0378392572529511,-1.3530135301353017,0
+random2-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.0657570252738229,-1.7155525019495799,-0.3520179603258371,-2.527075812274367,2
+random2-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.2196512757525095,-6.028150295471546,-2.7725447399005807,-10.1010101010101,7
+random2-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-19.219071158576813,-26.58201606546489,-12.118699392026311,-36.1803084223013,8
+random2-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-24.66764113992111,-35.11322356145697,-14.090361758521052,-49.228944246737846,8
+random2-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-2.201115344213336,-3.6767993081131594,-0.7444203156296102,-5.812574139976276,4
+random2-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.9450889313033588,-3.096907987049297,-0.8472445905225046,-4.693140794223827,4
+random2-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.858396905905048,-3.1620710103027516,-0.7732993843463587,-6.257521058965098,2
+random2-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.7800857474210463,-1.5645234019551972,-0.09070258846895024,-3.3210332103321027,1
+random2-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.009402592367340486,-0.185880400445278,0.20048055827660216,-0.36101083032490744,0
+random2-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.02564904484105827,-0.44577322468045266,0.36769899620159735,-1.2403100775193818,0
+random2-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.26060207939340535,-0.6907934223260683,0.16370957450273863,-1.1070110701107048,0
+random2-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.4901388493172709,-1.8787541093879665,0.8523031589284892,-4.5510455104551015,1
+random3-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.4168258168197658,-0.7318005610343756,-0.10172702131588049,-1.2345679012345698,0
+random3-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-3.2240463118604628,-4.549479916026336,-2.0511186048393357,-6.715506715506718,5
+random3-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.14575093999316688,-0.31988736374195603,0.010282931867572145,-0.5089058524173036,0
+random3-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.11560932921020524,-0.2796496141864694,0.014822125414730804,-0.6172839506172867,0
+random3-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.1604196338438524,-0.29286230592748186,-0.026595469451762537,-0.5089058524173036,0
+random3-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-17.50065334981754,-22.453087788903197,-13.042196946957064,-32.22222222222222,9
+random3-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-53.69604208348257,-60.30143622065188,-46.953507737855276,-67.79184247538677,9
+random3-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.9547521764118558,-2.6490708759897603,-1.3849563310781556,-4.325699745547073,3
+random3-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.686006006785273,-3.538777596103755,-1.8453517508664101,-4.6913580246913575,5
+random3-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-6.187754234878934,-7.732885472229478,-4.764982122520777,-11.111111111111109,9
+random3-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-35.51770507901256,-44.26592828789733,-26.222104422556786,-58.931082981715896,9
+random3-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-39.75907155826864,-47.22544085289052,-32.85760042924571,-62.51526251526251,9
+random3-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.0585601812981564,-1.479007630410261,-0.7074948758949523,-2.43531202435312,1
+random3-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-2.186883305355644,-3.1299759063259267,-1.3892137411098633,-5.289052890528908,5
+random3-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.7964786102664705,-2.3934750017120345,-1.2832882357568933,-3.4440344403444048,3
+random3-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.2519736822617504,-1.7213939105142109,-0.7808737169070785,-2.2831050228310517,2
+random3-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.09830033018288487,-0.3185386265150336,0.16309502512040966,-0.5089058524173073,0
+random3-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.45604345807523355,-0.7300342892577586,-0.21060330540938724,-1.21765601217656,0
+random3-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.34188640490330047,-0.5746090493680546,-0.11459611247847902,-1.0178117048346071,0
+random3-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-3.0954309447707677,-4.153419376769324,-2.2233092841742477,-6.439393939393934,7
+random3-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.4229812311133142,-0.9832633960992828,0.10538661970635266,-2.166064981949456,1
+random3-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-2.6278567315802386,-4.140142510619737,-1.2938088858388241,-6.257521058965103,4
+random3-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.22574491844056327,-0.3434692559006848,-0.1074949536639597,-0.48134777376654947,0
+random3-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.1289648292788301,-0.3653348405625642,0.10714723884818324,-0.6201550387596899,0
+random3-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.24813162000458366,-0.6061949442901213,0.05121567381970942,-1.3953488372093001,0
+random3-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-8.792985137524354,-11.846582020956202,-5.793865683841149,-16.967509025270754,8
+random3-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-29.051783730189737,-37.49225661005946,-20.585534637141084,-45.07575757575758,9
+random3-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.17418581376227849,-0.980710246319694,0.8757664481011457,-1.660735468564652,0
+random3-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.1125044608688082,-1.724418551546393,-0.48117285256343123,-2.583025830258301,2
+random3-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.7131118756387473,-4.75853753602465,-0.9207209383847978,-8.838383838383841,4
+random3-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-17.909178774312934,-25.42466981218192,-11.219714029610225,-40.909090909090914,9
+random3-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-21.551042222328896,-29.400516041227604,-14.010424760288041,-43.77224199288256,9
+random3-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.8993884689424946,-2.6111430959723223,0.2117306378300233,-7.220216606498196,1
+random3-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.4232395925910195,-2.4724957008369395,-0.40911182639548654,-3.85078219013237,3
+random3-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.1967406495045068,-2.0178350099676012,-0.4272601706953795,-3.4897713598074587,2
+random3-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.5973792715492405,-1.4853041424315505,0.18799789716991444,-3.4897713598074622,1
+random3-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.43131776642502345,-0.6703786474736291,-0.20435523519454818,-0.9661835748792258,0
+random3-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.1893551381653459,-0.5098080070424643,0.17405256912902117,-0.8423586040914569,0
+random3-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.3044912395436359,-0.7997006376546123,0.1399529466928415,-1.8604651162790697,0
+random3-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.12747717987067317,-0.9847223299791887,0.9339619025619084,-2.015503875968992,1
+relevance-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.207788535031613,-0.6211188020818369,0.1662415220906523,-1.3888888888888915,0
+relevance-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-4.9778007038203995,-8.010103381840716,-2.626667822941042,-14.938271604938269,7
+relevance-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.008409475772111572,-0.1398261963177961,0.13410959714324128,-0.30441400304414,0
+relevance-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.18908454624643067,-0.40941226126411395,0.0010417773930838632,-0.8547008547008553,0
+relevance-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.2620512769135709,-0.4318427914315893,-0.09486576093099323,-0.6172839506172829,0
+relevance-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-18.49751223978608,-26.1980964971311,-11.354412344764016,-40.084388185654,9
+relevance-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-55.39955930282364,-61.281761317635265,-49.020994819212646,-67.04545454545455,9
+relevance-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-1.366402457281641,-2.0057056606779504,-0.7968368208343724,-3.3333333333333326,2
+relevance-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.7789147609474685,-3.8169173761193154,-1.7835881450429267,-6.1050061050061055,7
+relevance-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-5.661260598213896,-7.134952850108012,-4.495790286002316,-10.687022900763354,9
+relevance-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-38.460786912047524,-46.06686464762292,-31.330940449253312,-59.77496483825598,9
+relevance-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-40.80816333900788,-52.12572623953153,-29.189772016309277,-67.42424242424242,9
+relevance-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.2040506315225015,-1.5590085510508505,-0.8176213686707916,-2.020202020202022,1
+relevance-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.2052265945318719,-2.3012259593788356,-0.4771528989187017,-5.25030525030525,1
+relevance-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-0.9749359462180544,-2.023993965646497,-0.16055290846426656,-4.395604395604399,2
+relevance-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.7771778509995224,-1.0733919803630272,-0.47012929533002173,-1.6414141414141399,0
+relevance-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.248633881940309,-0.5133520549126984,0.0005639422267126141,-1.0178117048346036,0
+relevance-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.42948800059764425,-0.8142565360004477,-0.138748385881748,-1.7283950617283939,0
+relevance-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.439945414849847,-0.7198498849259605,-0.15872821760433747,-1.1111111111111107,0
+relevance-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-2.2708660544177075,-2.920830971866203,-1.626701260862245,-4.059040590405905,6
+relevance-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",-0.478172999647554,-1.0612886078886357,0.032696022906585034,-2.020202020202018,1
+relevance-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-2.543537056303401,-5.256486443699655,-0.18294466190939404,-10.83627797408716,4
+relevance-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.12876001255628378,-0.4609122942534052,0.1710979272931898,-0.9840098400984024,0
+relevance-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.08772827027307091,-0.465143472370568,0.2518907836102591,-1.2626262626262617,0
+relevance-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.06821460818992225,-0.3213417479403159,0.20477753044575767,-0.5931198102016588,0
+relevance-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-10.167622849597292,-16.718450943774293,-4.907207799958252,-30.934343434343432,8
+relevance-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-31.71505944636759,-41.2679684211026,-21.908753412917093,-47.72447724477245,9
+relevance-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.11153371684758098,-0.5284333763530342,0.9008313468861636,-0.9489916963226541,0
+relevance-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-2.0167447567768355,-3.0956085988071287,-1.0854160709888336,-5.05050505050505,3
+relevance-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-3.7517840672662977,-6.359010393871887,-1.42697420927757,-11.237373737373735,6
+relevance-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-21.670980367525587,-30.21729260276185,-13.382059747878857,-42.8030303030303,8
+relevance-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-26.45958161085541,-36.89450912332435,-15.495652404570333,-47.478474784747846,8
+relevance-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-0.9165361665032459,-1.986341751220457,0.024300923005658663,-3.7304452466907354,2
+relevance-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-0.756530161868777,-1.9170641095444678,0.2954889477861485,-4.166666666666666,2
+relevance-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.1788250337286867,-2.4900685532663367,-0.030475792224100517,-5.303030303030302,3
+relevance-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-1.0607102170240674,-1.7820894605065631,-0.40604525915455325,-3.1565656565656575,2
+relevance-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.023125623416582728,-0.12109398074310346,0.18508547904043515,-0.25252525252525226,0
+relevance-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",0.018086051025365684,-0.23509236761848148,0.2561413276992872,-0.7067137809187256,0
+relevance-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.3877881307741522,-0.5717824311783127,-0.2000977995208453,-0.8244994110718477,0
+relevance-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.8427528413422718,-1.9741571557319197,0.27609609203402197,-4.182041820418206,2
+weightnorm-8,session1,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.039964772476021995,-0.09533387088518432,0.19127988624315836,-0.24420024420024333,0
+weightnorm-8,session1,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-2.381076756921182,-3.443683377885824,-1.3285149678944264,-4.41919191919192,5
+weightnorm-8,session1,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",0.05397881210716938,-0.11476559963978777,0.2065458546940032,-0.5089058524173036,0
+weightnorm-8,session1,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",0.11901555196644338,-0.11534754504150518,0.3538754185331591,-0.3690036900369028,0
+weightnorm-8,session1,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.06251223302458292,-0.28288318433770726,0.13749416451784272,-0.7633587786259555,0
+weightnorm-8,session1,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-19.639657344530004,-25.295018484781792,-14.586988398931677,-36.986301369863014,9
+weightnorm-8,session1,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-53.65034575429622,-61.11170872459559,-45.80918559421937,-69.0576652601969,9
+weightnorm-8,session1,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",-0.6933744869778403,-1.1243151748987712,-0.2606218634225886,-1.5990159901599021,0
+weightnorm-8,session1,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-3.569852356399628,-4.177790138146345,-2.918687097043886,-4.797979797979793,8
+weightnorm-8,session1,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-4.4575693522763125,-6.543334274613621,-2.56350430505381,-10.687022900763361,7
+weightnorm-8,session1,activations:input@4,activations,input,4,"input EEG, 4 bits",-39.19371541357138,-46.20462389159753,-31.85640717985217,-54.14908579465541,9
+weightnorm-8,session1,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-41.14496131482057,-51.30061447246317,-31.178101268042788,-63.009845288326304,9
+weightnorm-8,session1,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.3789592034567557,-1.8888473242595056,-0.8109027628304903,-2.39099859353024,3
+weightnorm-8,session1,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.7747110861767652,-2.6079764987765675,-0.9077988860821318,-3.6529680365296837,5
+weightnorm-8,session1,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.1855600885369553,-1.976133003567645,-0.5496506831866255,-3.805175038051752,2
+weightnorm-8,session1,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.9783205158215166,-1.4622159347593326,-0.4726231016451112,-2.035623409669211,1
+weightnorm-8,session1,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",0.22327960849506268,0.07807953726696472,0.3794775491180667,-0.14064697609001237,0
+weightnorm-8,session1,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.26899618091436733,-0.5530216053956297,-0.0033040524270272096,-1.0178117048346071,0
+weightnorm-8,session1,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.3586298101562409,-0.6434787071093662,-0.11539241295739518,-1.1111111111111107,0
+weightnorm-8,session1,activations:logits@4,activations,logits,4,"logits, 4 bits",-1.6153151163218114,-2.2616456887967606,-1.0228003548736653,-3.1806615776081424,3
+weightnorm-8,session2,weights:conv_t@4,weights,conv_t,4,"temporal convolution weights, 4 bits",0.2165664841698176,-0.34212314046215375,0.7193297201705829,-1.3530135301352977,0
+weightnorm-8,session2,weights:conv_s@4,weights,conv_s,4,"spatial convolution weights, 4 bits",-0.8295240820979742,-1.7154329148760146,0.06204727492996139,-3.0084235860409163,3
+weightnorm-8,session2,weights:conv_d@4,weights,conv_d,4,"depthwise convolution weights, 4 bits",-0.09906175843013607,-0.2539759121859372,0.059800076370162505,-0.48134777376654947,0
+weightnorm-8,session2,weights:conv_p@4,weights,conv_p,4,"pointwise convolution weights, 4 bits",-0.09172801937674219,-0.3225287953984471,0.15846100203255292,-0.6150061500614961,0
+weightnorm-8,session2,weights:fc@4,weights,fc,4,"classifier weights, 4 bits",-0.08890462204128222,-0.3487003068113093,0.23465489966392922,-0.7220216606498224,0
+weightnorm-8,session2,weights:conv_t@2,weights,conv_t,2,"temporal convolution weights, 2 bits",-11.065814136625562,-14.14928601910749,-7.986755956323276,-18.686868686868685,9
+weightnorm-8,session2,weights:conv_s@2,weights,conv_s,2,"spatial convolution weights, 2 bits",-31.616496008922084,-41.85611287981602,-21.683785628967605,-53.28282828282828,9
+weightnorm-8,session2,weights:conv_d@2,weights,conv_d,2,"depthwise convolution weights, 2 bits",0.14709394892672956,-0.9129775436700978,1.332333378504233,-2.829028290282902,1
+weightnorm-8,session2,weights:conv_p@2,weights,conv_p,2,"pointwise convolution weights, 2 bits",-1.7126327234703531,-3.5684298620571675,-0.31722709381020275,-8.118081180811805,3
+weightnorm-8,session2,weights:fc@2,weights,fc,2,"classifier weights, 2 bits",-2.2853157042780086,-4.099757641566034,-0.7022992718988667,-7.828282828282824,5
+weightnorm-8,session2,activations:input@4,activations,input,4,"input EEG, 4 bits",-21.432635510399237,-29.49911391723013,-14.203062363222715,-42.42424242424242,9
+weightnorm-8,session2,activations:conv_t@4,activations,conv_t,4,"temporal convolution output, 4 bits",-26.789749314925334,-36.66385640477914,-17.071466247756632,-47.979797979797986,9
+weightnorm-8,session2,activations:conv_s@4,activations,conv_s,4,"spatial convolution output, 4 bits",-1.1724319013516402,-2.9034702192850723,0.17476083350290897,-6.5656565656565675,2
+weightnorm-8,session2,activations:elu1@4,activations,elu1,4,"first ELU output, 4 bits",-1.4705520245315256,-2.316852551556643,-0.6486452378745685,-3.540903540903543,3
+weightnorm-8,session2,activations:pool1@4,activations,pool1,4,"first pooling output, 4 bits",-1.2542726508086626,-2.118503850699518,-0.5918396046244261,-4.33212996389892,1
+weightnorm-8,session2,activations:conv_d@4,activations,conv_d,4,"depthwise convolution output, 4 bits",-0.0474573456988275,-0.6691896299047196,0.6122569187218182,-1.3237063778580027,0
+weightnorm-8,session2,activations:conv_p@4,activations,conv_p,4,"pointwise convolution output, 4 bits",-0.1509618422320009,-0.5000674869251446,0.19041603867506465,-1.0830324909747335,0
+weightnorm-8,session2,activations:elu2@4,activations,elu2,4,"second ELU output, 4 bits",-0.18802857243401927,-0.5080529234158203,0.12959945999082959,-0.9661835748792258,0
+weightnorm-8,session2,activations:pool2@4,activations,pool2,4,"second pooling output, 4 bits",-0.25238589747001605,-0.5916843753356926,0.10238387046239478,-0.9661835748792258,0
+weightnorm-8,session2,activations:logits@4,activations,logits,4,"logits, 4 bits",-0.5309451112493799,-1.746349124636426,0.6515792779721802,-4.4280442804427995,1

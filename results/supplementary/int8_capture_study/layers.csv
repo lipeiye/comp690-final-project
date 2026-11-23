@@ -1,0 +1,289 @@
+comparison,model,tensor,label,values,differ,max_abs
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,node_Conv_90,temporal conv,2821632,51226,40.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,node_Conv_92,spatial conv,256512,21394,179.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,21394,179.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,6458,254.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,6458,254.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,node_Conv_95,depthwise conv,64512,12793,184.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,node_Conv_97,pointwise conv,64512,64009,103.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,64009,103.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,7494,188.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,7494,188.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,128,103.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_full-22,logits,logits,128,128,6.284943327307701
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,38762,47.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,14151,92.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,14151,92.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,4531,88.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,4531,88.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,13681,30.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,22489,52.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,22489,52.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,2664,75.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,2664,75.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,117,19.0
+novnni-intel-6140 vs vnni-amd-9654,sub-01_seed-0_relevance-16-prune50,logits,logits,128,117,1.3419381082057953
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,node_Conv_90,temporal conv,2821632,524051,42.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,node_Conv_92,spatial conv,256512,71980,56.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,71980,56.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,21402,104.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,21402,104.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,node_Conv_95,depthwise conv,64512,32474,44.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,node_Conv_97,pointwise conv,64512,55759,64.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,55759,64.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,6533,101.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,6533,101.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,122,23.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_full-22,logits,logits,128,122,1.1970102787017822
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,484330,72.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,95401,179.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,95401,179.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,28810,185.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,28810,185.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,40896,74.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,30718,74.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,30718,74.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,3621,95.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,3621,95.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,126,35.0
+novnni-intel-6140 vs vnni-amd-9654,sub-02_seed-0_relevance-16-prune50,logits,logits,128,126,0.8662881851196289
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,node_Conv_90,temporal conv,2821632,126,6.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,node_Conv_92,spatial conv,256512,3415,127.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,3415,127.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,1200,145.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,1200,145.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,node_Conv_95,depthwise conv,64512,4478,67.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,node_Conv_97,pointwise conv,64512,30171,59.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,30171,59.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,3692,76.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,3692,76.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,100,23.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_full-22,logits,logits,128,100,1.258763313293457
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,2061,24.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,1904,199.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,1904,199.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,735,149.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,735,149.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,3039,104.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,10662,48.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,10662,48.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,1342,72.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,1342,72.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,81,24.0
+novnni-intel-6140 vs vnni-amd-9654,sub-03_seed-0_relevance-16-prune50,logits,logits,128,81,1.0831912755966187
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,node_Conv_90,temporal conv,2821632,68337,15.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,node_Conv_92,spatial conv,256512,16388,46.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,16388,46.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,4869,82.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,4869,82.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,node_Conv_95,depthwise conv,64512,12009,26.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,node_Conv_97,pointwise conv,64512,30234,13.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,30234,13.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,4017,17.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,4017,17.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,95,6.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_full-22,logits,logits,128,95,0.1829080581665039
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,53025,34.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,21605,170.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,21605,170.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,7132,245.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,7132,245.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,16419,135.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,29488,84.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,29488,84.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,3546,146.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,3546,146.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,124,57.0
+novnni-intel-6140 vs vnni-amd-9654,sub-04_seed-0_relevance-16-prune50,logits,logits,128,124,1.547304391860962
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,node_Conv_90,temporal conv,2821632,92759,39.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,node_Conv_92,spatial conv,256512,28492,221.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,28492,221.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,9221,206.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,9221,206.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,node_Conv_95,depthwise conv,64512,17917,164.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,node_Conv_97,pointwise conv,64512,61877,107.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,61877,107.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,7386,169.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,7386,169.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,126,73.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_full-22,logits,logits,128,126,2.0340577363967896
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,61900,27.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,15932,118.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,15932,118.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,5159,76.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,5159,76.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,11360,24.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,17649,24.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,17649,24.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,2142,41.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,2142,41.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,92,10.0
+novnni-intel-6140 vs vnni-amd-9654,sub-05_seed-0_relevance-16-prune50,logits,logits,128,92,0.352663516998291
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,node_Conv_90,temporal conv,2821632,12525,30.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,node_Conv_92,spatial conv,256512,4290,147.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,4290,147.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,1115,43.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,1115,43.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,node_Conv_95,depthwise conv,64512,3267,40.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,node_Conv_97,pointwise conv,64512,12650,22.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,12650,22.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,1772,26.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,1772,26.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,51,7.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_full-22,logits,logits,128,51,0.2126704454421997
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,11783,20.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,5842,106.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,5842,106.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,1758,134.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,1758,134.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,6209,64.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,13157,36.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,13157,36.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,1769,70.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,1769,70.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,102,29.0
+novnni-intel-6140 vs vnni-amd-9654,sub-06_seed-0_relevance-16-prune50,logits,logits,128,102,0.7181633412837982
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,node_Conv_90,temporal conv,2821632,40692,35.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,node_Conv_92,spatial conv,256512,11403,141.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,11403,141.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,3385,162.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,3385,162.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,node_Conv_95,depthwise conv,64512,10029,70.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,node_Conv_97,pointwise conv,64512,38816,38.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,38816,38.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,4497,42.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,4497,42.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,112,13.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_full-22,logits,logits,128,112,0.9180946350097656
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,74471,29.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,23879,231.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,23879,231.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,6974,255.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,6974,255.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,17191,184.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,30270,70.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,30270,70.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,3569,112.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,3569,112.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,128,85.0
+novnni-intel-6140 vs vnni-amd-9654,sub-07_seed-0_relevance-16-prune50,logits,logits,128,128,4.651721954345703
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,node_Conv_90,temporal conv,2821632,104563,16.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,node_Conv_92,spatial conv,256512,24144,63.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,24144,63.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,5965,40.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,5965,40.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,node_Conv_95,depthwise conv,64512,13008,18.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,node_Conv_97,pointwise conv,64512,31519,9.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,31519,9.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,3572,14.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,3572,14.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,78,6.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_full-22,logits,logits,128,78,0.38111281394958496
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,60487,17.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,21637,140.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,21637,140.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,6754,230.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,6754,230.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,17460,87.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,26602,100.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,26602,100.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,2998,115.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,2998,115.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,124,31.0
+novnni-intel-6140 vs vnni-amd-9654,sub-08_seed-0_relevance-16-prune50,logits,logits,128,124,1.6506965160369873
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant,input (as uint8),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,Transpose_out0,input (as uint8) (layout),352000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,node_Conv_90,temporal conv,2821632,60179,27.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,node_Conv_92,spatial conv,256512,17158,43.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,17158,43.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,4233,79.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,Transpose_token_31_out0,pool 1 (as uint8) (layout),64000,4233,79.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,node_Conv_95,depthwise conv,64512,11458,22.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,node_Conv_97,pointwise conv,64512,22155,41.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),64512,22155,41.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),7680,2780,34.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),7680,2780,34.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,qdq_s8_to_u8_quant_token_19,dense (logits),128,92,4.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_full-22,logits,logits,128,92,0.21377134323120117
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant,input (as uint8),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_1,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_3,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,Transpose_out0,input (as uint8) (layout),256000,0,0.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,node_Conv_90,temporal conv,2052096,135696,45.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,node_Conv_92,spatial conv,256512,42083,110.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_7,spatial conv (layout),256512,42083,110.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_9,pool 1 (as uint8),64000,11594,98.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,Transpose_token_27_out0,pool 1 (as uint8) (layout),64000,11594,98.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,node_Conv_95,depthwise conv,64512,27333,34.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,node_Conv_97,pointwise conv,32256,29506,60.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_13,pointwise conv (layout),32256,29506,60.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_15,pool 2 (as uint8),3840,3263,79.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_17,pool 2 (as uint8) (layout),3840,3263,79.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,qdq_s8_to_u8_quant_token_19,dense (logits),128,124,37.0
+novnni-intel-6140 vs vnni-amd-9654,sub-09_seed-0_relevance-16-prune50,logits,logits,128,124,1.556778222322464

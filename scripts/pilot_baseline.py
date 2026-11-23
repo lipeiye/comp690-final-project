@@ -19,6 +19,7 @@ import torch
 from mibci import data, splits, train
 from mibci.env import environment
 from mibci.model import EEGNET_KWARGS, build_eegnet
+from mibci.paths import RESULTS_DIR
 
 
 def plot_curves(folds: list[dict], path: Path) -> None:
@@ -31,8 +32,12 @@ def plot_curves(folds: list[dict], path: Path) -> None:
         ax_loss.plot(epochs, h["val_loss"], lw=1, color=line.get_color(), label=f"fold {k} val")
         ax_loss.plot(epochs, h["train_loss"], lw=1, ls="--", alpha=0.6, color=line.get_color(), label=f"fold {k} train")
     ax_acc.axhline(0.25, color="grey", lw=0.8, ls="--", label="chance")
-    ax_acc.set(xlabel="epoch", ylabel="validation accuracy", ylim=(0, 1),
-               title="Validation accuracy (dotted: lowest validation loss)")
+    ax_acc.set(
+        xlabel="epoch",
+        ylabel="validation accuracy",
+        ylim=(0, 1),
+        title="Validation accuracy (dotted: lowest validation loss)",
+    )
     ax_loss.set(xlabel="epoch", ylabel="cross-entropy", title="Training and validation loss")
     ax_acc.legend(fontsize=8)
     ax_loss.legend(fontsize=8, ncol=2)
@@ -46,7 +51,7 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=500)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--threads", type=int, default=4)
-    parser.add_argument("--out", type=Path, default=data.PROJECT_ROOT / "results" / "pilot")
+    parser.add_argument("--out", type=Path, default=RESULTS_DIR / "pilot")
     args = parser.parse_args()
     torch.set_num_threads(args.threads)
 
@@ -66,11 +71,18 @@ def main() -> None:
         h = res["history"]
         lowest = int(np.argmin(h["val_loss"]) + 1)
         final = train.scores(train.predict(model, X_va), y[va])
-        folds.append({
-            "val_runs": list(val_runs), "n_train": int(tr.sum()), "n_val": int(va.sum()),
-            "lowest_val_loss_epoch": lowest, "val_acc_at_lowest_val_loss": h["val_acc"][lowest - 1],
-            "final": final, "train_time_s": res["train_time_s"], "history": h,
-        })
+        folds.append(
+            {
+                "val_runs": list(val_runs),
+                "n_train": int(tr.sum()),
+                "n_val": int(va.sum()),
+                "lowest_val_loss_epoch": lowest,
+                "val_acc_at_lowest_val_loss": h["val_acc"][lowest - 1],
+                "final": final,
+                "train_time_s": res["train_time_s"],
+                "history": h,
+            }
+        )
         print(
             f"fold {k} (val runs {val_runs}): lowest val loss at epoch {lowest} "
             f"(val acc {h['val_acc'][lowest - 1]:.3f}), val acc {final['acc']:.3f} at the last epoch "

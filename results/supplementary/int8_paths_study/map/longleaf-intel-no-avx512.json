@@ -1,0 +1,1550 @@
+{
+ "label": "longleaf-intel-no-avx512",
+ "host": "c0812.ll.unc.edu",
+ "cpu": {
+  "model": "Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz",
+  "features": {
+   "avx2": true,
+   "avx512f": false,
+   "avx512_vnni": false,
+   "avx_vnni": false,
+   "amx_int8": false,
+   "amx_tile": false,
+   "asimddp": false,
+   "i8mm": false
+  }
+ },
+ "onnxruntime": "1.31.1",
+ "started": "2026-11-22T17:42:17.840507-05:00",
+ "load_before": [
+  26.05,
+  27.24,
+  28.43
+ ],
+ "load_after": [
+  28.02,
+  27.99,
+  28.35
+ ],
+ "environment": {
+  "python": "3.12.16",
+  "os": "Linux-5.14.0-611.16.1.el9_7.x86_64-x86_64-with-glibc2.34",
+  "cpu": "",
+  "physical_memory_bytes": null,
+  "torch_threads": 1,
+  "packages": {
+   "torch": "2.15.0",
+   "braindecode": "2.0.0",
+   "numpy": "2.5.4",
+   "scipy": "1.18.1",
+   "scikit-learn": "1.9.1"
+  }
+ },
+ "protocol_sha256": "1fea30b925bf6a90071162f3155be60c227e1de9e1868e96f316e71eb7d38e9d",
+ "shapes": [
+  {
+   "name": "spatial_g1_m1",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 1,
+   "macs": 11000,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.022087,
+   "int8_ms": 0.0728525,
+   "fp32_ns_per_mac": 2.007909090909091,
+   "int8_ns_per_mac": 6.6229545454545455,
+   "int8_over_fp32": 3.2984334676506544,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.022087,
+     "best_round_ms": 0.0219775,
+     "worst_round_ms": 0.0222525,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.0728525,
+     "best_round_ms": 0.0726185,
+     "worst_round_ms": 0.07313,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g1_m2",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 2,
+   "macs": 22000,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.022951,
+   "int8_ms": 0.140404,
+   "fp32_ns_per_mac": 1.0432272727272727,
+   "int8_ns_per_mac": 6.382,
+   "int8_over_fp32": 6.117554790640931,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.022951,
+     "best_round_ms": 0.022799,
+     "worst_round_ms": 0.023083,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.140404,
+     "best_round_ms": 0.13850400000000002,
+     "worst_round_ms": 0.1432115,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g1_m4",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 4,
+   "macs": 44000,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.022754,
+   "int8_ms": 0.1358925,
+   "fp32_ns_per_mac": 0.5171363636363636,
+   "int8_ns_per_mac": 3.088465909090909,
+   "int8_over_fp32": 5.972246637953766,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.022754,
+     "best_round_ms": 0.022699,
+     "worst_round_ms": 0.022825,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.1358925,
+     "best_round_ms": 0.1345705,
+     "worst_round_ms": 0.1406565,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g1_m8",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 8,
+   "macs": 88000,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.024764,
+   "int8_ms": 0.14120349999999998,
+   "fp32_ns_per_mac": 0.2814090909090909,
+   "int8_ns_per_mac": 1.604585227272727,
+   "int8_over_fp32": 5.70196656436763,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.024764,
+     "best_round_ms": 0.0245395,
+     "worst_round_ms": 0.025081,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.14120349999999998,
+     "best_round_ms": 0.137328,
+     "worst_round_ms": 0.147897,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g1_m16",
+   "kernel": "spatial",
+   "groups": 1,
+   "per_group": 16,
+   "macs": 176000,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.0286845,
+   "int8_ms": 0.143037,
+   "fp32_ns_per_mac": 0.16298011363636364,
+   "int8_ns_per_mac": 0.8127102272727272,
+   "int8_over_fp32": 4.986560686084819,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.0286845,
+     "best_round_ms": 0.0285475,
+     "worst_round_ms": 0.028763,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.143037,
+     "best_round_ms": 0.14054650000000002,
+     "worst_round_ms": 0.1489915,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g2_m1",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 1,
+   "macs": 22000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.017812,
+   "int8_ms": 0.105543,
+   "fp32_ns_per_mac": 0.8096363636363636,
+   "int8_ns_per_mac": 4.797409090909091,
+   "int8_over_fp32": 5.925387379294857,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.017812,
+     "best_round_ms": 0.017717999999999998,
+     "worst_round_ms": 0.018133,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.105543,
+     "best_round_ms": 0.10057949999999999,
+     "worst_round_ms": 0.1080585,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g2_m2",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 2,
+   "macs": 44000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.0232835,
+   "int8_ms": 0.2897515,
+   "fp32_ns_per_mac": 0.5291704545454545,
+   "int8_ns_per_mac": 6.585261363636364,
+   "int8_over_fp32": 12.444499323555307,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.0232835,
+     "best_round_ms": 0.0231385,
+     "worst_round_ms": 0.0236125,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.2897515,
+     "best_round_ms": 0.26203699999999996,
+     "worst_round_ms": 0.31581950000000003,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g2_m4",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 4,
+   "macs": 88000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.024374,
+   "int8_ms": 0.268483,
+   "fp32_ns_per_mac": 0.27697727272727274,
+   "int8_ns_per_mac": 3.050943181818182,
+   "int8_over_fp32": 11.015139082629032,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.024374,
+     "best_round_ms": 0.024227,
+     "worst_round_ms": 0.0245615,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.268483,
+     "best_round_ms": 0.260513,
+     "worst_round_ms": 0.29574,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g2_m8",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 8,
+   "macs": 176000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.027139,
+   "int8_ms": 0.2632255,
+   "fp32_ns_per_mac": 0.15419886363636365,
+   "int8_ns_per_mac": 1.4955994318181818,
+   "int8_over_fp32": 9.699159880614614,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.027139,
+     "best_round_ms": 0.027033,
+     "worst_round_ms": 0.027386,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.2632255,
+     "best_round_ms": 0.25501450000000003,
+     "worst_round_ms": 0.2784845,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g2_m16",
+   "kernel": "spatial",
+   "groups": 2,
+   "per_group": 16,
+   "macs": 352000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.031856499999999996,
+   "int8_ms": 0.2706225,
+   "fp32_ns_per_mac": 0.09050142045454544,
+   "int8_ns_per_mac": 0.7688139204545454,
+   "int8_over_fp32": 8.495048106351923,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.031856499999999996,
+     "best_round_ms": 0.031687,
+     "worst_round_ms": 0.031991,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.2706225,
+     "best_round_ms": 0.2626155,
+     "worst_round_ms": 0.299095,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g4_m1",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 1,
+   "macs": 44000,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.07966999999999999,
+   "int8_ms": 0.1715215,
+   "fp32_ns_per_mac": 1.8106818181818178,
+   "int8_ns_per_mac": 3.898215909090909,
+   "int8_over_fp32": 2.1528994602736287,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.07966999999999999,
+     "best_round_ms": 0.0793755,
+     "worst_round_ms": 0.0799865,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.1715215,
+     "best_round_ms": 0.15647149999999999,
+     "worst_round_ms": 0.1976445,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g4_m2",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 2,
+   "macs": 88000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.030562,
+   "int8_ms": 0.5009565,
+   "fp32_ns_per_mac": 0.3472954545454545,
+   "int8_ns_per_mac": 5.6926875,
+   "int8_over_fp32": 16.3914828872456,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.030562,
+     "best_round_ms": 0.03025,
+     "worst_round_ms": 0.030883,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.5009565,
+     "best_round_ms": 0.4940885,
+     "worst_round_ms": 0.5314685,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g4_m4",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 4,
+   "macs": 176000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.0319775,
+   "int8_ms": 0.500927,
+   "fp32_ns_per_mac": 0.18169034090909092,
+   "int8_ns_per_mac": 2.846176136363636,
+   "int8_over_fp32": 15.664983191306389,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.0319775,
+     "best_round_ms": 0.0317145,
+     "worst_round_ms": 0.0322645,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.500927,
+     "best_round_ms": 0.488324,
+     "worst_round_ms": 0.5317019999999999,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g4_m8",
+   "kernel": "spatial",
+   "groups": 4,
+   "per_group": 8,
+   "macs": 352000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.039143,
+   "int8_ms": 0.512463,
+   "fp32_ns_per_mac": 0.11120170454545454,
+   "int8_ns_per_mac": 1.4558607954545455,
+   "int8_over_fp32": 13.092072656669137,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.039143,
+     "best_round_ms": 0.038699,
+     "worst_round_ms": 0.0392565,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.512463,
+     "best_round_ms": 0.4966385,
+     "worst_round_ms": 0.527723,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g8_m1",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 1,
+   "macs": 88000,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.0701035,
+   "int8_ms": 0.1584645,
+   "fp32_ns_per_mac": 0.7966306818181819,
+   "int8_ns_per_mac": 1.8007329545454545,
+   "int8_over_fp32": 2.2604363548182334,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.0701035,
+     "best_round_ms": 0.069746,
+     "worst_round_ms": 0.07032450000000001,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.1584645,
+     "best_round_ms": 0.15516950000000002,
+     "worst_round_ms": 0.1645805,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g8_m2",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 2,
+   "macs": 176000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.044591,
+   "int8_ms": 0.905088,
+   "fp32_ns_per_mac": 0.25335795454545457,
+   "int8_ns_per_mac": 5.142545454545455,
+   "int8_over_fp32": 20.297548832724093,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.044591,
+     "best_round_ms": 0.0441715,
+     "worst_round_ms": 0.0446945,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.905088,
+     "best_round_ms": 0.899594,
+     "worst_round_ms": 0.908768,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g8_m4",
+   "kernel": "spatial",
+   "groups": 8,
+   "per_group": 4,
+   "macs": 352000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.048038,
+   "int8_ms": 0.9277815,
+   "fp32_ns_per_mac": 0.13647159090909092,
+   "int8_ns_per_mac": 2.6357428977272725,
+   "int8_over_fp32": 19.313491402639578,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.048038,
+     "best_round_ms": 0.047836000000000004,
+     "worst_round_ms": 0.04829,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.9277815,
+     "best_round_ms": 0.9180055,
+     "worst_round_ms": 0.948763,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g16_m1",
+   "kernel": "spatial",
+   "groups": 16,
+   "per_group": 1,
+   "macs": 176000,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.13704,
+   "int8_ms": 0.240429,
+   "fp32_ns_per_mac": 0.7786363636363637,
+   "int8_ns_per_mac": 1.3660738636363636,
+   "int8_over_fp32": 1.7544439579684765,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.13704,
+     "best_round_ms": 0.130639,
+     "worst_round_ms": 0.1506995,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.240429,
+     "best_round_ms": 0.235827,
+     "worst_round_ms": 0.243615,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "spatial_g16_m2",
+   "kernel": "spatial",
+   "groups": 16,
+   "per_group": 2,
+   "macs": 352000,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.08094950000000001,
+   "int8_ms": 1.864329,
+   "fp32_ns_per_mac": 0.22997017045454549,
+   "int8_ns_per_mac": 5.296389204545455,
+   "int8_over_fp32": 23.030766094911023,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.08094950000000001,
+     "best_round_ms": 0.07288149999999999,
+     "worst_round_ms": 0.138287,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 1.864329,
+     "best_round_ms": 1.8533225,
+     "worst_round_ms": 1.9182635000000001,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g1_m1",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 1,
+   "macs": 705408,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.506903,
+   "int8_ms": 2.116575,
+   "fp32_ns_per_mac": 0.7185954794955544,
+   "int8_ns_per_mac": 3.000497584376701,
+   "int8_over_fp32": 4.175503005505985,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.506903,
+     "best_round_ms": 0.5029144999999999,
+     "worst_round_ms": 0.5115545,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 2.116575,
+     "best_round_ms": 1.9352999999999998,
+     "worst_round_ms": 2.2735025,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g1_m2",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 2,
+   "macs": 1410816,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5157185,
+   "int8_ms": 0.611945,
+   "fp32_ns_per_mac": 0.36554625124750495,
+   "int8_ns_per_mac": 0.4337525233623662,
+   "int8_over_fp32": 1.1865872564199267,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5157185,
+     "best_round_ms": 0.5132275,
+     "worst_round_ms": 0.5219195,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.611945,
+     "best_round_ms": 0.6054655,
+     "worst_round_ms": 0.6169765,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g1_m4",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 4,
+   "macs": 2821632,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5323685,
+   "int8_ms": 0.564272,
+   "fp32_ns_per_mac": 0.18867396598847758,
+   "int8_ns_per_mac": 0.19998072037742695,
+   "int8_over_fp32": 1.0599274750478287,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5323685,
+     "best_round_ms": 0.5303135,
+     "worst_round_ms": 0.53841,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.564272,
+     "best_round_ms": 0.558881,
+     "worst_round_ms": 0.5743929999999999,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g1_m8",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 8,
+   "macs": 5643264,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5392105,
+   "int8_ms": 0.5743795,
+   "fp32_ns_per_mac": 0.09554940190641445,
+   "int8_ns_per_mac": 0.10178143358170023,
+   "int8_over_fp32": 1.065223136418894,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5392105,
+     "best_round_ms": 0.534376,
+     "worst_round_ms": 0.5430945,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.5743795,
+     "best_round_ms": 0.5697475000000001,
+     "worst_round_ms": 0.5786455,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g1_m16",
+   "kernel": "temporal",
+   "groups": 1,
+   "per_group": 16,
+   "macs": 11286528,
+   "ops_fp32": {
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.6350365,
+   "int8_ms": 0.7294875000000001,
+   "fp32_ns_per_mac": 0.05626500018429051,
+   "int8_ns_per_mac": 0.06463347275619218,
+   "int8_over_fp32": 1.1487331830532577,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.6350365,
+     "best_round_ms": 0.634242,
+     "worst_round_ms": 0.636665,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 0.7294875000000001,
+     "best_round_ms": 0.726805,
+     "worst_round_ms": 0.7395065000000001,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g2_m1",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 1,
+   "macs": 1410816,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5402245,
+   "int8_ms": 3.148406,
+   "fp32_ns_per_mac": 0.3829163406142261,
+   "int8_ns_per_mac": 2.231620565686808,
+   "int8_over_fp32": 5.8279585616720455,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5402245,
+     "best_round_ms": 0.5342104999999999,
+     "worst_round_ms": 0.54442,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 3.148406,
+     "best_round_ms": 3.065287,
+     "worst_round_ms": 3.309545,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g2_m2",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 2,
+   "macs": 2821632,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.8412475,
+   "int8_ms": 6.907864,
+   "fp32_ns_per_mac": 0.29814217445790236,
+   "int8_ns_per_mac": 2.448180343857739,
+   "int8_over_fp32": 8.211452634331751,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.8412475,
+     "best_round_ms": 0.838956,
+     "worst_round_ms": 0.8521105,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 6.907864,
+     "best_round_ms": 6.8428755,
+     "worst_round_ms": 6.9800699999999996,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g2_m4",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 4,
+   "macs": 5643264,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.862341,
+   "int8_ms": 6.9742905,
+   "fp32_ns_per_mac": 0.15280890633505717,
+   "int8_ns_per_mac": 1.2358611080396027,
+   "int8_over_fp32": 8.087624849102617,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.862341,
+     "best_round_ms": 0.8571035,
+     "worst_round_ms": 0.8765624999999999,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 6.9742905,
+     "best_round_ms": 6.910435,
+     "worst_round_ms": 7.0251269999999995,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g2_m8",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 8,
+   "macs": 11286528,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 1.0629085,
+   "int8_ms": 6.9078420000000005,
+   "fp32_ns_per_mac": 0.09417497568782889,
+   "int8_ns_per_mac": 0.6120431367378879,
+   "int8_over_fp32": 6.498999678711761,
+   "timing": {
+    "fp32": {
+     "median_ms": 1.0629085,
+     "best_round_ms": 1.0449964999999999,
+     "worst_round_ms": 1.095043,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 6.9078420000000005,
+     "best_round_ms": 6.867236500000001,
+     "worst_round_ms": 6.996416999999999,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g2_m16",
+   "kernel": "temporal",
+   "groups": 2,
+   "per_group": 16,
+   "macs": 22573056,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 1.3134025,
+   "int8_ms": 7.858911,
+   "fp32_ns_per_mac": 0.058184523176658044,
+   "int8_ns_per_mac": 0.34815449888575123,
+   "int8_over_fp32": 5.9836272582091174,
+   "timing": {
+    "fp32": {
+     "median_ms": 1.3134025,
+     "best_round_ms": 1.2915435,
+     "worst_round_ms": 1.355113,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 7.858911,
+     "best_round_ms": 7.758227,
+     "worst_round_ms": 8.01297,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g4_m1",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 1,
+   "macs": 2821632,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5737650000000001,
+   "int8_ms": 4.4539405,
+   "fp32_ns_per_mac": 0.20334508539738708,
+   "int8_ns_per_mac": 1.5784980110801126,
+   "int8_over_fp32": 7.762656313996147,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5737650000000001,
+     "best_round_ms": 0.5655735,
+     "worst_round_ms": 0.5853185000000001,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 4.4539405,
+     "best_round_ms": 4.4208929999999995,
+     "worst_round_ms": 4.5647400000000005,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g4_m2",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 2,
+   "macs": 5643264,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 1.7411225,
+   "int8_ms": 13.603455499999999,
+   "fp32_ns_per_mac": 0.30853110894687896,
+   "int8_ns_per_mac": 2.4105651445688165,
+   "int8_over_fp32": 7.813037566282671,
+   "timing": {
+    "fp32": {
+     "median_ms": 1.7411225,
+     "best_round_ms": 1.724603,
+     "worst_round_ms": 1.759201,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 13.603455499999999,
+     "best_round_ms": 13.5088055,
+     "worst_round_ms": 13.632028,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g4_m4",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 4,
+   "macs": 11286528,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 1.7642065,
+   "int8_ms": 13.481198,
+   "fp32_ns_per_mac": 0.15631082472838415,
+   "int8_ns_per_mac": 1.1944504102590274,
+   "int8_over_fp32": 7.6415079527254886,
+   "timing": {
+    "fp32": {
+     "median_ms": 1.7642065,
+     "best_round_ms": 1.749019,
+     "worst_round_ms": 1.78873,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 13.481198,
+     "best_round_ms": 13.427705499999998,
+     "worst_round_ms": 13.5601565,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g4_m8",
+   "kernel": "temporal",
+   "groups": 4,
+   "per_group": 8,
+   "macs": 22573056,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 2.20732,
+   "int8_ms": 13.775172000000001,
+   "fp32_ns_per_mac": 0.09778560776174923,
+   "int8_ns_per_mac": 0.6102484306954274,
+   "int8_over_fp32": 6.2406773825272275,
+   "timing": {
+    "fp32": {
+     "median_ms": 2.20732,
+     "best_round_ms": 2.1802665,
+     "worst_round_ms": 2.2229935000000003,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 13.775172000000001,
+     "best_round_ms": 13.744946500000001,
+     "worst_round_ms": 13.868506,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g8_m1",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 1,
+   "macs": 5643264,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 0.5904765000000001,
+   "int8_ms": 2.767347,
+   "fp32_ns_per_mac": 0.10463386082947743,
+   "int8_ns_per_mac": 0.49038056699101795,
+   "int8_over_fp32": 4.686633591684004,
+   "timing": {
+    "fp32": {
+     "median_ms": 0.5904765000000001,
+     "best_round_ms": 0.5852915000000001,
+     "worst_round_ms": 0.595012,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 2.767347,
+     "best_round_ms": 2.6343550000000002,
+     "worst_round_ms": 2.8986929999999997,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g8_m2",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 2,
+   "macs": 11286528,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 3.3976990000000002,
+   "int8_ms": 26.5943975,
+   "fp32_ns_per_mac": 0.30104023132711855,
+   "int8_ns_per_mac": 2.356295709362525,
+   "int8_over_fp32": 7.827178775989279,
+   "timing": {
+    "fp32": {
+     "median_ms": 3.3976990000000002,
+     "best_round_ms": 3.3900129999999997,
+     "worst_round_ms": 3.4326455,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 26.5943975,
+     "best_round_ms": 26.5640325,
+     "worst_round_ms": 26.6226365,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g8_m4",
+   "kernel": "temporal",
+   "groups": 8,
+   "per_group": 4,
+   "macs": 22573056,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 3.484007,
+   "int8_ms": 27.158552999999998,
+   "fp32_ns_per_mac": 0.15434361213652242,
+   "int8_ns_per_mac": 1.2031402837081517,
+   "int8_over_fp32": 7.795206209401989,
+   "timing": {
+    "fp32": {
+     "median_ms": 3.484007,
+     "best_round_ms": 3.477093,
+     "worst_round_ms": 3.522075,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 27.158552999999998,
+     "best_round_ms": 27.073641000000002,
+     "worst_round_ms": 27.1738455,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g16_m1",
+   "kernel": "temporal",
+   "groups": 16,
+   "per_group": 1,
+   "macs": 11286528,
+   "ops_fp32": {
+    "ReorderInput": 1,
+    "Conv": 1,
+    "ReorderOutput": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 1.2240065,
+   "int8_ms": 2.3549629999999997,
+   "fp32_ns_per_mac": 0.10844845288116949,
+   "int8_ns_per_mac": 0.2086525634809925,
+   "int8_over_fp32": 1.9239791618753657,
+   "timing": {
+    "fp32": {
+     "median_ms": 1.2240065,
+     "best_round_ms": 1.1792535000000002,
+     "worst_round_ms": 1.229788,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 2.3549629999999997,
+     "best_round_ms": 2.3040005,
+     "worst_round_ms": 2.4419605,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  },
+  {
+   "name": "temporal_g16_m2",
+   "kernel": "temporal",
+   "groups": 16,
+   "per_group": 2,
+   "macs": 22573056,
+   "ops_fp32": {
+    "Conv": 1
+   },
+   "ops_int8": {
+    "QuantizeLinear": 1,
+    "Transpose": 2,
+    "QLinearConv": 1,
+    "DequantizeLinear": 1
+   },
+   "fp32_ms": 6.666167,
+   "int8_ms": 53.216586,
+   "fp32_ns_per_mac": 0.295315220057045,
+   "int8_ns_per_mac": 2.357526867429913,
+   "int8_over_fp32": 7.983086232313112,
+   "timing": {
+    "fp32": {
+     "median_ms": 6.666167,
+     "best_round_ms": 6.6569305,
+     "worst_round_ms": 6.679878,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    },
+    "int8": {
+     "median_ms": 53.216586,
+     "best_round_ms": 53.157913,
+     "worst_round_ms": 53.458628000000004,
+     "rounds": 7,
+     "runs_per_round": 200,
+     "warmup": 50
+    }
+   }
+  }
+ ]
+}
