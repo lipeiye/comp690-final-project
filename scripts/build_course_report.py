@@ -28,7 +28,10 @@ RES = PROJECT_RESULTS_DIR
 SUPP = RES / "supplementary"
 OUT = DOCS_DIR / "COURSE_REPORT.md"
 ASSETS = DOCS_DIR / "course_report"
-TITLE = "Fewer Electrodes, Eight Bits, and the Missing Kernels: An Edge-Ready Motor-Imagery EEG Decoder"
+TITLE = (
+    "EEG Channel Selection and Model Compression for Motor-Imagery BCI: "
+    "Why 16 Electrodes Suffice and What Makes 8-Bit Inference Fast"
+)  # the talk's cover title, then the two main findings
 AUTHOR = "Peiye Li"
 EMAIL = "**[email address: to be filled in by the author]**"
 NAVY, BLUE, LIGHT, RED, GREY = "#13294B", "#4B9CD3", "#9ec5e8", "#C8102E", "#6b7280"

@@ -1,4 +1,4 @@
-# Fewer Electrodes, Eight Bits, and the Missing Kernels: An Edge-Ready Motor-Imagery EEG Decoder
+# EEG Channel Selection and Model Compression for Motor-Imagery BCI: Why 16 Electrodes Suffice and What Makes 8-Bit Inference Fast
 
 **Peiye Li** | **[email address: to be filled in by the author]** | COMP 690-193, Fall 2026 (individual project)
 

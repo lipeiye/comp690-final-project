@@ -648,4 +648,5 @@ python3 scripts/package_release.py --output release/project_with_supplement_mode
 - **检查**：`python3 tools/check.py` 四项（format、lint、guard、tests）全部 ok；unittest 112 项通过，其中 2 项 uint8 内核测试要设 `MIBCI_ORT_HEADERS`（本机用 MacDev 上的 `environments/onnxruntime-headers`）才会运行，设好后也通过。`python3 tools/golden.py --all`：40 个生成器在沙箱里从记录重建，全部 SAME。`python3 -u scripts/audit_project.py --deep --require-artifacts` 通过（历史证据一致，回放和训练就绪，缺失的模型产物 0）。
 - **交付物**：课程报告 [COURSE_REPORT.pdf](docs/COURSE_REPORT.pdf) 正文 12 页（摘要 198 词）；[final.pptx](presentation/final.pptx) 26 页，讲稿按词数算完整 18 分 15 秒、去掉方括号 16 分 53 秒；问答预案 24 题都已按最终结果写好。新交付包 `release/COMP690_final_2026-11-22.zip`（112,814 个文件，181 MB，不含模型、原始脑电和虚拟环境；逐个文件的哈希核对记录在 `release/package_verification_2026-11-22.json`）。
 - **Git**：作者同意后，当晚把上述全部工作提交并推送到 GitHub 的 main（不含第 12 节列出的几类副本和本机文件），课程报告 Artifacts 一节随之填上仓库地址。
-- **没有做的事**：没有上传 GitHub Release；报告里的署名邮箱、贡献说明、与其他课程或研究的重叠说明、AI 使用说明和标题等作者决定（见 FINAL_EXECUTION_PLAN 的 WP12）。
+- **作者的决定**：不写 AI 使用说明；报告标题按作者的意思重拟为 “EEG Channel Selection and Model Compression for Motor-Imagery BCI: Why 16 Electrodes Suffice and What Makes 8-Bit Inference Fast”（沿用期末汇报封面的主标题，副标题点出两个主要结论）。
+- **没有做的事**：没有上传 GitHub Release；报告里的署名邮箱、贡献说明、与其他课程或研究的重叠说明还空着，等作者填写（见 FINAL_EXECUTION_PLAN 的 WP12）。

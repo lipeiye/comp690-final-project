@@ -935,7 +935,7 @@ fold 模型上（只用第一天），噪声对电极的归一化范数之比（
 | 11-21 夜 | 两项深入研究（单片机、过拟合的直接检验）、电极数 × 训练量、两个补上的 INT8 内核；结果见 1.6 节 | 已完成 |
 | 11-22 起 | 把每个还说不清的地方查到底（见下面的清单），每项都在 Longleaf 上先写计划、再训练和打分；结果出来就更新幻灯片 | 已完成（11-22 晚；结果见 1.7 节） |
 | 11-22 下午起 | 期末冲刺，按 [FINAL_EXECUTION_PLAN.md](FINAL_EXECUTION_PLAN.md) 执行：WP1–WP8 的实验在 Longleaf 和本机上跑，课程报告、幻灯片、问答预案随结果更新；进度见那份的第 9 节 | 实验全部完成（11-22 21:00）；剩下等你决定的事（WP12） |
-| 11-28 到 12-03 | 报告改写成 10–12 页、按课程规定的章节；PDF 导出并逐页检查。11-22 已有完整稿 [COURSE_REPORT.pdf](COURSE_REPORT.pdf)（由 `scripts/build_course_report.py` 生成，正文 12 页，并入了全部期中后研究，包括期末冲刺的 WP1–WP8、WP1b、WP3b）；还差作者填写的邮箱、贡献、重叠和 AI 使用说明，以及定标题 | 进行中（等作者） |
+| 11-28 到 12-03 | 报告改写成 10–12 页、按课程规定的章节；PDF 导出并逐页检查。11-22 已有完整稿 [COURSE_REPORT.pdf](COURSE_REPORT.pdf)（由 `scripts/build_course_report.py` 生成，正文 12 页，并入了全部期中后研究，包括期末冲刺的 WP1–WP8、WP1b、WP3b）；标题已改为 “EEG Channel Selection and Model Compression for Motor-Imagery BCI: Why 16 Electrodes Suffice and What Makes 8-Bit Inference Fast”，作者决定不写 AI 使用说明；还差作者填写的邮箱、贡献和重叠说明 | 进行中（等作者） |
 | 12-04 到 12-07 | 在你的 MacBook 上打开幻灯片试放（字体、视频），排练计时；新建交付包；提交并推到 GitHub（需要你同意） | 待办 |
 
 11-22 起要查到底的问题（按对结论的重要程度排序）：
